@@ -1,0 +1,20 @@
+{% extends "base/base_list.html" %}
+
+{% block title %}
+    Páginas || {{ block.super }}
+{% endblock %}
+
+{% block page_title %}
+    Páginas
+{% endblock %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Páginas</li>
+{% endblock %}
+
+
+{% block add_url %}
+    <a href="crear" class="btn btn-primary mb-3">
+        <i class="bx bx-plus" aria-hidden="true"></i> dd nuevo
+    </a>
+{% endblock %}
+

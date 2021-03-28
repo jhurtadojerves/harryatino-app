@@ -1,0 +1,38 @@
+{% if object_list %}
+    <div class="row row-cards" style="margin: auto auto;align-items: center; justify-content: center;">
+        {% for object in object_list %}
+            <div class="card-group">
+                <div class="card p-3 m-2">
+                    <a href="{% url 'site:producto_producto_detalle' object.reference %}" class="mb-3">
+                        <img
+                            src="{{ object.image }}"
+                            alt="{{ object.name }}"
+                            class="rounded product_image"
+                            style="{% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                        >
+                    </a>
+                    <div class="d-flex align-items-center px-2">
+                        <div>
+                            <div style="max-width: 230px;">{{ object.name }}</div>
+                            <small class="d-block text-muted">Referencia: {{ object.reference }}</small>
+                            <small class="d-block text-muted">Sección: {{ object.category.section }}</small>
+                            <small class="d-block text-muted">Categoría: {{ object.category.name }}</small>
+                            <small class="d-block text-muted">Stock Disponible: {{ object.check_stock }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <h4>¡Lo sentimos!</h4>
+        <p>Los criterios de búsqueda seleccionados no obtuvieron ningún resultado.
+           Puede intentarlo de nuevo o resetear los filtros</p>
+        <div class="btn-list">
+            <a href="#" class="btn btn-info">
+                <i class="bx bx-plus"></i> Reiniciar Búsqueda
+            </a>
+        </div>
+    </div>
+{% endif %}

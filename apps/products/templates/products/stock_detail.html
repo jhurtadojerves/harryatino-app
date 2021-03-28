@@ -1,0 +1,106 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Solicitud de Aumento de Stock || {{ block.super }}
+{% endblock %}
+
+{% block page_title %}
+    Solicitud de Aumento de Stock
+{% endblock %}
+
+{% block content %}
+    <div class="row" style="justify-content: center;">
+        <div class="col-sm-12">
+            <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
+                <div class="card-body">
+                    <p class="card-text text-justify">{{ object.name|safe }}</p>
+                    <p class="card-text text-justify"> Estado: {{ object.get_status_request_display }}
+                    </p>
+                    <p class="card-text text-justify">
+                        Solicitud:
+                        <a
+                            href="{{ object.forum_url }}"
+                            target="_blank"
+                        > Ver en el foro </a>
+                    </p>
+                    <p class="card-text text-justify">Solicitado por: {{ object.created_at }} a
+                                                      las {{ object.created }}</p>
+                    <p class="card-text text-justify">Última edición por: {{ object.modified_at }} a
+                                                      las {{ object.modified }}</p>
+                    {% if user.is_staff and object.status_request == 0 %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong><i class="mdi mdi-alert-outline mr-2"></i> Instrucciones</strong>
+                            <p>
+                                Puedes aprobar o rechazar la solicitud, ninguna de las acciones se pueden revertir.
+                            </p>
+                            <p>
+                                Antes de aprobar la solicitud puedes editarla para quitar o añadir productos, o
+                                modificar el stock que se va a aumentar
+                            </p>
+                            <p>
+                                <a href="?status=approve"
+                                   type="button"
+                                   class="btn btn-success waves-light waves-effect">
+                                    <i class="bx bx-check-double font-size-16 align-middle mr-2"></i> Aprobar
+                                </a>
+                                <a href="?status=deny"
+                                   type="button"
+                                   class="btn btn-danger waves-light waves-effect">
+                                    <i class="bx bx-block font-size-16 align-middle mr-2"></i> Rechazar
+                                </a>
+                            </p>
+                        </div>
+                        <p class="card-text text-justify">
+
+                        </p>
+                    {% endif %}
+                    {% if user.is_authenticated and object.status_request == 0 %}
+                        <p class="card-text text-justify">
+                            <a href="editar/"
+                               type="button"
+                               class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-tag"></i> Editar
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="card p3 m-2 col">
+                <div class="card-body table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock Incial</th>
+                                <th>Stock Actual</th>
+                                <th>Stock a Aumentar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stock in object.product_requests.all %}
+                                <tr>
+                                    <td>{{ stock.product }}</td>
+                                    <td>{{ stock.product.category }}</td>
+                                    <td>{{ stock.product.initial_stock }}</td>
+                                    <td>{{ stock.product.check_stock }}</td>
+                                    <td>{{ stock.requested_amount }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "product:stock_list" %}">Solicitudes de Stock</a></li>
+    <li class="breadcrumb-item active">{{ object.name }}</li>
+{% endblock %}

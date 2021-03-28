@@ -1,0 +1,21 @@
+{% extends 'authentication/base.html' %}
+{% block form %}
+    <div class="login-signin">
+        <div class="mb-20">
+            <h3>Recuperar contraseña</h3>
+            <div class="text-muted font-weight-bold">Ingrese su correo para recuperar la contraseña</div>
+        </div>
+        <form class="form" method="POST">
+            {% csrf_token %}
+            {{ form.errors }}
+
+            <div class="form-group mb-5">
+                <input class="form-control h-auto form-control-solid py-4 px-8" type="email"
+                       placeholder="Correo electrónico" name="email"/>
+            </div>
+            <button type="submit"
+                    class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4">Recuperar
+            </button>
+        </form>
+    </div>
+{% endblock %}

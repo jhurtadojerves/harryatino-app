@@ -1,0 +1,76 @@
+<div class="statebar no-gutters">
+    <div class="statebar-content">
+        <div class="d-flex flex-column-auto flex-column px-10">
+            <!--begin: statebar Nav-->
+            <div class="statebar-nav d-flex flex-column align-items-center align-items-md-start">
+                <!--begin::statebar Steps-->
+                <div class="statebar-steps d-flex flex-column flex-md-row">
+                    {% if object.state > 0 %}
+                        {% for code, state in states %}
+                        {% if code > 0 %}
+                        <div class="statebar-step flex-grow-1 flex-basis-0" data-statebar-type="step" data-state="{% if code < object.state %}done{% elif code == object.state %}current{% endif %}">
+                            <div class="statebar-wrapper pr-lg-7 pr-5">
+                                <div class="statebar-icon">
+                                    <i class="statebar-check ki ki-check"></i>
+                                    <span class="statebar-number">{{ code }}</span>
+                                </div>
+                                <div class="statebar-label mr-3">
+                                    <h3 class="statebar-title">
+                                        {{ state }}
+                                    </h3>
+                                </div>
+                                {% if not forloop.last %}
+                                <span class="svg-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"/>
+                                            <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-270.000000) translate(-12.000003, -11.999999) "/>
+                                        </g>
+                                    </svg>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="statebar-step flex-grow-1 flex-basis-0" data-statebar-type="step" data-state="current">
+                            <div class="statebar-wrapper pr-lg-7 pr-5">
+                                <div class="statebar-icon">
+                                    <i class="statebar-check ki ki-check"></i>
+                                    <span class="statebar-number">x</span>
+                                </div>
+                                <div class="statebar-label mr-3">
+                                    <h3 class="statebar-title">
+                                        Anulado
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% for transition in object.get_transitions %}
+                    {% if transition.cancel_method %}
+                    <button type="submit" form="state-form" data-target="{{ transition.name }}" class="btn btn-light-danger font-weight-bolder ml-2"> <i class="fas fa-times icon-sm"></i> {{ transition.label }}</button>
+                    {% else %}
+                    <button type="submit" form="state-form" data-target="{{ transition.name }}" class="btn btn-light-primary font-weight-bolder"><i class="fas fa-check icon-sm"></i> {{ transition.label }}</button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <!--end::statebar Steps-->
+            </div>
+            <!--end: statebar Nav-->
+        </div>
+    </div>
+    <form id="state-form" action="{% url state_url_name object.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="target">
+        <input type="hidden" name="next" value="{{ request.path }}">
+    </form>
+</div>
+<script>
+    document.getElementById('state-form').addEventListener('submit', event => {
+        let target = event.submitter.dataset.target
+        event.currentTarget.querySelector('[name=target]').value = target
+    })
+</script>

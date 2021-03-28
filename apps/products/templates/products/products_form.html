@@ -1,0 +1,26 @@
+{% extends 'base/base_form.html' %}
+{% load static %}
+{% block title %}
+    {% if created %}
+        Editar Producto || {{ object.name }} || {{ block.super }}
+    {% else %}
+        Crear Producto || {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "product:product_list" %}">Productos</a></li>
+    {% if created %}
+        <li class="breadcrumb-item active">{{ object.name }} (Editando)</li>
+    {% else %}
+        <li class="breadcrumb-item active">Crear</li>
+    {% endif %}
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script>
+      $(document).ready(function () {
+        $('.django-select2').djangoSelect2({theme: "dark-adminlte"});
+      });
+    </script>
+{% endblock %}

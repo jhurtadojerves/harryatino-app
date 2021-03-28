@@ -1,0 +1,50 @@
+<!--begin::Pagination-->
+{% if is_paginated %}
+<div class="d-flex justify-content-center align-items-center flex-wrap">
+    <div id="id_paginator" class="d-flex flex-wrap py-2 mr-3">
+
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{{ search_url }}" data-page="{{ page_obj.previous_page_number }}" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                <i class="ki ki-bold-arrow-back icon-xs"></i>
+            </a>
+            {% if page_obj.number > 4 %}
+            <a href="?page=1{{ search_url }}" data-page="1" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">1</a>
+            {% endif %}
+        {% else %}
+            <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1 disabled">
+                <i class="ki ki-bold-arrow-back icon-xs"></i>
+            </a>
+        {% endif %}
+
+        {% if page_obj.number|add:'-3' > 1 %}
+            <a href="?page={{ page_obj.number|add:'-4' }}{{ search_url }}" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" data-page="{{ page_obj.number|add:'-4' }}">&hellip;</a>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <a href="javascript:void(0);" class="btn btn-icon btn-sm border-0 btn-hover-primary active mr-2 my-1">{{ i }}</a>
+            {% elif i > page_obj.number|add:'-4' and i < page_obj.number|add:'4' %}
+            <a href="?page={{ i }}{{ search_url }}" data-page="{{ i }}" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > page_obj.number|add:'3' %}
+            <a href="?page={{ page_obj.number|add:'4' }}{{ search_url }}" data-page="{{ page_obj.number|add:'4' }}" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">&hellip;</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            {% if page_obj.number|add:'3' < paginator.num_pages %}
+                <a href="?page={{ paginator.num_pages }}{{ search_url }}" data-page="{{ paginator.num_pages }}" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">{{ paginator.num_pages }}</a>
+            {% endif %}
+            <a href="?page={{ page_obj.next_page_number }}{{ search_url }}" data-page="{{ page_obj.next_page_number }}" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1">
+                <i class="ki ki-bold-arrow-next icon-xs"></i>
+            </a>
+        {% else %}
+        <a href="#" class="btn btn-icon btn-sm btn-light-primary disabled mr-2 my-1">
+            <i class="ki ki-bold-arrow-next icon-xs"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+<!--end:: Pagination-->

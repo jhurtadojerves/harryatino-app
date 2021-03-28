@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Viendo el perfil de {{ object.nick }} || {{ block.super }}
+{% endblock %}
+
+{% block page_title %}
+    Perfil de {{ object.nick }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="row" style="justify-content: center;">
+        <div class="col-sm-12 col-md-5">
+            <div class="card p-3 m-2 col">
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-6">
+                        <img
+                            class="card-img img-fluid "
+                            src="{{ object.avatar }}"
+                            alt="Card image"
+                            style="width: 200px; {% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ object.name }}</h4>
+                            <p class="card-text"><strong>ID del Foro: </strong>{{ object.forum_user_id }}</p>
+                            <p class="card-text"><strong>Nivel Mágico: </strong>{{ object.magic_level }}</p>
+                            <p class="card-text"><strong>Rango de Criaturas: </strong>{{ object.range_of_creatures }}
+                            </p>
+                            <p class="card-text"><strong>Rango de Objetos: </strong>{{ object.range_of_objects }}</p>
+                            <p class="card-text"><strong>Bóveda: </strong>{{ object.vault }}</p>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                        <div class="col mt-3">
+                            <a href="editar/"
+                               type="button"
+                               class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-tag"></i> Editar
+                            </a>
+                            <a href="{% url 'sale:sale_list' %}?buyer={{ object.pk }}"
+                               type="button"
+                               class="btn btn-info waves-light waves-effect">
+                                <i class="fas fa-credit-card"></i> Ventas en Tabla
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class="row">
+                {% include "products/components/sections.html" with cols=True not_total=True %}
+            </div>
+        </div>
+        <div class="w-100"></div>
+        {% include 'products/components/products_sale.html' with products=current_page.object_list %}
+        <div class="w-100"></div>
+        {% include "base/components/paginator.html" with page_obj=current_page %}
+    </div>
+
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "profile:profile_list" %}">Magos</a></li>
+    <li class="breadcrumb-item active">{{ object.nick }}</li>
+{% endblock %}

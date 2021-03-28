@@ -1,0 +1,32 @@
+{% extends "base/base_detail.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                {% if request.user.is_authenticated %}
+                    <div class="btn-toolbar p-3" role="toolbar">
+                        <div class="btn-group mr-2 mb-2 mb-sm-0">
+                            <a href="{% url 'page:page_create' %}" type="button" class="btn btn-primary waves-light waves-effect"><i
+                                class="fa fa-tag"></i> Nuevo</a>
+                        </div>
+                        <div class="btn-group mr-2 mb-2 mb-sm-0">
+                            <a href="{% url 'page:page_update' page.slug %}" type="button"
+                               class="btn btn-primary waves-light waves-effect"><i
+                                class="fa fa-inbox"></i> Editar</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <p>{{ page.content|safe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "page:page_list" %}">Páginas</a></li>
+    <li class="breadcrumb-item active">{{ page.name }}</li>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base/base_list.html" %}
+{% load static %}
+{% block title %}
+    Ventas Realizadas || {{ block.super }}
+{% endblock %}
+
+
+{% block list_actions %}
+
+{% endblock %}
+{% block list %}
+    <form action="" id="search_date">
+    </form>
+    <form action="" id="search_form">
+        <div class="row">
+            <div class="form-group col-sm-12 col-md-6">
+                <label for="from_date" class="form-label">Fecha Inicial</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="text" name="from_date" data-inputmask-inputformat="yyyy-mm-dd"
+                           data-inputmask="'alias': 'datetime'" class="form-control input-mask"
+                           id="from_date" im-insert="false" value="{{ from_date }}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-6">
+                <label for="to_date" class="form-label">Fecha Final</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="text" name="to_date" data-inputmask-inputformat="yyyy-mm-dd"
+                           data-inputmask="'alias': 'datetime'" class="form-control input-mask"
+                           id="to_date" im-insert="false" value="{{ to_date }}">
+                </fieldset>
+            </div>
+            {% if page %}
+                <div class="form-group col" style="display: none;">
+                    <input type="text" name="page" value="{{ page }}">
+                </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">Producto</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="text"
+                           name="product"
+                           class="form-control"
+                           id="product"
+                           value="{% if product %}{{ product }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">Número de Comprador</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="number"
+                           name="buyer"
+                           class="form-control"
+                           id="buyer"
+                           value="{% if buyer %}{{ buyer }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">ID del foro</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="number"
+                           name="forum_id"
+                           class="form-control"
+                           id="forum_id"
+                           value="{% if forum_id %}{{ forum_id }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-sm-12 col-md-2 align-self-center">
+                <button data-repeater-delete="" type="submit" class="btn btn-primary btn-block">Buscar</button>
+            </div>
+            <div class="w-100"></div>
+        </div>
+    </form>
+    <table class="datatable">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Comprador</th>
+                <th>Vendedor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in object_list %}
+                <tr>
+                    <td>{{ sale.pk }}</td>
+                    <td>{{ sale.date }}</td>
+                    <td><a
+                        href="{% url 'site:producto_producto_detalle' sale.product.reference %}">{{ sale.product }}</a>
+                    </td>
+                    <td><a
+                        href="{% url 'site:perfiles-de-comprador_mago_detalle' sale.profile.pk %}">{{ sale.profile }}</a>
+                    </td>
+                    <td>{{ sale.created_user }}</td>
+                    <td>
+                        <a href="{% url 'site:venta_venta_detalle' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
+                           title="Ver detalles">
+                            <i class="fas fa-eye icon-md"></i>
+                        </a>
+                        <a href="{% url 'site:venta_venta_editar' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
+                           title="Editar detalles">
+                            <i class="fas fa-pen icon-md"></i>
+                        </a>
+                        <a href="{% url 'site:venta_venta_eliminar' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
+                           title="Eliminar">
+                            <i class="fas fa-trash-alt icon-md"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'assets/js/apps/sales/list_search.js' %}"></script>
+{% endblock %}

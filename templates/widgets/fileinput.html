@@ -1,0 +1,15 @@
+{% load superadmin_forms %}
+
+<div class="input-group">
+    <div class="custom-file">
+        {{ field }}
+        <label class="custom-file-label" for="{{ field.id_for_label }}">{{ file_name|default:"Seleccionar archivo" }}</label>
+    </div>
+    {% if file_url %}
+    <div class="input-group-append">
+        <a href="{{ file_url }}" target="_blank" class="input-group-text">
+            <i class="fas fa-arrow-down"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>

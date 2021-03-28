@@ -1,0 +1,25 @@
+{% for section in sections %}
+    <div class="col-sm-12 {% if cols %}col-md-6 mb-2 {% else %}col-md-3{% endif %}" {% if not cols %}
+         style="flex:1;"{% endif %}>
+        <div class="card" style="height:100%;">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-2"><a href="?section={{ section.name }}{{ name }}">{{ section.name }}</a>
+                        </p>
+                        {% if not not_total %}
+                            <h4 class="mb-0">{{ section.number_of_products }}</h4>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            {% for category in section.categories.all %}
+                                <a href="?category={{ category.name }}{{ name }}">{{ category.name }}</a><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

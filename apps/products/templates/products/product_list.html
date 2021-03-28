@@ -1,0 +1,35 @@
+{% extends 'base/base_list.html' %}
+{% load static %}
+
+
+{% block list %}
+    <div class="row mb-3">
+        {% include "products/components/sections.html" %}
+    </div>
+    {% include 'products/components/products.html' %}
+{% endblock %}
+
+{% block empty_list %}
+    <div class="d-flex mt-2 mb-7">
+        <div class="table-search flex-grow-1 p-1">
+            <form action="" id="search_form">
+                <input id="name" type="search" class="form-control form-control"
+                       placeholder="Buscar" name="name" value="{{ name_value }}">
+                {% if search_name %}
+                    <input id="{{ search_name }}" style="display: none;" type="text" class="form-control form-control"
+                           placeholder="Buscar" name="{{ search_name }}" value="{{ search_value }}">
+                {% endif %}
+            </form>
+
+        </div>
+    </div>
+    <div class="row mb-3">
+        {% include "products/components/sections.html" %}
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'assets/js/search_product_by_name.js' %}"></script>
+    {{ block.super }}
+{% endblock %}

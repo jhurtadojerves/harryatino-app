@@ -1,0 +1,54 @@
+{% extends "base/base_list.html" %}
+{% load static %}
+
+{% block list_actions %}
+    <form action="" id="search_form">
+        <div class="row">
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">Nick</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="text"
+                           name="nick"
+                           class="form-control"
+                           id="nick"
+                           value="{% if nick %}{{ nick }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">Número de Comprador</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="number"
+                           name="buyer"
+                           class="form-control"
+                           id="buyer"
+                           value="{% if buyer %}{{ buyer }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-4">
+                <label for="from_date" class="form-label">ID del foro</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="number"
+                           name="forum_id"
+                           class="form-control"
+                           id="forum_id"
+                           value="{% if forum_id %}{{ forum_id }}{% endif %}">
+                </fieldset>
+            </div>
+            <div class="form-group col-sm-12 col-md-4" style="display: none;">
+                <label for="from_date" class="form-label">ID del foro</label>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="text"
+                           name="page"
+                           class="form-control"
+                           id="page"
+                           value="{% if page %}{{ page }}{% endif %}">
+                </fieldset>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'assets/js/apps/profiles/list_search.js' %}"></script>
+{% endblock %}

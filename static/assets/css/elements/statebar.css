@@ -1,0 +1,122 @@
+.statebar .statebar-content .statebar-nav {
+  padding: 0; 
+}
+.statebar.no-gutters {
+  margin: -2rem -2.25rem 2rem -2.25rem;
+  border-bottom: 1px solid #EBEDF3;
+}
+.statebar .statebar-content .statebar-nav .statebar-steps {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; 
+}
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step {
+  padding: 0.75rem 0;
+  -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+}
+
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; 
+}
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+  min-width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background-color: #F3F6F9;
+  margin-right: 1rem; 
+}
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-icon .statebar-check {
+  display: none;
+  font-size: 1.4rem; 
+}
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-icon .statebar-number {
+  font-weight: 600;
+  color: #3F4254;
+  font-size: 1.35rem; 
+}
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; 
+}
+
+.statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-label .statebar-title {
+  color: #181C32;
+  font-weight: 600;
+  font-size: 1.24rem; 
+  margin: 0;
+}
+  
+      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] {
+        -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease; }
+        .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] .statebar-icon {
+          -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+          background-color: #C9F7F5; }
+          .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] .statebar-icon .statebar-check {
+            color: #1BC5BD;
+            display: none; }
+          .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] .statebar-icon .statebar-number {
+            color: #1BC5BD; }
+        .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] .statebar-label .statebar-title {
+          color: #181C32; }
+        
+      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-icon, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-icon {
+        -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+        background-color: #C9F7F5; }
+        .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-icon .statebar-check, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-icon .statebar-check {
+          color: #1BC5BD;
+          display: inline-block; }
+        .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-icon .statebar-number, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-icon .statebar-number {
+          display: none; }
+      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-label .statebar-title, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-label .statebar-title {
+        color: #B5B5C3; }
+
+
+@media (max-width: 767.98px) {
+  .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step {
+    width: 100%; 
+  }
+  .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step .statebar-wrapper .svg-icon {
+    display: none; 
+  } 
+}

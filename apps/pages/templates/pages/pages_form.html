@@ -1,0 +1,23 @@
+{% extends 'base/base_form.html' %}
+{% load static %}
+{% block title %}
+    {% if created %}
+        Editar Página || {{ object.name }} || {{ block.super }}
+        {% else %}
+        Crear Página || {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "page:page_list" %}">Páginas</a></li>
+    {% if created %}
+        <li class="breadcrumb-item active">{{ object.name }} (Editando)</li>
+    {% else %}
+        <li class="breadcrumb-item active">Crear</li>
+    {% endif %}
+{% endblock %}

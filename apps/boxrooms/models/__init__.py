@@ -1,0 +1,1 @@
+from .boxrooms import Boxroom

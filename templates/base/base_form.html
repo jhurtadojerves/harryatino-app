@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+
+{% load static superadmin_forms %}
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'assets/css/forms/validation.css' %}" rel="stylesheet"/>
+    <!--<link href="{% static 'assets/css/forms/validation.css' %}" rel="stylesheet" />-->
+{% endblock %}
+
+
+{% block content %}
+    <div class="card card-custom card-sticky" id="kt_page_sticky_card">
+        <div class="card-header">
+            <div class="card-title">
+            <span class="card-icon">
+                <span class="svg-icon svg-icon-md svg-icon-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                         height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <rect fill="#000000" x="4" y="5" width="16" height="3" rx="1.5"/>
+                            <path
+                                d="M5.5,15 L18.5,15 C19.3284271,15 20,15.6715729 20,16.5 C20,17.3284271 19.3284271,18 18.5,18 L5.5,18 C4.67157288,18 4,17.3284271 4,16.5 C4,15.6715729 4.67157288,15 5.5,15 Z M5.5,10 L12.5,10 C13.3284271,10 14,10.6715729 14,11.5 C14,12.3284271 13.3284271,13 12.5,13 L5.5,13 C4.67157288,13 4,12.3284271 4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z"
+                                fill="#000000" opacity="0.3"/>
+                        </g>
+                    </svg>
+                </span>
+            </span>
+                <h3 class="card-label">
+                    {{ site.title|capfirst }} <i class="mr-2"></i>
+                </h3>
+            </div>
+            <div class="card-toolbar">
+                {% if not object %}
+                    <a href="{{ site.urls.list }}" class="btn btn-light-primary font-weight-bolder mr-2">
+                        <i class="fas fa-arrow-left icon-sm"></i>Atrás
+                    </a>
+                {% else %}
+                    <a href="{{ site.urls.detail }}" class="btn btn-light-primary font-weight-bolder mr-2">
+                        <i class="fas fa-arrow-left icon-sm"></i>Atrás
+                    </a>
+                    <a href="{{ site.urls.delete }}" class="btn btn-light-danger font-weight-bolder mr-2">
+                        <i class="fas fa-times icon-sm"></i>Eliminar
+                    </a>
+                {% endif %}
+                <div class="btn-group">
+                    <button type="submit" form="main-form" class="btn btn-primary font-weight-bolder">
+                        <i class="fas fa-check icon-sm"></i>Guardar
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                        <ul class="nav nav-hover flex-column">
+                            {% block save_options %}
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-redo icon-lg mr-3"></i>
+                                        <span class="nav-text">Guardar & continuar</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-plus icon-lg mr-3"></i>
+                                        <span class="nav-text">Guadar & crear nuevo</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-sign-out-alt icon-lg mr-3"></i>
+                                        <span class="nav-text">Guardar & salir</span>
+                                    </a>
+                                </li>
+                            {% endblock %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if states %}
+                {% include "components/statebar.html" with change_state_url=url_name %}
+            {% endif %}
+            <form id="main-form" data-errors="{{ form.errors.as_json }}" action="" method="POST"
+                  enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% block form %}
+                    {% include 'forms/form.html' with form=form %}
+                {% endblock %}
+
+                {% block extra_forms %}{% endblock %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modals %}
+    <div class="insoles-forms">
+        <div class="modal fade text-left" id="insoles-forms" tabindex="3" role="dialog" aria-labelledby="modalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalLabel">Crear nuevo </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                    <form id="insoles-form" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Cancelar</span>
+                            </button>
+                            <button type="submit" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Crear</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendors/formset/jquery.formset.js' %}"></script>
+    <script src="{% static 'vendors/formset/formsets.init.js' %}"></script>
+    <script src="{% static 'assets/js/apps/insoles.js' %}"></script>
+    <script src="{% static 'assets/js/apps/indexing.js' %}"></script>
+    <!--<script src="{% static 'assets/js/forms/validation.js' %}"></script>-->
+
+    <!--<script src="{% static 'assets/js/required_fields.js' %}"></script>-->
+{% endblock %}

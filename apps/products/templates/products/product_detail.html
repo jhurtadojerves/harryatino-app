@@ -1,0 +1,90 @@
+{% extends "base/base_detail.html" %}
+{% load static %}
+
+
+{% block title %}
+    {{ object.name }} || {{ block.super }}
+{% endblock %}
+
+{% block page_title %}
+    {{ object.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="row" style="justify-content: center;">
+        <div class="col-sm-12 col-md-6">
+            <div class="card p-3 m-2 col">
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-6">
+                        <img
+                            class="card-img img-fluid"
+                            src="{{ object.image }}"
+                            alt="Card image"
+                            style="width: 240px; {% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ object.name }}</h4>
+                            <p class="card-text"><strong>Sección: </strong>{{ object.category.section }}</p>
+                            <p class="card-text"><strong>Categoría: </strong>{{ object.category.show_name }}</p>
+                            <p class="card-text"><strong>Puntos: </strong>{{ object.points }}</p>
+                            <p class="card-text"><strong>Precio: </strong>{{ object.cost }}</p>
+                            <p class="card-text"><strong>Referencia: </strong>{{ object.reference }}</p>
+                            <p class="card-text"><strong>Stock Inicial: </strong>{{ object.initial_stock }}</p>
+                            <p class="card-text"><strong>Ventas: </strong>{{ object.number_of_sales }}</p>
+                            <p class="card-text"><strong>Stock Final: </strong>{{ object.check_stock }}</p>
+                            {% if object.category.name == "LH" %}
+                                <p class="card-text"><strong>Nivel del Libro: </strong>{{ object.level_book }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                        <div class="w-100">
+                            <a href="{% url 'site:producto_producto_editar' object.reference %}"
+                               type="button"
+                               class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-tag"></i> Editar
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
+                <div class="card-body">
+                    <p class="card-text text-justify">{{ object.description|safe }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="card p3 m-2 col">
+                <div class="card-body table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Perfil</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in current_page.object_list %}
+                                <tr>
+                                    <td>{{ sale.date }}</td>
+                                    <td><a href="{{ sale.profile.detail_url }}">{{ sale.profile }}</a></td>
+                                    <td>--</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% include "base/paginator.html" with page_obj=current_page %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+

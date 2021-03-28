@@ -1,0 +1,42 @@
+{% extends 'base/base_form.html' %}
+{% load hydra %}
+{% load static %}
+{% block css %}
+    {{ formset.media.css }}
+{% endblock %}
+{% block extra_forms %}
+    {% include 'base/formset.html' with formset=formset %}
+{% endblock %}
+{% block js %}
+    <script src="{% static 'libs/formset/jquery.formset.js' %}"></script>
+    <script src="{% static 'libs/formset/formset.js' %}"></script>
+    <script>
+      let order_function = () => {
+        let formsets = [...document.getElementsByClassName("checkbox")]
+        formsets.map(single => {
+          single.parentElement.parentElement.style.display = "none"
+          single.parentElement.parentElement.nextElementSibling.style = "margin-top: auto; margin-bottom: auto;"
+        })
+        document.querySelector("a.btn:nth-child(1)").style.marginBottom = "50px"
+      }
+      let fs = function () {
+        $('.django-select2').djangoSelect2({
+          dropdownAutoWidth: true,
+          width: '100%', theme: "dark-adminlte"
+        });
+        order_function()
+      }
+      renderFormset("{{ formset.prefix }}", "Añadir", additionalFunction = fs)
+    </script>
+    {{ formset.media.js }}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          $(".django-select2").select2("destroy");
+          fs()
+        }, 100);
+      });
+    </script>
+
+{% endblock %}
