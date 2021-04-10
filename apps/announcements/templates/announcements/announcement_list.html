@@ -1,0 +1,40 @@
+{% extends "base/base_list.html" %}
+{% load static %}
+{% block search %}
+
+{% endblock %}
+
+{% block list %}
+    <div class="row">
+        <div class="col-lg-4 col-md-12">
+            <div class="list-group">
+                {% for announcement in object_list %}
+                    <a href="{% url 'site:anuncio_anuncio_detalle' announcement.pk %}" class="list-group-item list-group-item-action">{{ announcement }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-12">
+            <div class="card">
+                {% if request.user.is_authenticated %}
+                    <div class="btn-toolbar p-3" role="toolbar">
+                        <div class="btn-group mr-2 mb-2 mb-sm-0">
+                            <a href="{% url 'site:anuncio_anuncio_editar' last.pk %}" type="button"
+                               class="btn btn-primary waves-light waves-effect"><i
+                                class="fa fa-inbox"></i> Editar</a>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="mt-0 font-size-16">Último anuncio creado</h4>
+                    <p>{{ last.content|safe }}</p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Anuncios</li>
+{% endblock %}

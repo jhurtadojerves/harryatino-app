@@ -42,13 +42,13 @@ class Sale(BaseModel):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        if self.pk is None and self.product.check_stock() == 0:
+        if not self.pk is None and self.product.check_stock() == 0:
             raise ValidationError(
                 for_humans(
                     f"No se puede vender {self.product.name} ya que su stock actual es 0"
                 )
             )
-        else:
+        elif self.pk:
             sale = Sale.objects.get(pk=self.pk)
             if sale.product.pk != self.product.pk and self.product.check_stock() == 0:
                 raise ValidationError(
@@ -56,12 +56,6 @@ class Sale(BaseModel):
                         f"No se puede vender {self.product.name} ya que su stock actual es 0"
                     )
                 )
-
-    def update_url(self):
-        return reverse("sale:sale_update", args=(self.id,))
-
-    def detail_url(self):
-        return reverse("sale:sale_detail", args=(self.id,))
 
     class Meta(BaseModel.Meta):
         """Class Meta"""

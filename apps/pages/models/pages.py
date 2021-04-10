@@ -1,11 +1,8 @@
 """Model to Sales"""
 # Django
 from django.db import models
-from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as for_humans
-from django.utils.text import slugify
-from django.db.models.signals import post_save
 
 
 # Models
@@ -21,9 +18,13 @@ from ckeditor.fields import RichTextField
 class Page(BaseModel):
     """Sale model."""
 
-    name = models.CharField(max_length=128, unique=True)
-    content = RichTextField()
-    show_in_home_page = models.BooleanField(default=False)
+    name = models.CharField(
+        max_length=128, unique=True, verbose_name="Nombre de la página"
+    )
+    content = RichTextField(verbose_name="Contenido")
+    show_in_home_page = models.BooleanField(
+        default=False, verbose_name="Ver en la página de inicio"
+    )
     slug = models.SlugField(max_length=256, editable=False)
 
     def __str__(self):

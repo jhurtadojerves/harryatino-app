@@ -12,7 +12,7 @@ from apps.profiles.models import Profile
 from config.mixins.permissions import NotPermissionRequiredMixin
 
 # Mixins
-from .mixins import ProfileListMixin
+from .mixins import ProfileListMixin, ProfileDetailMixin
 
 
 @register("profiles.Profile")
@@ -20,7 +20,7 @@ class ProfileSite(BaseSite):
     """Site for Profiles"""
 
     list_mixins = (NotPermissionRequiredMixin, ProfileListMixin)
-    detail_mixins = (NotPermissionRequiredMixin,)
+    detail_mixins = (NotPermissionRequiredMixin, ProfileDetailMixin)
     list_fields = (
         "pk:numero_de_comprador",
         "forum_user_id",
@@ -31,3 +31,5 @@ class ProfileSite(BaseSite):
     )
     search_fields = ("nick",)
     list_template_name = None
+    detail_template_name = None
+    menu_is_public = True

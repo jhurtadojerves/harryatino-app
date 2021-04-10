@@ -1,0 +1,7 @@
+{% extends 'base/base_form.html' %}
+{% load static %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+{% endblock %}

@@ -62,15 +62,17 @@ THIRD_PARTY_APPS = [
     "ckeditor",
     "tracing",
     "django_select2",
+    "mathfilters",
 ]
 
 LOCAL_APPS = [
+    "apps.announcements",
     "apps.authentication",
-    "apps.pages",
+    "apps.boxrooms",
     "apps.menu",
+    "apps.pages",
     "apps.products",
     "apps.profiles",
-    "apps.boxrooms",
     "apps.sales",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -188,9 +190,10 @@ TEMPLATE_WIDGETS = {
     "ckeditoruploading": "widgets/textinput.html",
     "ckeditor_upload": "widgets/textinput.html",
     "textarea": "widgets/textinput.html",
-    "ckeditor": "widgets/textinput.html",
+    "ckeditor": "widgets/textarea.html",
     "checkboxselectmultiple": "widgets/textinput.html",
     "time": "widgets/textinput.html",
     "modelselect2tag": "widgets/textinput.html",
     "url": "widgets/textinput.html",
 }
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

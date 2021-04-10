@@ -2,19 +2,20 @@
 
 # Django
 from django import forms
+from django.forms import inlineformset_factory
 
 # Third party integration
 from django_select2.forms import (
     ModelSelect2Widget,
-    Select2Widget,
+    ModelSelect2MultipleWidget,
 )
 from superadmin.forms import ModelForm
 
 # Local
-from apps.products.models import Product, Section
+from apps.products.models import Product, Section, StockRequest, StockProduct
 
 
-class SorterSettingsForm(ModelForm):
+class ProductForm(ModelForm):
     section = forms.ModelChoiceField(
         label="Sección",
         queryset=Section.objects.all(),
@@ -48,3 +49,35 @@ class SorterSettingsForm(ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.id:
             self.fields["section"].initial = self.instance.category.section.pk
+
+
+class StockRequestForm(ModelForm):
+    class Meta:
+        model = StockRequest
+        fieldsets = (
+            "name",
+            "forum_url",
+        )
+
+
+StockFormset = inlineformset_factory(
+    StockRequest,
+    StockProduct,
+    fields=("product", "requested_amount"),
+    extra=0,
+    min_num=1,
+    validate_min=1,
+    can_delete=True,
+    widgets={
+        "product": ModelSelect2Widget(
+            model=Product,
+            search_fields=["name__icontains",],
+            max_results=10,
+            attrs={
+                "class": "form-control form-control-sm",
+                "data-placeholder": "Buscar Producto",
+                "data-minimum-input-length": 2,
+            },
+        )
+    },
+)

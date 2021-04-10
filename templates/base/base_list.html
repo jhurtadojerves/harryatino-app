@@ -36,17 +36,19 @@
                 {% block list_actions %}
                 <!--begin::Search Form-->
                     <div class="d-flex mt-2 mb-7">
-                        <div class="table-search flex-grow-1 p-1">
-                            <form action="" id="search_form">
-                                <input id="name" type="search" class="form-control form-control"
-                                       placeholder="Buscar" name="name" value="{{ name_value }}">
-                                {% if search_name %}
-                                    <input id="{{ search_name }}" style="display: none;" type="text"
-                                           class="form-control form-control"
-                                           placeholder="Buscar" name="{{ search_name }}" value="{{ search_value }}">
-                                {% endif %}
-                            </form>
-                        </div>
+                        {% block search %}
+                            <div class="table-search flex-grow-1 p-1">
+                                <form action="" id="search_form">
+                                    <input id="name" type="search" class="form-control form-control"
+                                           placeholder="Buscar" name="name" value="{{ name_value }}">
+                                    {% if search_name %}
+                                        <input id="{{ search_name }}" style="display: none;" type="text"
+                                               class="form-control form-control"
+                                               placeholder="Buscar" name="{{ search_name }}" value="{{ search_value }}">
+                                    {% endif %}
+                                </form>
+                            </div>
+                        {% endblock %}
                     </div>
                 <!--end: Search Form-->
                 {% endblock %}

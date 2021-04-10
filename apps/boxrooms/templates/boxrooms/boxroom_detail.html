@@ -1,10 +1,9 @@
 {% extends 'base/base_detail.html' %}
 
 {% block content %}
-    <div class="col">
+    <div class="col" style="color: #3F4254 !important;">
         <div class="card">
             <div class="card-body">
-
                 <h4 class="card-title"></h4>
                 <p class="card-title-desc">
                     {{ object.content|safe }}
@@ -45,7 +44,7 @@
                 </ul>
 
                 <!-- Tab panes -->
-                <div class="tab-content p-3 text-muted">
+                <div class="tab-content p-3">
                     <div class="tab-pane active" id="indice" role="tabpanel">
                         <h3 class="text-center"><strong>ÍNDICE DE BIENES</strong></h3>
                         <hr>
@@ -67,28 +66,35 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="objetos" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE OBJETOS</strong></h3>
+                        <hr>
                         <div class="row mb-0">
                             {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_objects_list %}
                         </div>
                     </div>
                     <div class="tab-pane" id="pociones" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE POCIONES</strong></h3>
+                        <hr>
                         <div class="row mb-0">
                             {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_potions_list %}
                         </div>
                     </div>
                     <div class="tab-pane" id="criaturas" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE CRIATURAS</strong></h3>
+                        <hr>
                         <div class="row mb-0">
                             {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_creatures_index %}
                         </div>
                     </div>
                     <div class="tab-pane" id="books" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE LIBROS DE HECHIZOS</strong></h3>
+                        <hr>
                         <div class="row mb-0">
                             {% include "boxrooms/components/books_detail.html" with products_list=object.get_books_index %}
                         </div>
                     </div>
 
                 </div>
-
             </div>
         </div>
     </div>

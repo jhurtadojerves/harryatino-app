@@ -1,9 +1,11 @@
 """Mixin for products"""
 
 # Django
-from django.utils.text import slugify
-from django.shortcuts import redirect, reverse
+from django.contrib import messages
 from django.db.models import Q
+from django.shortcuts import redirect, reverse
+from django.utils.text import slugify
+
 
 # Local
 from apps.products.models import Category, Section
@@ -131,3 +133,69 @@ class ProductDetailMixin:
 
 class ProductEditMixin:
     slug_field = "reference"
+
+
+class StockRequestDetail:
+    """Stock request Detail View"""
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        status = request.GET.get("status", False)
+
+        if not request.user.is_staff:
+            messages.add_message(
+                request, messages.ERROR, "No tienes permisos para realizar esta acción"
+            )
+        elif not self.object.status_request == 0 and status:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                f"No se puede realizara acciones sobre solicitudes con estado {self.object.get_status_request_display()}",
+            )
+        elif status == "approve":
+            products = self.object.product_requests.all()
+            for product in products:
+                product.product.initial_stock += product.requested_amount
+                product.product.save()
+                self.object.status_request = 1
+                self.object.save()
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "El stock de los productos fue actualizado",
+                )
+        elif status == "deny":
+            self.object.status_request = 2
+            self.object.save()
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Solicitud rechazada, no se modificó el stock",
+            )
+
+        return super().get(request, *args, **kwargs)
+
+
+class StockRequestFormMixin:
+    """Stock request form view"""
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object_or_none()
+        if self.object and not self.object.status_request == 0:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                f"No se puede editar solicitudes solicitudes con estado {self.object.get_status_request_display()}",
+            )
+            return redirect(
+                reverse(
+                    "site:producto_solicitud-de-stock_detalle", args=[self.object.pk]
+                )
+            )
+        return super().get(request, *args, **kwargs)
+
+    def get_object_or_none(self):
+        try:
+            return self.get_object()
+        except:
+            return None

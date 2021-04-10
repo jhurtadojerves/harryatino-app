@@ -71,3 +71,7 @@ class SaleListMixin:
             search_params.update({"profile__pk": buyer})
 
         return product, forum_id, buyer, from_date, to_date, page, search_params
+
+
+class SaleDetailMixin:
+    context_object_name = "sale"

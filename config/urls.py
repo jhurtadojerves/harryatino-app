@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 from django.contrib.auth.decorators import login_required
+from apps.pages.views import HomePage
 
 import superadmin
 
@@ -28,7 +29,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", superadmin.site.urls),
     path("", include("apps.authentication.urls"),),
-    path("", TemplateView.as_view(template_name="base/base.html")),
+    path("", HomePage.as_view()),
     # Api v1
     path("select2/", include("django_select2.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,72 @@
+{% extends "base/base_detail.html" %}
+{% load static %}
+
+{% block detail %}
+    <div class="row" style="justify-content: center;">
+        <div class="col-sm-12 col-md-6">
+            <div class="card p-3 m-2 col">
+                <div class="row no-gutters align-items-center">
+                    <div class="col-md-6">
+                        <img
+                            class="card-img img-fluid"
+                            src="{{ sale.product.image }}"
+                            alt="Card image"
+                            style="width: 240px; {% if sale.product.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ sale.product.name }}</h4>
+                            <p class="card-text"><strong>Sección: </strong>{{ sale.product.category.section }}</p>
+                            <p class="card-text"><strong>Categoría: </strong>{{ sale.product.category.show_name }}</p>
+                            <p class="card-text"><strong>Puntos: </strong>{{ sale.product.points }}</p>
+                            <p class="card-text"><strong>Precio: </strong>{{ sale.product.cost }}</p>
+                            <p class="card-text"><strong>Referencia: </strong>{{ sale.product.reference }}</p>
+                            <p class="card-text"><strong>Stock Inicial: </strong>{{ sale.product.initial_stock }}</p>
+                            <p class="card-text"><strong>Ventas: </strong>{{ sale.product.number_of_sales }}</p>
+                            <p class="card-text"><strong>Stock Final: </strong>{{ sale.product.check_stock }}</p>
+                            {% if sale.object.category.name == "LH" %}
+                                <p class="card-text"><strong>Nivel del Libro: </strong>{{ sale.object.level_book }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
+                <div class="card-body">
+                    <p class="card-text text-justify">{{ sale.product.description|safe }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="card p3 m-2 col">
+                <div class="card-body table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Comprador</th>
+                                <th>Vendedor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ sale.date }}</td>
+                                <td>{{ sale.profile }}</td>
+                                <td>{{ sale.created_user }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url "product:product_list" %}">Productos</a></li>
+    <li class="breadcrumb-item active">{{ sale.object.name }}</li>
+{% endblock %}

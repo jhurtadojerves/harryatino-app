@@ -22,7 +22,7 @@ class UserSite(BaseSite):
         ("username", "get_full_name:nombre completo",),
         ("email", "old_number"),
     )
-    list_fields = ("get_full_name:nombre completo", "email")
+    list_fields = ("username:usuario", "email")
     allow_views = ("update", "list", "detail")
     form_template_name = None
 

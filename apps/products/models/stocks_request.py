@@ -28,15 +28,6 @@ class StockRequest(BaseModel):
     def __str__(self):
         return self.name
 
-    def update_url(self):
-        return reverse("product:stock_update", args=(self.pk,))
-
-    def detail_url(self):
-        return reverse("product:stock_detail", args=(self.pk,))
-
-    def create_url(self):
-        return reverse("product:stock_create")
-
     class Meta(BaseModel.Meta):
         verbose_name = "Solicitud de Stock"
         verbose_name_plural = "Solicitudes de Stock"
@@ -54,4 +45,6 @@ class StockProduct(models.Model):
     product = models.ForeignKey(
         "products.Product", on_delete=models.CASCADE, verbose_name="Producto"
     )
-    requested_amount = models.PositiveIntegerField(blank=False, null=False)
+    requested_amount = models.PositiveIntegerField(
+        blank=False, null=False, verbose_name="Cantidad a Aumentar"
+    )

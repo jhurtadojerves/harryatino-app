@@ -1,23 +1,22 @@
 """Script to import sales"""
 
-# Python
-import csv
-from datetime import datetime
-
-# Models
-from apps.sales.models import Sale
-from apps.profiles.models import Profile
-from apps.products.models import Product
-from apps.authentication.models import User
-
-# Django
-from django.conf import settings
-from django.db.models.signals import post_save
-
-SCRIPTS_DIR = settings.BASE_DIR / "scripts"
-
 
 def run():
+    # Python
+    import csv
+    from datetime import datetime
+
+    # Models
+    from apps.sales.models import Sale
+    from apps.profiles.models import Profile
+    from apps.products.models import Product
+    from apps.authentication.models import User
+
+    # Django
+    from django.conf import settings
+    from django.db.models.signals import post_save
+
+    SCRIPTS_DIR = settings.BASE_DIR / "scripts"
     path = SCRIPTS_DIR / "transacciones.csv"
     with open(path) as read_file:
         csv_reader = csv.reader(read_file, delimiter=",")
@@ -29,9 +28,14 @@ def run():
                 date = datetime(int(raw_date[0]), int(raw_date[1]), int(raw_date[2]))
                 product = Product.objects.get(reference=row[2])
                 profile = Profile.objects.get(forum_user_id=row[3])
-                # user = User.objects.get(old_number=row[4])
-                user = User.objects.get(pk=1)
+                if User.objects.filter(pk=row[4]).exists():
+                    user = User.objects.get(pk=row[4])
+                else:
+                    user = User.objects.first()
+                pk = int(row[0])
+                # user = User.objects.get(pk=1)
                 data = {
+                    "pk": pk,
                     "date": date,
                     "product": product,
                     "profile": profile,
@@ -40,3 +44,7 @@ def run():
                 Sale.objects.create(**data)
             except Exception as e:
                 print(e)
+                print(f"{row[4]}: {row[0]}")
+
+
+run()

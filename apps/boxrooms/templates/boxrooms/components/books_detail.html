@@ -3,7 +3,7 @@
 {% for sale in products_list %}
     <div class="col-12 mb-4">
         Nombre del Producto: {{ sale.product.name }}<br>
-        Descripción: <a href="{% url 'product:product_detail' sale.product.slug %}" target="_blank">Tarjeta</a> <br>
+        Descripción: <a href="{% url 'site:producto_producto_detalle' sale.product.slug %}" target="_blank">Tarjeta</a> <br>
         Nivel: {{ sale.product.level_book }} <br>
         Precio pagado: {{ sale.product.cost }} G<br>
         Puntos obtenidos: {{ sale.product.points }} <br>
