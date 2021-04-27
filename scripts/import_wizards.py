@@ -64,4 +64,4 @@ def create_users():
 
 
 create_users()
-# create_wizards()
+create_wizards()
