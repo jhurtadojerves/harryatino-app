@@ -25,8 +25,8 @@ class Sale(BaseModel):
         related_name="sales",
     )
     available = models.BooleanField(
-        default=False,
-        verbose_name="Estado",
+        default=True,
+        verbose_name="Disponible?",
         help_text="Este campo se utiliza para marcar una compra de libros de hechizos o consumibles"
         "Spell books. True = Can Use"
         "Consumables. True = Consumable Used"
