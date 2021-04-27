@@ -1,3 +1,4 @@
+'''
 # Third party integration
 from superadmin.decorators import register
 
@@ -42,3 +43,4 @@ class FormSite(BaseSite):
     form_template_name = None
     list_fields = ("code", "name", "description")
     detail_fields = ("code", "name", "description")
+'''
