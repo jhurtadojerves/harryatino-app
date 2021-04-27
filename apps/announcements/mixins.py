@@ -20,6 +20,7 @@ class AnnouncementListMixin:
                     args=(self.model.objects.first().pk,),
                 )
             )
+        return super(AnnouncementListMixin, self).get(request, *args, **kwargs)
 
 
 class AnnouncementDetailMixin:
