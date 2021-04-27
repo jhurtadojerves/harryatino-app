@@ -47,8 +47,7 @@ class CategorySite(BaseSite):
 
 @register("products.StockRequest")
 class StockRequestSite(BaseSite):
-    list_mixins = (NotPermissionRequiredMixin,)
-    detail_mixins = (NotPermissionRequiredMixin, StockRequestDetail)
+    detail_mixins = (StockRequestDetail,)
     form_mixins = (StockRequestFormMixin,)
     form_class = StockRequestForm
     inlines = {"lines": StockFormset}

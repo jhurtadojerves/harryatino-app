@@ -142,7 +142,7 @@ class StockRequestDetail:
         self.object = self.get_object()
         status = request.GET.get("status", False)
 
-        if not request.user.is_staff:
+        if status and not request.user.is_staff:
             messages.add_message(
                 request, messages.ERROR, "No tienes permisos para realizar esta acción"
             )
@@ -152,7 +152,7 @@ class StockRequestDetail:
                 messages.ERROR,
                 f"No se puede realizara acciones sobre solicitudes con estado {self.object.get_status_request_display()}",
             )
-        elif status == "approve":
+        elif status and status == "approve":
             products = self.object.product_requests.all()
             for product in products:
                 product.product.initial_stock += product.requested_amount
@@ -164,7 +164,7 @@ class StockRequestDetail:
                     messages.SUCCESS,
                     "El stock de los productos fue actualizado",
                 )
-        elif status == "deny":
+        elif status and status == "deny":
             self.object.status_request = 2
             self.object.save()
             messages.add_message(
