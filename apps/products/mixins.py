@@ -142,7 +142,7 @@ class StockRequestDetail:
         self.object = self.get_object()
         status = request.GET.get("status", False)
 
-        if status and not request.user.is_staff:
+        if status and not request.user.has_perm("products.can_approve"):
             messages.add_message(
                 request, messages.ERROR, "No tienes permisos para realizar esta acción"
             )

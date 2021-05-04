@@ -31,6 +31,7 @@ class StockRequest(BaseModel):
     class Meta(BaseModel.Meta):
         verbose_name = "Solicitud de Stock"
         verbose_name_plural = "Solicitudes de Stock"
+        permissions = (("can_approve", "Can approve requests"),)
 
 
 class StockProduct(models.Model):

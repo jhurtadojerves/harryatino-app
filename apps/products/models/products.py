@@ -31,6 +31,13 @@ class Product(BaseModel):
     def check_stock(self):
         return self.initial_stock - self.sales.all().count()
 
+    def fix_stock(self):
+        stock = self.check_stock()
+        if stock < 0:
+            stock = stock * -1
+            self.initial_stock += stock
+            self.save()
+
     def number_of_sales(self):
         return self.sales.count()
 
