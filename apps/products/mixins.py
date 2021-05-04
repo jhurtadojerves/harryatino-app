@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import redirect, reverse
 from django.utils.text import slugify
+from django.core.paginator import Paginator
 
 
 # Local
@@ -129,6 +130,24 @@ class ProductDetailMixin:
                 permanent=True,
             )
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        page = self.request.GET.get("page", 1)
+        context = super().get_context_data()
+        self.object = self.get_object()
+        sales = self.object.sales.all()
+        paginator = Paginator(sales, per_page=15)
+        if int(page) > paginator.num_pages:
+            page = paginator.num_pages
+        selected_page = paginator.page(page)
+        context.update(
+            {
+                "current_page": selected_page,
+                "all_pages": paginator,
+                "is_paginated": True,
+            }
+        )
+        return context
 
 
 class ProductEditMixin:

@@ -1,5 +1,5 @@
 {% extends "base/base_detail.html" %}
-{% load static %}
+{% load static get_site_url %}
 
 
 {% block title %}
@@ -73,8 +73,8 @@
                             {% for sale in current_page.object_list %}
                                 <tr>
                                     <td>{{ sale.date }}</td>
-                                    <td><a href="{{ sale.profile.detail_url }}">{{ sale.profile }}</a></td>
-                                    <td>--</td>
+                                    <td><a href="{% get_site_url sale.profile 'detail' %}">{{ sale.profile }}</a></td>
+                                    <td><a href="{% get_site_url sale 'detail' %}">Ver venta</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
