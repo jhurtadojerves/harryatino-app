@@ -12,15 +12,15 @@
                     <p class="card-text text-justify">
                         Solicitud:
                         <a
-                            href="{{ object.forum_url }}"
-                            target="_blank"
+                                href="{{ object.forum_url }}"
+                                target="_blank"
                         > Ver en el foro </a>
                     </p>
                     <p class="card-text text-justify">Solicitado por: {{ object.created_user }} a
-                                                      las {{ object.created_date }}</p>
+                        las {{ object.created_date }}</p>
                     <p class="card-text text-justify">Última edición por: {{ object.modified_user }} a
-                                                      las {{ object.modified_date }}</p>
-                    {% if user.is_staff and object.status_request == 0 %}
+                        las {{ object.modified_date }}</p>
+                    {% if perms.products.can_approve and object.status_request == 0 %}
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <strong><i class="mdi mdi-alert-outline mr-2"></i> Instrucciones</strong>
                             <p>
@@ -47,6 +47,13 @@
 
                         </p>
                     {% endif %}
+                    {% if request.user.is_superuser and object.status_request == 1 %}
+                        <a href="?status=cancel"
+                           type="button"
+                           class="btn btn-danger waves-light waves-effect">
+                            <i class="bx bx-block font-size-16 align-middle mr-2"></i> Cancelar
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -55,24 +62,24 @@
                 <div class="card-body table-responsive">
                     <table class="table mb-0">
                         <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Categoría</th>
-                                <th>Stock Incial</th>
-                                <th>Stock Actual</th>
-                                <th>Stock a Aumentar</th>
-                            </tr>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Stock Incial</th>
+                            <th>Stock Actual</th>
+                            <th>Stock a Aumentar</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for stock in object.product_requests.all %}
-                                <tr>
-                                    <td>{{ stock.product }}</td>
-                                    <td>{{ stock.product.category }}</td>
-                                    <td>{{ stock.product.initial_stock }}</td>
-                                    <td>{{ stock.product.check_stock }}</td>
-                                    <td>{{ stock.requested_amount }}</td>
-                                </tr>
-                            {% endfor %}
+                        {% for stock in object.product_requests.all %}
+                            <tr>
+                                <td>{{ stock.product }}</td>
+                                <td>{{ stock.product.category }}</td>
+                                <td>{{ stock.product.initial_stock }}</td>
+                                <td>{{ stock.product.check_stock }}</td>
+                                <td>{{ stock.requested_amount }}</td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

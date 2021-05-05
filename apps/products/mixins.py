@@ -11,6 +11,9 @@ from django.core.paginator import Paginator
 # Local
 from apps.products.models import Category, Section
 
+# Local
+from apps.menu.utils import get_site_url
+
 
 class ProductListMixin:
     def get_context_data(self, **kwargs):
@@ -160,7 +163,24 @@ class StockRequestDetail:
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         status = request.GET.get("status", False)
-
+        if not status:
+            return super().get(request, *args, **kwargs)
+        if (
+            status
+            and status == "cancel"
+            and request.user.is_superuser
+            and self.object.status_request == 1
+        ):
+            products = self.object.product_requests.all()
+            for product in products:
+                product.product.initial_stock -= product.requested_amount
+                product.product.save()
+                self.object.status_request = 2
+                self.object.save()
+                messages.add_message(
+                    request, messages.SUCCESS, "La operación fue cancelada",
+                )
+                status = False
         if status and not request.user.has_perm("products.can_approve"):
             messages.add_message(
                 request, messages.ERROR, "No tienes permisos para realizar esta acción"
@@ -191,8 +211,7 @@ class StockRequestDetail:
                 messages.SUCCESS,
                 "Solicitud rechazada, no se modificó el stock",
             )
-
-        return super().get(request, *args, **kwargs)
+        return redirect(get_site_url(self.object, "detail"))
 
 
 class StockRequestFormMixin:
