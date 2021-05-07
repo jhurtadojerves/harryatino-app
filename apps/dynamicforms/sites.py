@@ -45,3 +45,11 @@ class FormSite(BaseSite):
     detail_template_name = None
     list_fields = ("name", "description")
     detail_fields = ("name", "description")
+
+
+@register("dynamicforms.AuditAPI")
+class AuditAPISite(BaseSite):
+    """Site to audit api"""
+
+    list_fields = ("username", "action", "created_date")
+    detail_fields = list_fields + ("data",)

@@ -95,3 +95,18 @@ class Form(BaseModel):
             else:
                 fieldsets.update({key: tuple([value])})
         return tuple(fieldsets.values())
+
+
+class AuditAPI(BaseModel):
+    username = models.ForeignKey(
+        "authentication.User",
+        verbose_name="usuario",
+        editable=False,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    data = models.JSONField(verbose_name="data obtenida")
+    action = models.TextField(editable=False, verbose_name="acción")
+
+    def __str__(self):
+        return f"{self.username}: {self.action}"

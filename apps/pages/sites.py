@@ -13,5 +13,6 @@ class PageSite(BaseSite):
     list_mixins = (NotPermissionRequiredMixin,)
     detail_mixins = (NotPermissionRequiredMixin,)
     form_template_name = None
+    detail_template_name = None
     prepopulate_slug = ("name",)
     menu_is_public = True

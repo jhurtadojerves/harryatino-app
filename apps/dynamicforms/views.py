@@ -9,7 +9,7 @@ from django.views.generic import DetailView
 
 # Local
 from apps.dynamicforms.forms import CreationDynamicForm
-from .models import Form
+from .models import Form, AuditAPI
 
 # Third party integration
 import requests
@@ -47,7 +47,7 @@ class ShowForm(MixinDynamicForm, DetailView):
     form_class = CreationDynamicForm
     template_name = "insoles/form.html"
 
-    def get_user_data(self, user_id) -> dict:
+    def get_user_data(self, user_id):
         payload = {}
         headers = {}
         url = (
@@ -56,26 +56,29 @@ class ShowForm(MixinDynamicForm, DetailView):
         response = requests.request("GET", url, headers=headers, data=payload)
         data = response.json()
         raw_user_data = data["customFields"]["3"]["fields"]
+        username = data["name"]
         user_data = dict()
         for key, value in raw_user_data.items():
             user_data.update({f"customFields[{key}]": value["value"]})
-        return user_data
+        return user_data, username
 
     def get_form(self, user_id):
         attr = {"form": self.object}
-        data = self.get_user_data(user_id)
+        data, username = self.get_user_data(user_id)
         form = self._get_form(self.form_class, attr, data)
-        return form
+        return form, username, data
 
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.GET.get("user_id")
             self.object = self.get_object()
-            form = self.get_form(user_id)
+            form, username, data = self.get_form(user_id)
             create_url = reverse_lazy("data_url", args=[self.object.pk])
             template = render_to_string(self.template_name, context={"form": form})
+            AuditAPI.objects.create(username=request.user, data=data, action="get")
             return JsonResponse(
-                {"create_url": create_url, "template": template}, status=200
+                {"create_url": create_url, "template": template, "username": username},
+                status=200,
             )
         except ValueError:
             return JsonResponse({}, status=500)
@@ -111,6 +114,7 @@ class ShowForm(MixinDynamicForm, DetailView):
             f"https://www.harrylatino.org/api/core/members/{user_id}?key={API_KEY_POST}"
         )
         response = requests.request("POST", url, headers=headers, data=payload)
+        AuditAPI.objects.create(username=request.user, data=data, action="post")
         if response.status_code == 200:
             return JsonResponse(
                 {"status": 200, "message": "Datos actualizados correctamente"}

@@ -16,7 +16,7 @@
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="modalLabel">Crear nuevo </h4>
+                        <h4 class="modal-title" id="modalLabel">Editar perfil <span id="username"></span> </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <i class="bx bx-x"></i>
                         </button>
@@ -55,6 +55,7 @@
         const form = document.getElementById("insoles-form")
         let create_form = document.getElementById(`id_create_form`)
         let load_data = document.getElementById(`load_data`)
+        let username_element = document.getElementById(`username`)
         let member_id_url = document.getElementById(`member_id_url`)
         const modal = document.getElementById('insoles-forms')
         let set_url = ""
@@ -97,10 +98,12 @@
                 member_id_url.value
                 let {
                     create_url,
-                    template
+                    template,
+                    username
                 } = await fetchMethodGet(`${create_form.dataset.url}?user_id=${member_id_url.value}`)
                 modal.querySelector('form').action = create_url
                 modal.querySelector('#render_form').innerHTML = ""
+                username_element.textContent = `de ${username}`
                 modal.querySelector('#render_form').insertAdjacentHTML('beforeend', template)
                 init_inputmask()
                 $(".selectpicker").selectpicker('refresh');

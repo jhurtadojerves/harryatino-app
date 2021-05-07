@@ -1,22 +1,9 @@
 {% extends "base/base_detail.html" %}
 
-{% block content %}
+{% block detail %}
     <div class="row">
         <div class="col">
             <div class="card">
-                {% if request.user.is_authenticated and page %}
-                    <div class="btn-toolbar p-3" role="toolbar">
-                        <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="{% url 'site:pagina_pagina_crear' %}" type="button" class="btn btn-primary waves-light waves-effect"><i
-                                class="fa fa-tag"></i> Nuevo</a>
-                        </div>
-                        <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="{% url 'site:pagina_pagina_detalle' page.slug %}" type="button"
-                               class="btn btn-primary waves-light waves-effect"><i
-                                class="fa fa-inbox"></i> Editar</a>
-                        </div>
-                    </div>
-                {% endif %}
                 <div class="card-body">
                     <p>{{ page.content|safe }}</p>
                 </div>
