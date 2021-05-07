@@ -1,4 +1,4 @@
-"""Products app admin."""
+"""Dynamic forms app admin."""
 
 # Django
 from django.contrib import admin
@@ -7,43 +7,19 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 # Models
-from apps.products.models import Product, Category, Section
+from apps.dynamicforms.models import Fieldset, Field, Form
 
 
-@admin.register(Product)
-class ProductAdmin(ImportExportModelAdmin):
-    """Product admin."""
-
-    list_display = (
-        "number",
-        "reference",
-        "name",
-        "points",
-        "cost",
-        "initial_stock",
-        "description",
-        "check_stock",
-        "slug",
-    )
-
-    list_filter = ("category",)
-    search_fields = ("reference", "name", "category__name", "id")
-    autocomplete_fields = ("category",)
+@admin.register(Fieldset)
+class FieldsetAdmin(ImportExportModelAdmin):
+    """Fieldset admin."""
 
 
-@admin.register(Category)
-class CategoryAdmin(ImportExportModelAdmin):
-    """Category admin. """
-
-    list_display = ("name", "section")
-    search_fields = ("name",)
-    list_filter = ("section",)
-    autocomplete_fields = ("section",)
+@admin.register(Field)
+class FieldAdmin(ImportExportModelAdmin):
+    """Field admin. """
 
 
-@admin.register(Section)
-class SectionAdmin(ImportExportModelAdmin):
-    """Section admin. """
-
-    list_display = ("name",)
-    search_fields = ("name",)
+@admin.register(Form)
+class FormAdmin(ImportExportModelAdmin):
+    """Form admin. """

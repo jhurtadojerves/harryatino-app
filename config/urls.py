@@ -29,6 +29,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", superadmin.site.urls),
     path("", include("apps.authentication.urls"),),
+    path("", include("apps.insoles.urls")),
+    path("", include("apps.dynamicforms.urls")),
     path("", HomePage.as_view()),
     # Api v1
     path("select2/", include("django_select2.urls")),

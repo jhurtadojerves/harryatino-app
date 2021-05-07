@@ -1,0 +1,117 @@
+{% extends "base/base_detail.html" %}
+{% load static %}
+
+{% block detail %}
+    {{ block.super }}
+    <button type="button" id="id_create_form" data-url="{% url 'data_url' object.pk %}"
+            class="btn btn-primary" data-toggle="modal" data-target="#insoles-forms">
+        Editar Usuario
+    </button>
+{% endblock %}
+
+{% block modals %}
+    <div class="insoles-forms">
+        <div class="modal fade text-left" id="insoles-forms" tabindex="3" role="dialog" aria-labelledby="modalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalLabel">Crear nuevo </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                    <form id="insoles-form" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>ID de Usuario</label>
+                                <input class="form-control" type="number" id="member_id_url">
+                                <button type="button" class="btn btn-primary mt-5" id="load_data">Cargar Datos</button>
+                            </div>
+                            <div id="render_form">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-light-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Editar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script>
+
+        const form = document.getElementById("insoles-form")
+        let create_form = document.getElementById(`id_create_form`)
+        let load_data = document.getElementById(`load_data`)
+        let member_id_url = document.getElementById(`member_id_url`)
+        const modal = document.getElementById('insoles-forms')
+        let set_url = ""
+
+        const fetchMethodGet = async (url) => {
+            let response = await fetch(url)
+            if (response.status !== 200) {
+                toastr.error('Los sentimos no se puede realizar esta acción.', 'No autorizado')
+                return Promise.reject(new Error(response.statusText))
+            }
+            return await response.json()
+        }
+
+        const fetchMethodPost = async (url, form_data, credentials = "include", headers = {}) => {
+            let response = await fetch(url, {
+                method: "POST",
+                body: form_data,
+                headers: headers,
+                credentials: credentials,
+            })
+            let data = await response.json()
+            $(modal).modal('hide')
+            if (data.status === 200) {
+                toastr.success(data.message, 'Realizado', options = {
+                    "closeButton": true, "progressBar": true, "newestOnTop": true,
+                });
+            } else {
+                toastr.error(data.message, 'Error', options = {
+                    "closeButton": true, "progressBar": true, "newestOnTop": true,
+                });
+            }
+
+        }
+        create_form.addEventListener("click", async (e) => {
+            modal.querySelector('#render_form').innerHTML = ''
+            $(modal).modal('show')
+        })
+        load_data.addEventListener("click", async (ev) => {
+            if (form.checkValidity() && member_id_url.value !== "") {
+                member_id_url.value
+                let {
+                    create_url,
+                    template
+                } = await fetchMethodGet(`${create_form.dataset.url}?user_id=${member_id_url.value}`)
+                modal.querySelector('form').action = create_url
+                modal.querySelector('#render_form').innerHTML = ""
+                modal.querySelector('#render_form').insertAdjacentHTML('beforeend', template)
+                init_inputmask()
+                $(".selectpicker").selectpicker('refresh');
+            }
+        })
+
+        form.addEventListener("submit", ev => {
+            ev.preventDefault()
+            fetchMethodPost(`${create_form.dataset.url}?user_id=${member_id_url.value}`, new FormData(form))
+        })
+
+
+    </script>
+{% endblock %}

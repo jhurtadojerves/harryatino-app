@@ -88,8 +88,9 @@
 
 {% block js %}
     {% include "base/js.html" %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     {% if messages %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         {% for message in messages %}
             <script>
                 if ("{{ message.tags }}" === "error") {

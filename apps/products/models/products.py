@@ -51,7 +51,7 @@ class Product(BaseModel):
         return self.id
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.reference}"
 
     class Meta(BaseModel.Meta):
         verbose_name = "Producto"
