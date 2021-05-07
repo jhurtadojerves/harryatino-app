@@ -59,7 +59,6 @@ class ShowForm(MixinDynamicForm, DetailView):
         user_data = dict()
         for key, value in raw_user_data.items():
             user_data.update({f"customFields[{key}]": value["value"]})
-
         return user_data
 
     def get_form(self, user_id):

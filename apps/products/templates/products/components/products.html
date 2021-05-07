@@ -2,7 +2,7 @@
     <div class="row row-cards" style="margin: auto auto;align-items: center; justify-content: center;">
         {% for object in object_list %}
             <div class="card-group">
-                <div class="card p-3 m-2">
+                <div class="card bg-light text-dark p-3 m-2">
                     <a href="{% url 'site:producto_producto_detalle' object.reference %}" class="mb-3">
                         <img
                             src="{{ object.image }}"
