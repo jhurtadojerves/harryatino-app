@@ -20,21 +20,25 @@
                 </span>
             </span>
                 <h3 class="card-label text-light">
-                    {{ object|capfirst }} <i class="mr-2"></i>
+                    {% block text_title %}
+                        {{ object|capfirst }}
+                    {% endblock %} <i class="mr-2"></i>
                 </h3>
             </div>
             <div class="card-toolbar">
                 {% block toolbar %}
-                    <a href="{{ site.urls.delete }}" class="btn btn-light-danger font-weight-bolder mr-2">
-                        <i class="fas fa-times icon-sm"></i>Eliminar
-                    </a>
-                    <a href="{{ site.urls.update }}" class="btn btn-light-primary font-weight-bolder mr-2">
-                        <i class="fas fa-pen icon-sm"></i>Editar
-                    </a>
-                    <a href="{{ site.urls.create }}" class="btn btn-primary font-weight-bolder">
-                        <i class="fas fa-plus icon-sm"></i>
-                        Crear nuevo
-                    </a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{{ site.urls.delete }}" class="btn btn-light-danger font-weight-bolder mr-2">
+                            <i class="fas fa-times icon-sm"></i>Eliminar
+                        </a>
+                        <a href="{{ site.urls.update }}" class="btn btn-light-primary font-weight-bolder mr-2">
+                            <i class="fas fa-pen icon-sm"></i>Editar
+                        </a>
+                        <a href="{{ site.urls.create }}" class="btn btn-primary font-weight-bolder">
+                            <i class="fas fa-plus icon-sm"></i>
+                            Crear nuevo
+                        </a>
+                    {% endif %}
                 {% endblock %}
             </div>
         </div>
@@ -60,29 +64,31 @@
             {% endblock %}
         </div>
         {% if request.user.is_superuser %}
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Creación</label>
-                            <p class="form-control-static">
-                                {{ object.created_date|default_if_none:"" }}
-                                <strong>por</strong> {{ object.created_user|default_if_none:"" }}
-                            </p>
+            {% block footer_audit %}
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Creación</label>
+                                <p class="form-control-static">
+                                    {{ object.created_date|default_if_none:"" }}
+                                    <strong>por</strong> {{ object.created_user|default_if_none:"" }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Ultima modificación</label>
-                            <p class="form-control-static">
-                                {{ object.modified_date|default_if_none:"" }}
-                                <strong>por</strong> {{ object.modified_user|default_if_none:"" }}
-                            </p>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ultima modificación</label>
+                                <p class="form-control-static">
+                                    {{ object.modified_date|default_if_none:"" }}
+                                    <strong>por</strong> {{ object.modified_user|default_if_none:"" }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endblock %}
         {% endif %}
     </div>
 {% endblock %}
