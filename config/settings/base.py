@@ -226,8 +226,6 @@ CKEDITOR_CONFIGS = {
         "toolbar": "Full",
         "height": 500,
         "width": 1400,
-        "filebrowserWindowWidth": 940,
-        "filebrowserWindowHeight": 725,
-        "extraPlugins": "autogrow",
+        "removePlugins": "autogrow",
     }
 }
