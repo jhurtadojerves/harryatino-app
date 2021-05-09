@@ -19,8 +19,8 @@
                     <div class="col-md-6">
                         <img
                             class="card-img img-fluid product_image"
-                            src="{{ object.image }}"
-                            alt="Card image"
+                            src="{{ object.get_image }}"
+                            alt="{{ object.name }}"
                             style="width: 240px; {% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
                         >
                     </div>
@@ -63,20 +63,20 @@
                 <div class="card-body table-responsive">
                     <table class="table mb-0">
                         <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Perfil</th>
-                                <th>Acciones</th>
-                            </tr>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Perfil</th>
+                            <th>Acciones</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for sale in current_page.object_list %}
-                                <tr>
-                                    <td>{{ sale.date }}</td>
-                                    <td><a href="{% get_site_url sale.profile 'detail' %}">{{ sale.profile }}</a></td>
-                                    <td><a href="{% get_site_url sale 'detail' %}">Ver venta</a></td>
-                                </tr>
-                            {% endfor %}
+                        {% for sale in current_page.object_list %}
+                            <tr>
+                                <td>{{ sale.date }}</td>
+                                <td><a href="{% get_site_url sale.profile 'detail' %}">{{ sale.profile }}</a></td>
+                                <td><a href="{% get_site_url sale 'detail' %}">Ver venta</a></td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                     {% include "base/paginator.html" with page_obj=current_page %}

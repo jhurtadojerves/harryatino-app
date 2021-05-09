@@ -6,6 +6,7 @@ from django.db import models
 # Models
 from tracing.models import BaseModel
 from apps.products.models import Category
+from ..utils import get_upload_path
 
 
 class Product(BaseModel):
@@ -19,6 +20,9 @@ class Product(BaseModel):
     cost = models.PositiveIntegerField(verbose_name="Precio")
     initial_stock = models.PositiveIntegerField(verbose_name="Stock inicial")
     image = models.URLField(verbose_name="Imagen")
+    uploaded_image = models.ImageField(
+        verbose_name="Imagen", null=True, upload_to=get_upload_path
+    )
     description = models.TextField(verbose_name="Descripción")
     category = models.ForeignKey(
         Category,
@@ -49,6 +53,11 @@ class Product(BaseModel):
 
     def number(self):
         return self.id
+
+    def get_image(self):
+        if self.uploaded_image:
+            return self.uploaded_image.url
+        return self.image
 
     def __str__(self):
         return f"{self.name} - {self.reference}"

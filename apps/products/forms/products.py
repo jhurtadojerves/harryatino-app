@@ -32,7 +32,7 @@ class ProductForm(ModelForm):
         fieldsets = (
             ("name", "reference",),
             ("points", "cost"),
-            ("initial_stock", "image"),
+            ("initial_stock", "image", "uploaded_image"),
             ("section", "category",),
             ("description",),
         )
