@@ -1,4 +1,5 @@
 """Mixin for products"""
+from django.http import HttpResponseRedirect
 
 
 class SaleListMixin:
@@ -75,3 +76,13 @@ class SaleListMixin:
 
 class SaleDetailMixin:
     context_object_name = "sale"
+
+
+class SaleFormMixin:
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save(commit=False)
+        if self.action == "create":
+            self.object.buyer = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())

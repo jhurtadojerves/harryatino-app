@@ -32,6 +32,9 @@ class Sale(BaseModel):
         "Consumables. True = Consumable Used"
         "Creatures. True = In the creature pool",
     )
+    buyer = models.ForeignKey(
+        "authentication.User", verbose_name="vendedor", on_delete=models.PROTECT
+    )
 
     # This field is used to mark a purchase of spell books or consumables.
     # Spell books. True = Can Use

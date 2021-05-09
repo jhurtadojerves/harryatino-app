@@ -19,7 +19,7 @@ def run():
     SCRIPTS_DIR = settings.BASE_DIR / "scripts"
     path = SCRIPTS_DIR / "transacciones.csv"
     with open(path) as read_file:
-        csv_reader = csv.reader(read_file, delimiter=",")
+        csv_reader = csv.reader(read_file, delimiter=";")
         line = 0
         # ['numero', 'fecha', 'referencia', 'forum_id',', 'vendedor']
         for row in csv_reader:
@@ -35,13 +35,15 @@ def run():
                 pk = int(row[0])
                 # user = User.objects.get(pk=1)
                 data = {
-                    "pk": pk,
                     "date": date,
                     "product": product,
                     "profile": profile,
-                    "created_user": user,
+                    "buyer": user,
                 }
-                Sale.objects.create(**data)
+                sale, created = Sale.objects.get_or_create(pk=pk, defaults=data)
+                if not created:
+                    sale.buyer = user
+                    sale.save()
             except Exception as e:
                 print(e)
                 print(f"{row[4]}: {row[0]}")

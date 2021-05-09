@@ -73,47 +73,7 @@
             <div class="w-100"></div>
         </div>
     </form>
-    <table class="datatable">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Fecha</th>
-                <th>Producto</th>
-                <th>Comprador</th>
-                <th>Vendedor</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sale in object_list %}
-                <tr>
-                    <td>{{ sale.pk }}</td>
-                    <td>{{ sale.date }}</td>
-                    <td><a
-                        href="{% url 'site:producto_producto_detalle' sale.product.reference %}">{{ sale.product }}</a>
-                    </td>
-                    <td><a
-                        href="{% url 'site:perfiles-de-comprador_mago_detalle' sale.profile.pk %}">{{ sale.profile }}</a>
-                    </td>
-                    <td>{{ sale.created_user }}</td>
-                    <td>
-                        <a href="{% url 'site:venta_venta_detalle' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
-                           title="Ver detalles">
-                            <i class="fas fa-eye icon-md"></i>
-                        </a>
-                        <a href="{% url 'site:venta_venta_editar' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
-                           title="Editar detalles">
-                            <i class="fas fa-pen icon-md"></i>
-                        </a>
-                        <a href="{% url 'site:venta_venta_eliminar' sale.pk %}" class="btn btn-sm btn-clean btn-icon"
-                           title="Eliminar">
-                            <i class="fas fa-trash-alt icon-md"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {{ block.super }}
 {% endblock %}
 
 {% block js %}
