@@ -52,4 +52,5 @@ class AuditAPISite(BaseSite):
     """Site to audit api"""
 
     list_fields = ("username", "action", "created_date")
-    detail_fields = list_fields + ("data",)
+    detail_fields = list_fields
+    detail_template_name = None

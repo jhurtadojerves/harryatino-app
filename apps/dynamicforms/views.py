@@ -55,9 +55,6 @@ class ShowForm(MixinDynamicForm, DetailView):
         )
         response = requests.request("GET", url, headers=headers, data=payload)
         data = response.json()
-        raw_user_data_3 = data["customFields"]["3"]["fields"]
-        raw_user_data_4 = data["customFields"]["4"]["fields"]
-        raw_user_data_7 = data["customFields"]["7"]["fields"]
         custom_fields = data["customFields"]
         raw_user_data = dict()
         for raw in custom_fields.values():
@@ -120,8 +117,9 @@ class ShowForm(MixinDynamicForm, DetailView):
             f"https://www.harrylatino.org/api/core/members/{user_id}?key={API_KEY_POST}"
         )
         response = requests.request("POST", url, headers=headers, data=payload)
-        AuditAPI.objects.create(username=request.user, data=data, action="post")
         if response.status_code == 200:
+            data = {"data": data, "user_id": user_id}
+            AuditAPI.objects.create(username=request.user, data=data, action="guardar")
             return JsonResponse(
                 {"status": 200, "message": "Datos actualizados correctamente"}
             )

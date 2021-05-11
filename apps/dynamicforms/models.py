@@ -110,3 +110,11 @@ class AuditAPI(BaseModel):
 
     def __str__(self):
         return f"{self.username}: {self.action}"
+
+    def get_data(self):
+        import json
+
+        return json.dumps(self.data, indent=4)
+
+    class Meta(BaseModel.Meta):
+        ordering = ("-created_date",)

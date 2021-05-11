@@ -1,0 +1,30 @@
+{% extends "base/base_detail.html" %}
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.4.1/jsoneditor.min.css"
+          integrity="sha512-97H82cvW1BVnksqmEMDmXVCgUnRdEauMdOgWI11Dl3zWTHc4sYgAuOnkCIlanSgH56vlc5Ufo7N6mC6ohuFiWw=="
+          crossorigin="anonymous"/>
+{% endblock %}
+
+
+{% block detail %}
+    {{ block.super }}
+    <label for="data">Data</label> <br>
+    <div id="jsoneditor" style="width: 100%; height: 400px;"></div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.4.1/jsoneditor.min.js"
+            integrity="sha512-gpE/vYKJCAfv267phg9Hb+EbxJHxN27V490vWDKe+99ow7FnZGF9Cd5zd24dsYiM4n7iE7E0+ucPCXrtnnn5Cg=="
+            crossorigin="anonymous"></script>
+
+    <script>
+        const container = document.getElementById("jsoneditor")
+        const options = {mode: "code"}
+        const editor = new JSONEditor(container, options)
+        editor.set({{ object.get_data|safe }})
+        // get json
+        //const updatedJson = editor.get()
+    </script>
+{% endblock %}
