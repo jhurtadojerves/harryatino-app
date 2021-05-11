@@ -55,7 +55,13 @@ class ShowForm(MixinDynamicForm, DetailView):
         )
         response = requests.request("GET", url, headers=headers, data=payload)
         data = response.json()
-        raw_user_data = data["customFields"]["3"]["fields"]
+        raw_user_data_3 = data["customFields"]["3"]["fields"]
+        raw_user_data_4 = data["customFields"]["4"]["fields"]
+        raw_user_data_7 = data["customFields"]["7"]["fields"]
+        custom_fields = data["customFields"]
+        raw_user_data = dict()
+        for raw in custom_fields.values():
+            raw_user_data.update(raw["fields"])
         username = data["name"]
         user_data = dict()
         for key, value in raw_user_data.items():
