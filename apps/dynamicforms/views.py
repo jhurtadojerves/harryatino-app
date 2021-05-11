@@ -78,7 +78,8 @@ class ShowForm(MixinDynamicForm, DetailView):
             form, username, data = self.get_form(user_id)
             create_url = reverse_lazy("data_url", args=[self.object.pk])
             template = render_to_string(self.template_name, context={"form": form})
-            AuditAPI.objects.create(username=request.user, data=data, action="get")
+            data = {"data": data, "user_id": user_id}
+            AuditAPI.objects.create(username=request.user, data=data, action="obtener")
             return JsonResponse(
                 {"create_url": create_url, "template": template, "username": username},
                 status=200,
