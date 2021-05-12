@@ -5,7 +5,7 @@ from django.db import models
 class TypesOfFieldChoices(models.TextChoices):
     """Class define choices the type of field"""
 
-    TEXT = "CharField", "Texto"
+    TEXT = "CharField:TextInput", "Texto"
     EMAIL = "EmailField", "Correo"
     FILE = "FileField", "Archivo"
     HIDDEN = "CharField:HiddenInput", "Campo Oculto"
