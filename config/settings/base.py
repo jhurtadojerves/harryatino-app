@@ -63,6 +63,7 @@ THIRD_PARTY_APPS = [
     "tracing",
     "django_select2",
     "mathfilters",
+    "rest_framework",
 ]
 
 LOCAL_APPS = [

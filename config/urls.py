@@ -33,5 +33,6 @@ urlpatterns = [
     path("", include("apps.dynamicforms.urls")),
     path("", HomePage.as_view()),
     # Api v1
+    path(route="api/v1/", view=include("api.urls")),
     path("select2/", include("django_select2.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

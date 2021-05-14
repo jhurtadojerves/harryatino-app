@@ -9,6 +9,6 @@ def menu(request):
 
 
 def build_user_menu(user):
-    object_list = Menu.objects.filter(parent__isnull=True)
+    object_list = Menu.objects.filter(parent__isnull=True, is_active=True)
     menu_list = get_user_menu(object_list, user)
     return menu_list

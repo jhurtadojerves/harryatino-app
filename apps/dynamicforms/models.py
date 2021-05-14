@@ -1,5 +1,6 @@
 # Django
 from django.db import models
+from django.shortcuts import reverse
 
 # Base
 from tracing.models import BaseModel
@@ -118,3 +119,23 @@ class AuditAPI(BaseModel):
 
     class Meta(BaseModel.Meta):
         ordering = ("-created_date",)
+
+
+class Action(BaseModel):
+    """Actions to define urls and methods"""
+
+    name = models.CharField(max_length=256, verbose_name="nombre")
+    form = models.ForeignKey(
+        "dynamicforms.Form", on_delete=models.PROTECT, verbose_name="formulario"
+    )
+    path = models.CharField(max_length=256, verbose_name="url")
+
+    def get_url(self):
+        return reverse(self.path, args=(self.pk,))
+
+    def __str__(self):
+        return self.name
+
+    class Meta(BaseModel.Meta):
+        verbose_name = "Acción"
+        verbose_name_plural = "Acciones"

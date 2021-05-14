@@ -19,6 +19,7 @@ django-import-export = "*"
 django-extensions = "*"
 django-mathfilters = "*"
 requests = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.7"

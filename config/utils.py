@@ -13,7 +13,7 @@ def get_user_menu(menu_list, user):
             "is_group": menu.is_group,
         }
         if not obj_menu["submenus"] and (
-            not menu.public_menus.all().exists()
+            not menu.public_menus.filter(is_active=True).exists()
             and (menu.is_group or not menu.action.has_permissions(user))
         ):
             continue

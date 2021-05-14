@@ -25,4 +25,5 @@ class SaleSite(BaseSite):
     detail_mixins = (SaleDetailMixin,)
     list_template_name = None
     detail_template_name = None
+    form_template_name = None
     paginate_by = 50

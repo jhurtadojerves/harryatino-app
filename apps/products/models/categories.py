@@ -21,6 +21,9 @@ class Category(BaseModel):
         related_name="categories",
         verbose_name="Sección",
     )
+    available_by_default = models.BooleanField(
+        default=True, verbose_name="Disponible al crear"
+    )
 
     def __str__(self):
         return f"{str(self.section)} {self.name}"

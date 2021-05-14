@@ -3,7 +3,7 @@
 
 {% block detail %}
     {{ block.super }}
-    <button type="button" id="id_create_form" data-url="{% url 'data_url' object.pk %}"
+    <button type="button" id="id_create_form" data-url="{{ object.get_url }}"
             class="btn btn-primary" data-toggle="modal" data-target="#insoles-forms">
         Editar Usuario
     </button>

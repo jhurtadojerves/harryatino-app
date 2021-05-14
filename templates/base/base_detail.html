@@ -49,7 +49,7 @@
             {% block detail %}
                 {% for row in site.results %}
                     <div class="row">
-                        {% for label, value in row.fields %}
+                        {% for label, value, widget in row.fields %}
                             <div class="col-md-{{ row.bs_cols }}">
                                 <div class="form-group">
                                     <label>{{ label|capfirst }}</label>

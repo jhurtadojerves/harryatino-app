@@ -42,9 +42,15 @@ class FormSite(BaseSite):
     form_class = FormForm
     inlines = {"lines": FieldLineFormset}
     form_template_name = None
-    detail_template_name = None
     list_fields = ("name", "description")
     detail_fields = ("name", "description")
+
+
+@register("dynamicforms.Action")
+class ActionSite(BaseSite):
+    detail_template_name = None
+    list_fields = ("name",)
+    detail_fields = ("name",)
 
 
 @register("dynamicforms.AuditAPI")

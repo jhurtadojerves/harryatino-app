@@ -42,7 +42,7 @@ class SectionSite(BaseSite):
 class CategorySite(BaseSite):
     list_mixins = (NotPermissionRequiredMixin,)
     detail_mixins = (NotPermissionRequiredMixin,)
-    detail_fields = "name", "section"
+    detail_fields = "name", "section", "available_by_default"
 
 
 @register("products.StockRequest")
