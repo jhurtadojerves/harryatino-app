@@ -126,9 +126,15 @@ class Action(BaseModel):
 
     name = models.CharField(max_length=256, verbose_name="nombre")
     form = models.ForeignKey(
-        "dynamicforms.Form", on_delete=models.PROTECT, verbose_name="formulario"
+        "dynamicforms.Form",
+        on_delete=models.PROTECT,
+        verbose_name="formulario",
+        null=True,
+        blank=True,
     )
     path = models.CharField(max_length=256, verbose_name="url")
+    message = models.CharField(max_length=32, verbose_name="Texto del Botón")
+    show_modal = models.BooleanField(verbose_name="¿Mostrar modal?", default=False)
 
     def get_url(self):
         return reverse(self.path, args=(self.pk,))
