@@ -21,5 +21,7 @@ create_form.addEventListener("click", async (e) => {
         state: 'primary',
         message: 'No cierres esta página, estamos procesando tu solicitud...'
     });
-    fetchMethodGet(create_form.dataset.url).then(data => data)
+    fetchMethodGet(create_form.dataset.url).then(data => data).catch(error => {
+        KTApp.unblockPage();
+    })
 })

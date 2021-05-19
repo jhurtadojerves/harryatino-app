@@ -155,7 +155,10 @@ class UpdateLevelsForm(BaseForm):
             members = self.get_full_user_data(self.BASE_API_URL, timestamp)
             members_data = list()
             for member in members:
-                members_data.append(self.calculate_level(self.BASE_API_URL, member))
+                try:
+                    members_data.append(self.calculate_level(self.BASE_API_URL, member))
+                except:
+                    pass
             AuditAPI.objects.create(
                 username=request.user, data=members_data, action="Niveles actualizados"
             )
@@ -228,7 +231,7 @@ class UpdateLevelsForm(BaseForm):
 
     @staticmethod
     def get_full_user_data(base_url, timestamp, per_page=1000):
-        url = f"{base_url}?key={API_KEY_GET}&per_page={per_page}&activity_after={timestamp}"
+        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}"
         # &group=126 this key can be used to filter by id group
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
