@@ -135,6 +135,9 @@ class Action(BaseModel):
     path = models.CharField(max_length=256, verbose_name="url")
     message = models.CharField(max_length=32, verbose_name="Texto del Botón")
     show_modal = models.BooleanField(verbose_name="¿Mostrar modal?", default=False)
+    super_admin_required = models.BooleanField(
+        default=False, verbose_name="¿Es requerido ser administrador?"
+    )
 
     def get_url(self):
         return reverse(self.path, args=(self.pk,))

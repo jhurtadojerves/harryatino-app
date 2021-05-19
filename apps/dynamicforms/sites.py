@@ -8,6 +8,9 @@ from apps.dynamicforms.forms import FieldForm, FormForm
 from apps.dynamicforms.formsets import FieldLineFormset
 from config.base import BaseSite
 
+# Local
+from .mixins import ActionDetailMixin
+
 
 @register("dynamicforms.Field")
 class FieldSite(BaseSite):
@@ -49,6 +52,7 @@ class FormSite(BaseSite):
 @register("dynamicforms.Action")
 class ActionSite(BaseSite):
     detail_template_name = None
+    detail_mixins = (ActionDetailMixin,)
     list_fields = ("name",)
     detail_fields = ("name",)
 

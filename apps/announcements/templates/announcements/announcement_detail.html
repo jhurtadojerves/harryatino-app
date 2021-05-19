@@ -1,12 +1,12 @@
 {% extends "base/base_detail.html" %}
-{% load static %}
+{% load static superadmin_utils %}
 
 {% block detail %}
     <div class="row">
         <div class="col-lg-4 col-md-12">
             <div class="list-group">
                 {% for announcement in announcements %}
-                    <a href="{% url 'site:anuncio_anuncio_detalle' announcement.pk %}" class="list-group-item list-group-item-action">{{ announcement }}</a>
+                    <a href="{% site_url announcement 'detail' %}" class="list-group-item list-group-item-action">{{ announcement }}</a>
                 {% endfor %}
             </div>
         </div>

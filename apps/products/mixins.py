@@ -6,12 +6,10 @@ from django.db.models import Q
 from django.shortcuts import redirect, reverse
 from django.utils.text import slugify
 from django.core.paginator import Paginator
-
+from django.http import Http404
 
 # Local
 from apps.products.models import Category, Section
-
-# Local
 from apps.menu.utils import get_site_url
 
 
@@ -125,14 +123,26 @@ class ProductDetailMixin:
     slug_field = "reference"
 
     def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
         slug = kwargs.get("slug")
         upper_slug = slug.upper()
         if slug != upper_slug:
-            return redirect(
-                reverse("site:producto_producto_detalle", args=(upper_slug,)),
-                permanent=True,
-            )
+            url = get_site_url(self.object, "detail")
+            url = url.replace(slug, upper_slug)
+            return redirect(url, permanent=True,)
         return super().get(request, *args, **kwargs)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        queryset = queryset.filter(reference=slug.upper())
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(
+                f"No {queryset.model._meta.verbose_name} found matching the query"
+            )
+        return obj
 
     def get_context_data(self, **kwargs):
         page = self.request.GET.get("page", 1)
@@ -155,6 +165,30 @@ class ProductDetailMixin:
 
 class ProductEditMixin:
     slug_field = "reference"
+
+    def get(self, request, *args, **kwargs):
+
+        if self.action == "update":
+            self.object = self.get_object()
+            slug = kwargs.get("slug")
+            upper_slug = slug.upper()
+            if slug != upper_slug:
+                url = get_site_url(self.object, "update")
+                url = url.replace(slug, upper_slug)
+                return redirect(url, permanent=True,)
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        queryset = queryset.filter(reference=slug.upper())
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(
+                f"No {queryset.model._meta.verbose_name} found matching the query"
+            )
+        return obj
 
 
 class StockRequestDetail:
@@ -225,11 +259,7 @@ class StockRequestFormMixin:
                 messages.ERROR,
                 f"No se puede editar solicitudes solicitudes con estado {self.object.get_status_request_display()}",
             )
-            return redirect(
-                reverse(
-                    "site:producto_solicitud-de-stock_detalle", args=[self.object.pk]
-                )
-            )
+            return redirect(get_site_url(self.object, "detail"))
         return super().get(request, *args, **kwargs)
 
     def get_object_or_none(self):

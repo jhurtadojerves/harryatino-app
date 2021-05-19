@@ -4,6 +4,9 @@
 from django.shortcuts import redirect, reverse
 from django.http import HttpResponsePermanentRedirect
 
+# Local
+from ..menu.utils import get_site_url
+
 
 class AnnouncementListMixin:
     def get_context_data(self, **kwargs):
@@ -15,11 +18,9 @@ class AnnouncementListMixin:
     def get(self, request, *args, **kwargs):
         if self.model.objects.all().exists():
             return HttpResponsePermanentRedirect(
-                reverse(
-                    "site:anuncio_anuncio_detalle",
-                    args=(self.model.objects.first().pk,),
-                )
+                reverse(get_site_url(self.model.objects.first(), "detail"))
             )
+
         return super(AnnouncementListMixin, self).get(request, *args, **kwargs)
 
 

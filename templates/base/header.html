@@ -1,4 +1,4 @@
-{% load static %}
+{% load static superadmin_utils %}
 <!--begin::Header-->
 <div id="kt_header" class="header  header-fixed ">
     <!--begin::Container-->
@@ -16,7 +16,7 @@
                             <ul class="menu-subnav">
                                 {% for page in pages %}
                                     <li class="menu-item " aria-haspopup="true">
-                                        <a href="{% url 'site:pagina_pagina_detalle' page.slug %}" class="menu-link ">
+                                        <a href="{% site_url page 'detail' %}" class="menu-link ">
                                             <span class="menu-text">{{ page.name }}</span>
                                         </a>
                                     </li>

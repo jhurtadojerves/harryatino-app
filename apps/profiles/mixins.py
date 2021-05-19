@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.db.models import Q
 
 # Local
-from apps.products.models import Category, Section
+from apps.products.models import Category, Section, Product
 
 
 class ProfileListMixin:
@@ -100,6 +100,9 @@ class ProfileDetailMixin:
         if int(page) > paginator.num_pages:
             page = paginator.num_pages
         selected_page = paginator.page(page)
+        last_sale = False
+        if sales.exists():
+            last_sale = sales.first()
         context.update(
             {
                 "search_url": f"{pages_url}{search_url}",
@@ -110,6 +113,8 @@ class ProfileDetailMixin:
                 "search_name": search_name,
                 "search_value": search_value,
                 "is_paginated": True,
+                "last_sale": last_sale,
+                "any_product": Product.objects.first(),
             }
         )
         return context

@@ -1,5 +1,5 @@
 {% extends "base/base_detail.html" %}
-{% load static get_site_url %}
+{% load static superadmin_utils %}
 
 
 {% block title %}
@@ -42,7 +42,7 @@
                     </div>
                     {% if request.user.is_authenticated %}
                         <div class="w-100">
-                            <a href="{% url 'site:producto_producto_editar' object.reference %}"
+                            <a href="{% site_url object 'update' %}"
                                type="button"
                                class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-tag"></i> Editar
@@ -73,8 +73,8 @@
                         {% for sale in current_page.object_list %}
                             <tr>
                                 <td>{{ sale.date }}</td>
-                                <td><a href="{% get_site_url sale.profile 'detail' %}">{{ sale.profile }}</a></td>
-                                <td><a href="{% get_site_url sale 'detail' %}">Ver venta</a></td>
+                                <td><a href="{% site_url sale.profile 'detail' %}">{{ sale.profile }}</a></td>
+                                <td><a href="{% site_url sale 'detail' %}">Ver venta</a></td>
                             </tr>
                         {% endfor %}
                         </tbody>

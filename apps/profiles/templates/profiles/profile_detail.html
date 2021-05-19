@@ -1,5 +1,5 @@
 {% extends "base/base_detail.html" %}
-{% load static %}
+{% load static superadmin_utils %}
 
 {% block detail %}
     <div class="row" style="justify-content: center;">
@@ -23,9 +23,9 @@
                             <p class="card-text"><strong>Rango de Objetos: </strong>{{ object.range_of_objects }}</p>
                             <p class="card-text"><strong>Bóveda: </strong>{{ object.vault|default_if_none:"--" }}</p>
                         </div>
-                        {% if request.user.is_authenticated %}
+                        {% if request.user.is_authenticated and last_sale %}
                             <div class="col mt-3">
-                                <a href="{% url 'site:venta_venta_listar' %}?buyer={{ object.pk }}{{ search_url }}"
+                                <a href="{% site_url last_sale 'list' %}?buyer={{ object.pk }}{{ search_url }}"
                                    type="button"
                                    class="btn btn-info waves-light waves-effect">
                                     <i class="fas fa-credit-card"></i> Ventas en Tabla

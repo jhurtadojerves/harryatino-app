@@ -1,9 +1,10 @@
+{% load superadmin_utils %}
 {% if products %}
     <div class="row row-cards" style="margin: auto auto;align-items: center; justify-content: center;">
         {% for object in products %}
             <div class="card-group">
                 <div class="card p-3 m-2">
-                    <a href="{% url 'site:producto_producto_detalle' object.product.slug %}" class="mb-3">
+                    <a href="{% site_url object.product 'detail' %}" class="mb-3">
                         <img
                             src="{{ object.product.image }}"
                             alt="Photo by Nathan Guerrero"
@@ -29,7 +30,7 @@
         <p>Los criterios de búsqueda seleccionados no obtuvieron ningún resultado.
            Puede intentarlo de nuevo o resetear los filtros</p>
         <div class="btn-list">
-            <a href="{% url 'site:producto_producto_listar' %}" class="btn btn-info">
+            <a href="{% site_url any_product 'list' %}" class="btn btn-info">
                 <i class="bx bx-plus"></i> Reiniciar Búsqueda
             </a>
         </div>
