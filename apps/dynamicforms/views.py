@@ -156,7 +156,9 @@ class UpdateLevelsForm(BaseForm):
             members_data = list()
             for member in members:
                 try:
-                    members_data.append(self.calculate_level(self.BASE_API_URL, member))
+                    data = self.calculate_level(self.BASE_API_URL, member)
+                    if data:
+                        members_data.append(data)
                 except:
                     pass
             AuditAPI.objects.create(
@@ -219,14 +221,45 @@ class UpdateLevelsForm(BaseForm):
         )
         raw_level = experience / 10000
         level = int(round(raw_level, 0))
-        payload = self.get_payload({"customFields[43]": f"{level}"})
         url = f"{base_url}{forum_id}?key={API_KEY_POST}"
         actual_level = user_data["43"]
+        organization = (
+            119249,
+            119247,
+            119248,
+            119738,
+            119739,
+            119246,
+            119242,
+            119769,
+            119772,
+            119781,
+            119773,
+            119770,
+            119768,
+        )
+
+        if member["id"] in organization:
+            level = 80
+
         if (actual_level != "") and (int(actual_level) != level):
-            response = self.post_request(url, payload)
-            response = response.json()
+            payload = self.get_payload({"customFields[43]": f"{level}"})
+            headers = {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+            response = requests.request("POST", url, headers=headers, data=payload)
+            data = response.json()
+            response = {
+                "user": {
+                    "id": data["id"],
+                    "nick": data["name"],
+                    "old_level": actual_level,
+                    "calculated_value": level,
+                },
+                "action": "updated",
+            }
         else:
-            response = {}
+            response = False
         return response
 
     @staticmethod
