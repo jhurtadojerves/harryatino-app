@@ -147,6 +147,90 @@ class UpdateTopicsForm(BaseForm):
 class UpdateLevelsForm(BaseForm):
     """Get data for update levels"""
 
+    social_ranks = {
+        "0": "Aprendiz",
+        "1": "Unicornios de Bronce",
+        "2": "Unicornios de Bronce",
+        "3": "Unicornios de Plata",
+        "4": "Unicornios de Plata",
+        "5": "Unicornios de Oro",
+        "6": "Unicornios de Oro",
+        "7": "Dragones de Bronce",
+        "8": "Dragones de Bronce",
+        "9": "Dragones de Bronce",
+        "10": "Dragones de Plata",
+        "11": "Dragones de Plata",
+        "12": "Dragones de Plata",
+        "13": "Dragones de Plata",
+        "14": "Dragones de Plata",
+        "15": "Dragones de Oro",
+        "16": "Dragones de Oro",
+        "17": "Dragones de Oro",
+        "18": "Dragones de Oro",
+        "19": "Dragones de Oro",
+        "20": "Orden de la Cruz Dorada",
+        "21": "Orden de la Cruz Dorada",
+        "22": "Orden de la Cruz Dorada",
+        "23": "Orden de la Cruz Dorada",
+        "24": "Orden de la Cruz Dorada",
+        "25": "Orden de la Cruz Dorada",
+        "26": "Orden de la Cruz Dorada",
+        "27": "Orden de la Cruz Dorada",
+        "28": "Orden de la Cruz Dorada",
+        "29": "Orden de la Cruz Dorada",
+        "30": "Orden del Caduceo",
+        "31": "Orden del Caduceo",
+        "32": "Orden del Caduceo",
+        "33": "Orden del Caduceo",
+        "34": "Orden del Caduceo",
+        "35": "Orden del Caduceo",
+        "36": "Orden del Caduceo",
+        "37": "Orden del Caduceo",
+        "38": "Orden del Caduceo",
+        "39": "Orden del Caduceo",
+        "40": "Orden del Grial",
+        "41": "Orden del Grial",
+        "42": "Orden del Grial",
+        "43": "Orden del Grial",
+        "44": "Orden del Grial",
+        "45": "Orden del Grial",
+        "46": "Orden del Grial",
+        "47": "Orden del Grial",
+        "48": "Orden del Grial",
+        "49": "Orden del Grial",
+        "50": "Supremo Consejo de Morgana",
+        "51": "Supremo Consejo de Morgana",
+        "52": "Supremo Consejo de Morgana",
+        "53": "Supremo Consejo de Morgana",
+        "54": "Supremo Consejo de Morgana",
+        "55": "Supremo Consejo de Morgana",
+        "56": "Supremo Consejo de Morgana",
+        "57": "Supremo Consejo de Morgana",
+        "58": "Supremo Consejo de Morgana",
+        "59": "Supremo Consejo de Morgana",
+        "60": "Supremo Consejo de Circe",
+        "61": "Supremo Consejo de Circe",
+        "62": "Supremo Consejo de Circe",
+        "63": "Supremo Consejo de Circe",
+        "64": "Supremo Consejo de Circe",
+        "65": "Supremo Consejo de Circe",
+        "66": "Supremo Consejo de Circe",
+        "67": "Supremo Consejo de Circe",
+        "68": "Supremo Consejo de Circe",
+        "69": "Supremo Consejo de Circe",
+        "70": "Supremo Consejo de Hécate",
+        "71": "Supremo Consejo de Hécate",
+        "72": "Supremo Consejo de Hécate",
+        "73": "Supremo Consejo de Hécate",
+        "74": "Supremo Consejo de Hécate",
+        "75": "Supremo Consejo de Hécate",
+        "76": "Supremo Consejo de Hécate",
+        "77": "Supremo Consejo de Hécate",
+        "78": "Supremo Consejo de Hécate",
+        "79": "Supremo Consejo de Hécate",
+        "80": "Orden de Merlín",
+    }
+
     def get(self, request, *args, **kwargs):
         try:
             now = datetime.now()
@@ -241,9 +325,15 @@ class UpdateLevelsForm(BaseForm):
 
         if member["id"] in organization:
             level = 80
-
         if (actual_level != "") and (int(actual_level) != level):
-            payload = self.get_payload({"customFields[43]": f"{level}"})
+            graduate = user_data["40"]
+            if graduate == "Graduado":
+                social_rank = self.social_ranks[f"{level}"]
+            else:
+                social_rank = "Aprendiz"
+            payload = self.get_payload(
+                {"customFields[43]": f"{level}", "customFields[63]": f"{social_rank}"}
+            )
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
             }
@@ -255,6 +345,7 @@ class UpdateLevelsForm(BaseForm):
                     "nick": data["name"],
                     "old_level": actual_level,
                     "calculated_value": level,
+                    "social_rank": social_rank,
                 },
                 "action": "updated",
             }
