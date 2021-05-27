@@ -239,12 +239,18 @@ class UpdateLevelsForm(BaseForm):
             members = self.get_full_user_data(self.BASE_API_URL, timestamp)
             members_data = list()
             for member in members:
-                try:
+                data = self.calculate_level(self.BASE_API_URL, member)
+                if data:
+                    members_data.append(data)
+                """try:
                     data = self.calculate_level(self.BASE_API_URL, member)
                     if data:
+                        breakpoint()
+
                         members_data.append(data)
-                except:
-                    pass
+                except Exception as e:
+                    print(e)"""
+
             AuditAPI.objects.create(
                 username=request.user, data=members_data, action="Niveles actualizados"
             )
@@ -262,20 +268,62 @@ class UpdateLevelsForm(BaseForm):
             user_data.update({key: value["value"]})
 
         forum_id = member["id"]
-        posts = float(member["posts"]) * 5
-        galleons = float(user_data["12"]) * 0.2 if user_data["12"] != "" else 0
+        # posts = float(member["posts"]) * 5
+        old_posts = user_data["39"]
+        new_posts = float(member["posts"])
+        posts = (
+            int(old_posts) * 5
+            if (old_posts and old_posts and old_posts >= new_posts)
+            else new_posts * 5
+        )
+        galleons = (
+            float(user_data["12"]) * 0.2
+            if (user_data["12"] and user_data["12"] != "")
+            else 0
+        )
+        object_points = (
+            float(user_data["34"]) * 25
+            if (user_data["34"] and user_data["34"] != "")
+            else 0
+        )
 
-        object_points = float(user_data["34"]) * 25 if user_data["34"] != "" else 0
-        creatures_points = float(user_data["33"]) * 25 if user_data["33"] != "" else 0
+        creatures_points = (
+            float(user_data["33"]) * 25
+            if (user_data["33"] and user_data["33"] != "")
+            else 0
+        )
 
-        knowledge_number = float(user_data["41"]) * 4000 if user_data["41"] != "" else 0
-        skill_number = float(user_data["42"]) * 12000 if user_data["42"] != "" else 0
-        power_number = float(user_data["63"]) * 6000 if user_data["63"] != "" else 0
+        knowledge_number = (
+            float(user_data["41"]) * 4000
+            if (user_data["41"] and user_data["41"] != "")
+            else 0
+        )
 
-        dungeon_points = float(user_data["71"]) * 2500 if user_data["71"] != "" else 0
-        set_points = float(user_data["11"]) * 1220 if user_data["11"] != "" else 0
+        skill_number = (
+            float(user_data["42"]) * 12000
+            if (user_data["42"] and user_data["42"] != "")
+            else 0
+        )
+        power_number = (
+            float(user_data["63"]) * 6000
+            if (user_data["63"] and user_data["63"] != "")
+            else 0
+        )
 
-        badget_points = float(user_data["60"]) if user_data["60"] != "" else 0
+        dungeon_points = (
+            float(user_data["71"]) * 2500
+            if (user_data["71"] and user_data["71"] != "")
+            else 0
+        )
+        set_points = (
+            float(user_data["11"]) * 1220
+            if (user_data["11"] and user_data["11"] != "")
+            else 0
+        )
+
+        badget_points = (
+            float(user_data["60"]) if (user_data["60"] and user_data["60"] != "") else 0
+        )
 
         # New Values
         posts = 50000 if posts > 50000 else posts
@@ -292,16 +340,16 @@ class UpdateLevelsForm(BaseForm):
         set_points = 120000 if set_points > 120000 else set_points
 
         experience = (
-            round(posts, 2)
-            + round(galleons, 2)
-            + round(object_points, 2)
-            + round(creatures_points, 2)
-            + round(knowledge_number, 2)
-            + round(skill_number, 2)
-            + round(power_number, 2)
-            + round(dungeon_points, 2)
-            + round(set_points, 2)
-            + round(badget_points, 2)
+            posts
+            + galleons
+            + object_points
+            + creatures_points
+            + knowledge_number
+            + skill_number
+            + power_number
+            + dungeon_points
+            + set_points
+            + badget_points
         )
         raw_level = experience / 10000
         level = int(round(raw_level, 0))
@@ -325,14 +373,16 @@ class UpdateLevelsForm(BaseForm):
 
         if member["id"] in organization:
             level = 80
-        if (actual_level != "") and (int(actual_level) != level):
-            graduate = user_data["40"]
+        actual_level = int(actual_level) if actual_level and actual_level != "" else 0
+        if actual_level != level:
+            graduate = user_data["40"] if user_data["40"] else ""
             if graduate == "Graduado":
                 social_rank = self.social_ranks[f"{level}"]
             else:
                 social_rank = "Aprendiz"
+
             payload = self.get_payload(
-                {"customFields[43]": f"{level}", "customFields[63]": f"{social_rank}"}
+                {"customFields[43]": f"{level}", "customFields[61]": f"{social_rank}"}
             )
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -360,3 +410,29 @@ class UpdateLevelsForm(BaseForm):
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
         return json["results"]
+
+    def fix(self):
+        pass
+        # Fix Poderes
+
+        """poderes = user_data["62"]
+        fix_poderes = {
+            "Libro del Aprendiz de Brujo (N.1)": 1,
+            "Libro de la Fortaleza (N.5)": 2,
+            "Libro de la Sangre (N.7)": 3,
+            "Libro del Equilibrio (N.10)": 4,
+            "Libro del Druida (N.15)": 5,
+            "Libro del Caos (N.20)": 6,
+            "Libro de los Ancestros (N.25)": 7,
+            "Libro de las Auras (N.30)": 8,
+            "Libro de Hermes Trimegisto (N.35)": 9,
+            "Libro de Merlín (N.40)": 10,
+        }
+        numero_poderes = fix_poderes.get(poderes, 0)
+        payload = self.get_payload({"customFields[63]": f"{numero_poderes}"})
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+        url = f"{base_url}{forum_id}?key={API_KEY_POST}"
+        response = requests.request("POST", url, headers=headers, data=payload)
+        return 1"""
