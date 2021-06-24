@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 
 # Local
-from apps.products.models import Category, Section
+from apps.products.models import Category, Section, Product
 from apps.menu.utils import get_site_url
 
 
@@ -43,11 +43,13 @@ class ProductListMixin:
                 "sections": Section.objects.all(),
                 "search_name": search_name,
                 "search_value": search_value,
+                "all_records": Product.objects.all(),
             }
         )
         return context
 
     def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
         category = self.request.GET.get("category", False)
         section = self.request.GET.get("section", False)
         name = self.request.GET.get("name", False)
@@ -75,7 +77,9 @@ class ProductListMixin:
                 else:
                     queryset = queryset.exclude(reference__icontains="P")
             else:
-                queryset = self.model.objects.filter(category=category,)
+                queryset = self.model.objects.filter(
+                    category=category,
+                )
                 if potions:
                     queryset = self.model.objects.filter(
                         category=category, reference__icontains="P"
@@ -103,7 +107,9 @@ class ProductListMixin:
                 else:
                     queryset = queryset.exclude(reference__icontains="P")
             else:
-                queryset = self.model.objects.filter(category__section=section,)
+                queryset = self.model.objects.filter(
+                    category__section=section,
+                )
                 if potions:
                     queryset = self.model.objects.filter(
                         category__section=section, reference__icontains="P"
@@ -129,7 +135,10 @@ class ProductDetailMixin:
         if slug != upper_slug:
             url = get_site_url(self.object, "detail")
             url = url.replace(slug, upper_slug)
-            return redirect(url, permanent=True,)
+            return redirect(
+                url,
+                permanent=True,
+            )
         return super().get(request, *args, **kwargs)
 
     def get_object(self):
@@ -175,7 +184,10 @@ class ProductEditMixin:
             if slug != upper_slug:
                 url = get_site_url(self.object, "update")
                 url = url.replace(slug, upper_slug)
-                return redirect(url, permanent=True,)
+                return redirect(
+                    url,
+                    permanent=True,
+                )
         return super().get(request, *args, **kwargs)
 
     def get_object(self):
@@ -212,7 +224,9 @@ class StockRequestDetail:
                 self.object.status_request = 2
                 self.object.save()
                 messages.add_message(
-                    request, messages.SUCCESS, "La operación fue cancelada",
+                    request,
+                    messages.SUCCESS,
+                    "La operación fue cancelada",
                 )
                 status = False
         if status and not request.user.has_perm("products.can_approve"):

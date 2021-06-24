@@ -17,11 +17,58 @@ class Profile(BaseModel):
         max_length=8, verbose_name="Rango de Criaturas"
     )
     range_of_objects = models.CharField(max_length=8, verbose_name="Rango de Objetos")
-    vault = models.URLField(verbose_name="Bóveda", null=True, blank=True)
+    vault_number = models.IntegerField(verbose_name="Número de Bóveda")
     avatar = models.URLField()
+    accumulated_posts = models.IntegerField(
+        verbose_name="posteos acumulados", editable=False
+    )
+    salary_scale = models.TextField(
+        verbose_name="escalafón laboral", editable=False, default="T0", max_length=2
+    )
+    user = models.OneToOneField(
+        "authentication.User",
+        verbose_name="Usuario",
+        null=True,
+        blank=True,
+        related_name="profile",
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return self.nick
+
+    def calculate_salary_scale(self):
+        posts = self.accumulated_posts
+        if 1 <= posts <= 100:
+            return "T1"
+        elif 101 <= posts <= 200:
+            return "T2"
+        elif 201 <= posts <= 400:
+            return "T3"
+        elif 401 <= posts <= 700:
+            return "T4"
+        elif 701 <= posts <= 1000:
+            return "T6"
+        elif 1001 <= posts <= 2000:
+            return "T7"
+        elif posts >= 2000:
+            return "T7"
+        else:
+            return "T0"
+
+    def calculate_payment_value(self):
+        salary_scale = self.salary_scale
+        switcher = {
+            "T0": 0,
+            "T1": 5000,
+            "T2": 6000,
+            "T3": 7000,
+            "T4": 8000,
+            "T5": 9000,
+            "T6": 10000,
+            "T7": 15000,
+        }
+        return switcher.get(salary_scale, 0)
 
     def update_url(self):
         return reverse("profile:profile_update", args=(self.id,))

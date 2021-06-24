@@ -7,9 +7,19 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.urls import reverse_lazy
 from django.apps import apps
 from django.forms import modelform_factory
+from django.contrib.admin.utils import flatten
 
-# Superadmin
+# Third party integration
 from superadmin import site
+from superadmin.views.detail import DetailMixin
+
+
+class RenderDetailMixin(DetailMixin):
+    def __init__(self, instance, site_instance, model):
+        self.object = instance
+        self.site = site_instance
+        self.model = model
+        super().__init__()
 
 
 class RenderFormView(View):
@@ -86,4 +96,41 @@ class RenderFieldView(RenderFormView):
         template = render_to_string("insoles/field.html", context=context)
         res = {"template": template}
 
+        return JsonResponse(res, status=200)
+
+
+class RenderDetailView(View):
+    http_method_names = [
+        "get",
+    ]
+
+    @staticmethod
+    def get_data(**kwargs):
+        app_name = kwargs.get("app")
+        model_name = kwargs.get("model")
+        reverse_value = kwargs.get("slug")
+        field = kwargs.get("field")
+        search = {field: reverse_value}
+        app = apps.get_app_config(app_name)
+        model = app.get_model(model_name)
+        instance = model.objects.filter(**search)
+        if instance.exists():
+            instance = instance.get()
+        else:
+            return None
+        model_site = site._registry[model]
+        detail = RenderDetailMixin(
+            instance=instance, site_instance=model_site, model=model
+        )
+        return detail.get_results()
+
+    def get(self, request, *args, **kwargs):
+        flatten_results, results = self.get_data(**kwargs)
+        context = {
+            "results": results,
+        }
+        template = render_to_string("insoles/detail.html", context=context)
+        res = {
+            "template": template,
+        }
         return JsonResponse(res, status=200)

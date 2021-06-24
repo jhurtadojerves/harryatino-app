@@ -1,0 +1,46 @@
+<div class="insoles-forms">
+    <div class="modal fade text-left" id="insoles-forms" tabindex="3" role="dialog" aria-labelledby="modalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel">Contar Posteos<span id="username"></span></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="bx bx-x"></i>
+                    </button>
+                </div>
+                <form id="insoles-form" action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label>ID del Topic</label>
+                                <input class="form-control" type="number" id="member_id_url">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label>Fecha Inicial</label>
+                                <input class="form-control" type="date" id="initial_date">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Fecha Final</label>
+                                <input class="form-control" type="date" id="end_date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary mt-5" id="load_data">Contar Posteos
+                            </button>
+                        </div>
+                        <div id="render_form">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

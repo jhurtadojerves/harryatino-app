@@ -75,6 +75,7 @@ LOCAL_APPS = [
     "apps.members",
     "apps.menu",
     "apps.pages",
+    "apps.payments",
     "apps.products",
     "apps.profiles",
     "apps.sales",
@@ -93,9 +94,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 # Middlewares
@@ -229,4 +236,10 @@ CKEDITOR_CONFIGS = {
         "width": 1400,
         "removePlugins": "autogrow",
     }
+}
+TEMPLATE_WIDGETS_DETAIL = {
+    "default": "detail_widgets/textinput.html",
+    "TextField": "detail_widgets/textarea.html",
+    "ForeignKey": "detail_widgets/foreignkey.html",
+    "OneToOneField": "detail_widgets/foreignkey.html",
 }

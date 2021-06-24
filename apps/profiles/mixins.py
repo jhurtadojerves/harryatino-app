@@ -6,6 +6,7 @@ from django.db.models import Q
 
 # Local
 from apps.products.models import Category, Section, Product
+from apps.profiles.models import Profile
 
 
 class ProfileListMixin:
@@ -75,7 +76,9 @@ class ProfileDetailMixin:
                 category = category.replace("P", "A")
                 potions = True
             category = Category.objects.get(name=category.upper())
-            sales = self.object.sales.filter(product__category=category,)
+            sales = self.object.sales.filter(
+                product__category=category,
+            )
             if potions:
                 sales = sales.exclude(~Q(product__reference__icontains="P"))
             else:
@@ -90,7 +93,9 @@ class ProfileDetailMixin:
                 section = "Objetos"
                 potions = True
             section = Section.objects.get(slug=slugify(section))
-            sales = self.object.sales.filter(product__category__section=section,)
+            sales = self.object.sales.filter(
+                product__category__section=section,
+            )
             if potions:
                 sales = sales.exclude(~Q(product__reference__icontains="P"))
             else:

@@ -28,9 +28,13 @@ import superadmin
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", superadmin.site.urls),
-    path("", include("apps.authentication.urls"),),
+    path(
+        "",
+        include("apps.authentication.urls"),
+    ),
     path("", include("apps.insoles.urls")),
     path("", include("apps.dynamicforms.urls")),
+    path("", include("apps.payments.urls")),
     path("", HomePage.as_view()),
     # Api v1
     path(route="api/v1/", view=include("api.urls")),

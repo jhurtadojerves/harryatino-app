@@ -1,0 +1,18 @@
+{% load superadmin_utils insoles %}
+{% has_detail_url value as is_registered %}
+
+{% if is_registered %}
+    <label>{{ label|capfirst }}</label> <br>
+    {% if value %}
+        <div style="height: 100%;">
+            <a style="display:inline-block; vertical-align: middle;" href="{% site_url value 'detail' %}"
+               class="insoles-detail" data-url="{% insoles_detail value %}" data-originurl="{% site_url value 'detail' %}">{{ value }}</a>
+        </div>
+    {% else %}
+        --
+    {% endif %}
+{% else %}
+    {% include 'detail_widgets/textinput.html' with value=value label=label %}
+{% endif %}
+
+<!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->

@@ -2,7 +2,7 @@
 from django.urls import path
 
 # Views
-from apps.insoles.views import RenderFormView, RenderFieldView
+from apps.insoles.views import RenderFormView, RenderFieldView, RenderDetailView
 
 urlpatterns = [
     path(
@@ -14,5 +14,10 @@ urlpatterns = [
         route="insoles/forms/<slug:app>/<slug:model>/<slug:field>/",
         view=RenderFieldView.as_view(),
         name="insoles_field",
+    ),
+    path(
+        route="insoles/detail/<slug:app>/<slug:model>/<slug:slug>/<slug:field>/",
+        view=RenderDetailView.as_view(),
+        name="insoles_detail",
     ),
 ]

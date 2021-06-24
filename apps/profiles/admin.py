@@ -18,7 +18,6 @@ class ProfileAdmin(ImportExportModelAdmin):
         "magic_level",
         "range_of_creatures",
         "range_of_objects",
-        "vault",
     )
     search_fields = ("nick", "forum_user_id")
 

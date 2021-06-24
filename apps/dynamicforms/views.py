@@ -1,6 +1,7 @@
 """Views to custom forms"""
 # Python
 from datetime import datetime
+import time
 
 # Django
 from django.http import JsonResponse
@@ -21,6 +22,7 @@ env = Env()
 API_KEY_GET = env("API_KEY_GET")
 API_KEY_POST = env("API_KEY_POST")
 API_KEY = env("API_KEY")
+IGNORE_OLD_LEVE = env.bool("IGNORE_OLD_LEVE", False)
 
 
 class MixinDynamicForm:
@@ -32,7 +34,10 @@ class MixinDynamicForm:
         kwargs = {"initial": data}
         if self.request.method in self.METHOD_ACCEPT:
             kwargs.update(
-                {"data": self.request.POST, "files": self.request.FILES,}
+                {
+                    "data": self.request.POST,
+                    "files": self.request.FILES,
+                }
             )
         if hasattr(self, "object"):
             kwargs.update(**attr)
@@ -62,7 +67,12 @@ class BaseForm(MixinDynamicForm, DetailView):
             "POST", url, headers=headers, data=payload_function(data)
         )
         return self.get_response(
-            request.user, response, data, user_id, "guardar", "Información actualizada",
+            request.user,
+            response,
+            data,
+            user_id,
+            "guardar",
+            "Información actualizada",
         )
 
     @staticmethod
@@ -239,17 +249,16 @@ class UpdateLevelsForm(BaseForm):
             members = self.get_full_user_data(self.BASE_API_URL, timestamp)
             members_data = list()
             for member in members:
+                """print(member)
                 data = self.calculate_level(self.BASE_API_URL, member)
                 if data:
-                    members_data.append(data)
-                """try:
+                    members_data.append(data)"""
+                try:
                     data = self.calculate_level(self.BASE_API_URL, member)
                     if data:
-                        breakpoint()
-
                         members_data.append(data)
                 except Exception as e:
-                    print(e)"""
+                    print(member)
 
             AuditAPI.objects.create(
                 username=request.user, data=members_data, action="Niveles actualizados"
@@ -273,7 +282,7 @@ class UpdateLevelsForm(BaseForm):
         new_posts = float(member["posts"])
         posts = (
             int(old_posts) * 5
-            if (old_posts and old_posts and old_posts >= new_posts)
+            if (old_posts and old_posts != "" and int(old_posts) >= new_posts)
             else new_posts * 5
         )
         galleons = (
@@ -311,7 +320,7 @@ class UpdateLevelsForm(BaseForm):
         )
 
         dungeon_points = (
-            float(user_data["71"]) * 2500
+            float(user_data["71"]) * 25
             if (user_data["71"] and user_data["71"] != "")
             else 0
         )
@@ -374,33 +383,36 @@ class UpdateLevelsForm(BaseForm):
         if member["id"] in organization:
             level = 80
         actual_level = int(actual_level) if actual_level and actual_level != "" else 0
-        if actual_level != level:
-            graduate = user_data["40"] if user_data["40"] else ""
-            if graduate == "Graduado":
-                social_rank = self.social_ranks[f"{level}"]
-            else:
-                social_rank = "Aprendiz"
-
-            payload = self.get_payload(
-                {"customFields[43]": f"{level}", "customFields[61]": f"{social_rank}"}
-            )
-            headers = {
-                "Content-Type": "application/x-www-form-urlencoded",
-            }
-            response = requests.request("POST", url, headers=headers, data=payload)
-            data = response.json()
-            response = {
-                "user": {
-                    "id": data["id"],
-                    "nick": data["name"],
-                    "old_level": actual_level,
-                    "calculated_value": level,
-                    "social_rank": social_rank,
-                },
-                "action": "updated",
-            }
+        graduate = user_data["40"] if user_data["40"] else ""
+        if graduate == "Graduado":
+            social_rank = self.social_ranks[f"{level}"]
         else:
-            response = False
+            social_rank = "Aprendiz"
+        payload_data = {
+            "customFields[43]": f"{level}",
+            "customFields[61]": f"{social_rank}",
+        }
+
+        # if ,
+        range_team = self.get_range_team(user_data["76"])
+        if range_team:
+            payload_data.update({"customFields[22]": range_team})
+        payload = self.get_payload(payload_data)
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        data = response.json()
+        response = {
+            "user": {
+                "id": data["id"],
+                "nick": data["name"],
+                "old_level": actual_level,
+                "calculated_value": level,
+                "social_rank": social_rank,
+            },
+            "action": "updated",
+        }
         return response
 
     @staticmethod
@@ -411,11 +423,100 @@ class UpdateLevelsForm(BaseForm):
         json = response.json()
         return json["results"]
 
+    @staticmethod
+    def get_range_team(team, level, inactive):
+        # ID customFieldsInactive => 76
+        # ID customFieldsRange => 22
+        if inactive and inactive == "Inactivo":
+            return "Sin rango por inactividad"
+        if not team or not level:
+            return ""
+        if team == "Orden del Fénix":
+            if 1 <= level <= 9:
+                return "Initie"
+            elif 10 <= level <= 21:
+                return "Legionario"
+            elif 22 <= level <= 36:
+                return "Templario"
+            elif 37 <= level <= 55:
+                return "Knight"
+            # elif 56 <= level <= 60:
+            else:
+                return "Demon Hunter"
+        if team == "Marca Tenebrosa":
+            if 1 <= level <= 9:
+                return "Base"
+            elif 10 <= level <= 21:
+                return "Tempestad"
+            elif 22 <= level <= 36:
+                return "Mago Oscuro"
+            elif 37 <= level <= 55:
+                return "Nigromante"
+            # elif 56 <= level <= 60:
+            else:
+                return "Ángel Caído"
+
+
+class CountMonthlyPostsForm(BaseForm):
+    """Count the monthly post in topic"""
+
+    BASE_API_URL = "https://www.harrylatino.org/api/forums/topics/"
+    URL = BASE_API_URL
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.GET.get("user_id")
+            initial_date = request.GET.get("initial_date")
+            end_date = request.GET.get("end_date")
+            self.object = self.get_object()
+            form, username, data = self.get_form(user_id, initial_date, end_date)
+            create_url = reverse_lazy(self.object.path, args=[self.object.pk])
+            template = render_to_string(self.template_name, context={"form": form})
+            data = {"data": data, "user_id": user_id}
+            AuditAPI.objects.create(username=request.user, data=data, action="obtener")
+            return JsonResponse(
+                {"create_url": create_url, "template": template, "username": username},
+                status=200,
+            )
+        except ValueError:
+            return JsonResponse({}, status=500)
+
+    def get_form(self, user_id, initial_date, end_date):
+        attr = {"form": self.object.form}
+        data, username = self.get_data(
+            self.BASE_API_URL, user_id, initial_date, end_date
+        )
+        form = self._get_form(self.form_class, attr, data)
+        return form, username, data
+
+    def post(self, request, *args, **kwargs):
+        return self.post_request(request, API_KEY_POST, self.get_payload)
+
+    def get_data(self, api_url, topic_id, initial_date, end_date):
+        url = f"{api_url}{topic_id}/posts?perPage=2000&key={API_KEY}"
+        response = requests.request("GET", url, headers={}, data={})
+        data = response.json()
+        return {
+            "number_of_posts": self.check_date(data["results"], initial_date, end_date)
+        }, ""
+
+    def check_date(self, posts, initial_date, end_date):
+        initial_date = time.strptime(initial_date, "%Y-%m-%d")
+        end_date = time.strptime(end_date, "%Y-%m-%d")
+        in_date_posts = list()
+        for post in posts:
+            post_date = time.strptime(post["date"], "%Y-%m-%dT%H:%M:%SZ")
+            if initial_date <= post_date <= end_date:
+                in_date_posts.append(post)
+        return len(in_date_posts)
+
+
+"""
     def fix(self):
         pass
         # Fix Poderes
 
-        """poderes = user_data["62"]
+        poderes = ["62"]
         fix_poderes = {
             "Libro del Aprendiz de Brujo (N.1)": 1,
             "Libro de la Fortaleza (N.5)": 2,
@@ -435,4 +536,4 @@ class UpdateLevelsForm(BaseForm):
         }
         url = f"{base_url}{forum_id}?key={API_KEY_POST}"
         response = requests.request("POST", url, headers=headers, data=payload)
-        return 1"""
+return 1"""

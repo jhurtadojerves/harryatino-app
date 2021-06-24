@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-
+{% load superadmin_utils static %}
 {% block page_title %}{{ object|capfirst|truncatechars:30 }}{% endblock %}
 
 {% block content %}
@@ -52,10 +52,8 @@
                         {% for label, value, widget in row.fields %}
                             <div class="col-md-{{ row.bs_cols }}">
                                 <div class="form-group">
-                                    <label>{{ label|capfirst }}</label>
-                                    <input class="form-control" type="text" value="{{ value|default_if_none:'' }}"
-                                           readonly>
-                                    <!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->
+                                    {% detail_widget label value widget as template %}
+                                    {% include template with labe=label value=value widget=widget %}
                                 </div>
                             </div>
                         {% endfor %}
@@ -91,4 +89,9 @@
             {% endblock %}
         {% endif %}
     </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'assets/js/apps/insoles_detail.js' %}"></script>
 {% endblock %}

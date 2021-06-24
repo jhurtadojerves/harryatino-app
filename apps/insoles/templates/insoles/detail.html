@@ -1,0 +1,13 @@
+{% load superadmin_utils static %}
+{% for row in results %}
+    <div class="row">
+        {% for label, value, widget in row.fields %}
+            <div class="col-md-{{ row.bs_cols }}">
+                <div class="form-group">
+                    {% detail_widget label value widget as template %}
+                    {% include template with labe=label value=value widget=widget %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}

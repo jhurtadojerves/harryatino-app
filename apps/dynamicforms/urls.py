@@ -2,7 +2,12 @@
 from django.urls import path
 
 # Views
-from .views import UpdateProfileForm, UpdateLevelsForm, UpdateTopicsForm
+from .views import (
+    UpdateProfileForm,
+    UpdateLevelsForm,
+    UpdateTopicsForm,
+    CountMonthlyPostsForm,
+)
 
 urlpatterns = [
     path(
@@ -19,5 +24,10 @@ urlpatterns = [
         route="dynamicforms/topics/<int:pk>/",
         view=UpdateTopicsForm.as_view(),
         name="update_topics",
+    ),
+    path(
+        route="dynamicforms/posts/<int:pk>/",
+        view=CountMonthlyPostsForm.as_view(),
+        name="count_posts",
     ),
 ]
