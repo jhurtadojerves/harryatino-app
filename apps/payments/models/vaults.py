@@ -23,7 +23,7 @@ class Vault(BaseModel):
     class Meta(BaseModel.Meta):
         """Class Meta"""
 
-        verbose_name = "Trabajo"
-        verbose_name_plural = "Trabajos"
+        verbose_name = "Bóveda"
+        verbose_name_plural = "Bóvedas"
         ordering = ("wizard__forum_user_id",)
         unique_together = ("vault_type", "identifier")

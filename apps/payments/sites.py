@@ -3,23 +3,15 @@ from superadmin.decorators import register
 
 # Base
 from config.base import BaseSite
-from config.mixins import NotPermissionRequiredMixin
 
-"""
-@register("pages.Page")
-class PageSite(BaseSite):
-    list_mixins = (NotPermissionRequiredMixin,)
-    detail_mixins = (NotPermissionRequiredMixin,)
-    form_template_name = None
-    detail_template_name = None
-    prepopulate_slug = ("name",)
-    menu_is_public = True
-"""
+# Forms
+from .forms import WorkMonthForm
 
 
 @register("payments.Work")
 class WorkSite(BaseSite):
     detail_fields = ("wizard", "work", "work_description")
+    form_class = WorkMonthForm
 
 
 @register("payments.MonthPayment")
