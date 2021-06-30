@@ -14,6 +14,9 @@ from config.mixins.permissions import NotPermissionRequiredMixin
 # Mixins
 from .mixins import ProfileListMixin, ProfileDetailMixin
 
+# Forms
+from .forms import WizardForm
+
 
 @register("profiles.Profile")
 class ProfileSite(BaseSite):
@@ -33,3 +36,4 @@ class ProfileSite(BaseSite):
     list_template_name = None
     detail_template_name = None
     menu_is_public = True
+    form_class = WizardForm

@@ -20,7 +20,7 @@ class Profile(BaseModel):
     vault_number = models.IntegerField(verbose_name="Número de Bóveda")
     avatar = models.URLField()
     accumulated_posts = models.IntegerField(
-        verbose_name="posteos acumulados", editable=False
+        verbose_name="posteos acumulados", editable=False, default=0
     )
     salary_scale = models.TextField(
         verbose_name="escalafón laboral", editable=False, default="T0", max_length=2
