@@ -126,7 +126,9 @@ class UpdateProfileForm(BaseForm):
         url = f"{api_url}{user_id}?key={API_KEY_GET}"
         response = requests.request("GET", url, headers={}, data={})
         data = response.json()
-        custom_fields = data["customFields"]
+        custom_fields = data.get("customFields", False)
+        if not custom_fields:
+            return False, False
         raw_user_data = dict()
         for raw in custom_fields.values():
             raw_user_data.update(raw["fields"])
@@ -509,6 +511,31 @@ class CountMonthlyPostsForm(BaseForm):
             if initial_date <= post_date <= end_date:
                 in_date_posts.append(post)
         return len(in_date_posts)
+
+
+class GetVault(View):
+    """Get all vaults and update profiles"""
+
+    URL = "https://www.harrylatino.org/api/core/members/"
+
+    def get(self, request, *args, **kwargs):
+        from apps.payments.models import Work
+
+        works = Work.objects.filter(is_active=True)
+        for work in works:
+            self.get_vault(work)
+
+        return JsonResponse({"status": 200, "message": "Listo :D"})
+
+    def get_vault(self, work):
+        user_data, username = UpdateProfileForm.get_data(
+            self.URL, work.wizard.forum_user_id
+        )
+        if user_data:
+            vault = user_data.get("customFields[64]", False)
+            if vault:
+                work.wizard.vault_number = vault
+                work.wizard.save()
 
 
 """

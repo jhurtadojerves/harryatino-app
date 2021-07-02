@@ -19,11 +19,15 @@ class ProfileService:
     POSTS_GET_URL = "https://www.harrylatino.org/api/forums/posts"
 
     @classmethod
-    def get_posts(cls, authors, per_page=10000):
-        url = f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&perPage={per_page}&forums=510&authors={authors}&sortBy=date&sortDir=desc"
+    def get_posts(cls, authors, per_page=1000, page=1):
+        url = f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}&forums=510&authors={authors}&sortBy=date&sortDir=desc"
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
-        return json["results"]
+        results = json["results"]
+        total_pages = int(json["totalPages"])
+        if total_pages != page:
+            return results + cls.get_posts(authors, per_page, page=page + 1)
+        return results
 
     @staticmethod
     def get_profiles_id(works):
@@ -33,7 +37,7 @@ class ProfileService:
         return authors
 
     @classmethod
-    def calculate_member_posts(cls, month, works, per_page=10000):
+    def calculate_member_posts(cls, month, works, per_page=1000):
         authors = cls.get_profiles_id(works)
         monthly_posts = get_profiles(authors)
         total_posts = get_profiles(authors)
@@ -47,11 +51,9 @@ class ProfileService:
             python_post_date = time.strptime(
                 post_date, "%Y-%m-%dT%H:%M:%SZ"
             )  # Create python time
-
             total_value = total_posts.get(f"{author_id}", list())
             total_value.append(post["date"])
             total_posts.update({f"{author_id}": total_value})
-
             if first_day <= python_post_date <= last_day:
                 monthly_value = monthly_posts.get(f"{author_id}", list())
                 monthly_value.append(post["date"])

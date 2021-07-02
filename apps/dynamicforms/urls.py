@@ -7,6 +7,7 @@ from .views import (
     UpdateLevelsForm,
     UpdateTopicsForm,
     CountMonthlyPostsForm,
+    GetVault,
 )
 
 urlpatterns = [
@@ -29,5 +30,10 @@ urlpatterns = [
         route="dynamicforms/posts/<int:pk>/",
         view=CountMonthlyPostsForm.as_view(),
         name="count_posts",
+    ),
+    path(
+        route="dynamicforms/vaults/update/",
+        view=GetVault.as_view(),
+        name="update_vaults",
     ),
 ]
