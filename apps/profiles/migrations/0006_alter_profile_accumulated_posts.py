@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('profiles', '0005_profile_user'),
+        ("profiles", "0005_profile_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='accumulated_posts',
-            field=models.IntegerField(default=0, editable=False, verbose_name='posteos acumulados'),
+            model_name="profile",
+            name="accumulated_posts",
+            field=models.IntegerField(
+                default=0, editable=False, verbose_name="posteos acumulados"
+            ),
         ),
     ]

@@ -37,16 +37,14 @@ class CalculatePaymentView(DetailView):
             number_of_posts = len(value)
             if number_of_posts >= 5:
                 calculated_value = work.wizard.calculate_payment_value()
-            else:
-                calculated_value = 0
-            MonthPaymentLine.objects.update_or_create(
-                work=work,
-                month=self.object,
-                defaults={
-                    "number_of_posts": number_of_posts,
-                    "calculated_value": calculated_value,
-                },
-            )
+                MonthPaymentLine.objects.update_or_create(
+                    work=work,
+                    month=self.object,
+                    defaults={
+                        "number_of_posts": number_of_posts,
+                        "calculated_value": calculated_value,
+                    },
+                )
 
         return redirect(site_url(self.object, "detail"))
 

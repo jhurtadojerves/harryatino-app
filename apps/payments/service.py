@@ -53,7 +53,6 @@ class ProfileService:
             total_posts.update({f"{author_id}": total_value})
 
             if first_day <= python_post_date <= last_day:
-                print(first_day <= python_post_date <= last_day)
                 monthly_value = monthly_posts.get(f"{author_id}", list())
                 monthly_value.append(post["date"])
                 monthly_posts.update({f"{author_id}": monthly_value})

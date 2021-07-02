@@ -22,7 +22,9 @@ class Work(BaseModel):
         "profiles.Profile", verbose_name="Usuario", on_delete=models.CASCADE
     )
     work = models.CharField(verbose_name="Trabajo", max_length=256)
-    work_description = models.TextField(verbose_name="Descripción del trabajo")
+    work_description = models.TextField(
+        verbose_name="Descripción del trabajo", blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.wizard}: {self.work}"
