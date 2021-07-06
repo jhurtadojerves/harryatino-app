@@ -28,9 +28,10 @@ class CalculatePaymentView(DetailView):
         total, monthly = ProfileService.calculate_member_posts(self.object, works)
         for key, value in total.items():
             work = works.filter(wizard__forum_user_id=key).get()
-            work.wizard.accumulated_posts = len(value)
-            work.wizard.salary_scale = work.wizard.calculate_salary_scale()
-            work.wizard.save()
+            if work.wizard.accumulated_posts != len(value):
+                work.wizard.accumulated_posts = len(value)
+                work.wizard.salary_scale = work.wizard.calculate_salary_scale()
+                work.wizard.save()
 
         for key, value in monthly.items():
             work = works.filter(wizard__forum_user_id=key).get()
