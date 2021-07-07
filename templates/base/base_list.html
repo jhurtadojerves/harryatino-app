@@ -23,9 +23,9 @@
             </div>
             <div class="card-toolbar">
                 <!--begin::Button-->
-                {% concat_all site.app_name '.' 'add_' site.model_name  as add_perm %}
-                {% concat_all site.app_name '.' 'change_' site.model_name  as change_perm %}
-                {% concat_all site.app_name '.' 'delete_' site.model_name  as delete_perm %}
+                {% concat_all site.app_name '.' 'add_' site.model_name as add_perm %}
+                {% concat_all site.app_name '.' 'change_' site.model_name as change_perm %}
+                {% concat_all site.app_name '.' 'delete_' site.model_name as delete_perm %}
                 {% check_permission request.user add_perm as add_perm %}
                 {% check_permission request.user change_perm as change_perm %}
                 {% check_permission request.user delete_perm as delete_perm %}
@@ -43,21 +43,26 @@
                 <!--begin::Card-->
                 {% block list_actions %}
                     <!--begin::Search Form-->
-                    <div class="d-flex mt-2 mb-7">
-                        {% block search %}
+                    {% block search %}
+                        <div class="d-flex mt-2 mb-7">
                             <div class="table-search flex-grow-1 p-1">
-                                <form action="" id="search_form">
-                                    <input id="name" type="search" class="form-control form-control"
-                                           placeholder="Buscar" name="name" value="{{ name_value }}">
-                                    {% if search_name %}
-                                        <input id="{{ search_name }}" style="display: none;" type="text"
-                                               class="form-control form-control"
-                                               placeholder="Buscar" name="{{ search_name }}" value="{{ search_value }}">
+                                <!--<input id="id_table_search" type="search" class="form-control form-control"
+                                        placeholder="Buscar">-->
+                                <div class="input-group">
+                                    <input id="id_table_search" type="text" class="form-control"
+                                           placeholder="Buscar...">
+                                    {% if site.filter_fields %}
+                                        <div class="input-group-append">
+                                            <button id="kt_quick_cart_toggle" class="btn btn-primary" type="button">
+                                                Avanzado
+                                            </button>
+                                        </div>
                                     {% endif %}
-                                </form>
+                                </div>
+
                             </div>
-                        {% endblock %}
-                    </div>
+                        </div>
+                    {% endblock %}
                     <!--end: Search Form-->
                 {% endblock %}
 
