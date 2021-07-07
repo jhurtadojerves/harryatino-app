@@ -16,7 +16,6 @@ class WorkSite(BaseSite):
     paginate_by = 30
     form_class = WorkMonthForm
     list_mixins = (WorkListMixin,)
-    search_fields = ("wizard__nick__icontains", "wizard__forum_user_id__icontains")
 
 
 @register("payments.MonthPayment")
