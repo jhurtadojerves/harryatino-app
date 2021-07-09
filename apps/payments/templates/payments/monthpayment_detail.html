@@ -33,8 +33,9 @@
                 <th scope="col">Usuario</th>
                 <th scope="col">Trabajo</th>
                 <th scope="col">Mes a Pagar</th>
-                <th scope="col">Posteos del Mes</th>
                 <th scope="col">Bóveda</th>
+                <th scope="col">Posteos del Mes</th>
+                <th scope="col">Escalafón</th>
                 <th scope="col">Valor a Pagar</th>
                 <th scope="col">Acciones/Información</th>
             </tr>
@@ -45,8 +46,8 @@
                     <th scope="row">{{ line.work.wizard }}</th>
                     <td>{{ line.work.work }}</td>
                     <td>{{ line.month }}</td>
+                    <td>{{ line.work.wizard.vault_number }}</td>
                     <td>{{ line.number_of_posts }}</td>
-                    <td>{{ line.work.wizard.vault }}</td>
                     <td>{{ line.work.wizard.salary_scale }}</td>
                     <td>{{ line.calculated_value }} G.</td>
                     <td>
