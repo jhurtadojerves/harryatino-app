@@ -20,6 +20,7 @@ class ProfileService:
 
     @classmethod
     def get_posts(cls, authors, per_page=1000, page=1):
+        print(page)
         url = f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}&forums=510&authors={authors}&sortBy=date&sortDir=desc"
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
@@ -37,7 +38,7 @@ class ProfileService:
         return authors
 
     @classmethod
-    def calculate_member_posts(cls, month, works, per_page=1000):
+    def calculate_member_posts(cls, month, works, per_page=500):
         authors = cls.get_profiles_id(works)
         monthly_posts = get_profiles(authors)
         total_posts = get_profiles(authors)
