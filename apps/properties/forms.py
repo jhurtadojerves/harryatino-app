@@ -1,0 +1,27 @@
+"""Products form"""
+
+# Third party integration
+from superadmin.forms import ModelForm
+from ckeditor.widgets import CKEditorWidget
+from django_select2 import forms as s2forms
+
+# Local
+from apps.properties.models import Property
+from apps.profiles.models import Profile
+
+
+class PropertyForm(ModelForm):
+    class Meta:
+        model = Property
+        fieldsets = (
+            ("name", "owner", "property_type"),
+            ("vault", "inscription", "rol"),
+            "content",
+        )
+        widgets = {
+            "content": CKEditorWidget(),
+            "owner": s2forms.ModelSelect2MultipleWidget(
+                model=Profile,
+                search_fields=["forum_user_id__icontains", "nick__icontains"],
+            ),
+        }

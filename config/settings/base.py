@@ -78,8 +78,10 @@ LOCAL_APPS = [
     "apps.payments",
     "apps.products",
     "apps.profiles",
+    "apps.properties",
     "apps.sales",
 ]
+
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # Passwords
