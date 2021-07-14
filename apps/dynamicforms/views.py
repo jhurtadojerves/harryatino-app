@@ -421,7 +421,7 @@ class UpdateLevelsForm(BaseForm):
 
     @staticmethod
     def get_full_user_data(base_url, timestamp, per_page=1000):
-        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}&group=126"
+        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}"
         # &group=126 this key can be used to filter by id group
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
