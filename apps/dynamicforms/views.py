@@ -260,7 +260,7 @@ class UpdateLevelsForm(BaseForm):
                     if data:
                         members_data.append(data)
                 except Exception as e:
-                    print(member)
+                    print(e)
 
             AuditAPI.objects.create(
                 username=request.user, data=members_data, action="Niveles actualizados"
@@ -396,7 +396,9 @@ class UpdateLevelsForm(BaseForm):
         }
 
         # if ,
-        range_team = self.get_range_team(user_data["76"])
+        # team, level, inactive
+        team = user_data["18"] if user_data["18"] else ""
+        range_team = self.get_range_team(team, level, user_data["76"])
         if range_team:
             payload_data.update({"customFields[22]": range_team})
         payload = self.get_payload(payload_data)
@@ -419,7 +421,7 @@ class UpdateLevelsForm(BaseForm):
 
     @staticmethod
     def get_full_user_data(base_url, timestamp, per_page=1000):
-        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}"
+        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}&group=126"
         # &group=126 this key can be used to filter by id group
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
@@ -431,7 +433,7 @@ class UpdateLevelsForm(BaseForm):
         # ID customFieldsRange => 22
         if inactive and inactive == "Inactivo":
             return "Sin rango por inactividad"
-        if not team or not level:
+        if not team or not level or team == "Sin información":
             return ""
         if team == "Orden del Fénix":
             if 1 <= level <= 9:
@@ -457,6 +459,8 @@ class UpdateLevelsForm(BaseForm):
             # elif 56 <= level <= 60:
             else:
                 return "Ángel Caído"
+
+        return ""
 
 
 class CountMonthlyPostsForm(BaseForm):
