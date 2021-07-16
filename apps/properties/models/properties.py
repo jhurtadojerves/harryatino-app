@@ -14,9 +14,7 @@ from ..choices import PropertiesChoices
 
 class Property(BaseModel):
     name = models.CharField(max_length=128, unique=True, verbose_name="Nombre")
-    content = RichTextField(
-        verbose_name="Contenido",
-    )
+    content = RichTextField(verbose_name="Contenido", null=True, blank=True)
     owner = models.ManyToManyField(
         "profiles.Profile", verbose_name="Propietarios/Patriarcas"
     )
