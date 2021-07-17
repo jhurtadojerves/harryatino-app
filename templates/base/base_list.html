@@ -50,7 +50,7 @@
                                         placeholder="Buscar">-->
                                 <div class="input-group">
                                     <input id="id_table_search" type="text" class="form-control"
-                                           placeholder="Buscar...">
+                                           placeholder="Buscar..." value="{{ search }}">
                                     {% if site.filter_fields %}
                                         <div class="input-group-append">
                                             <button id="kt_quick_cart_toggle" class="btn btn-primary" type="button">
@@ -87,12 +87,10 @@
                                 {% endfor %}
                                 <td>
                                     <div>
-                                        {% if row.urls.detail %}
-                                            <a href="{{ row.urls.detail }}" class="btn btn-sm btn-clean btn-icon"
-                                               title="Ver detalles">
-                                                <i class="fas fa-eye icon-md"></i>
-                                            </a>
-                                        {% endif %}
+                                        <a href="{{ row.urls.detail }}" class="btn btn-sm btn-clean btn-icon"
+                                           title="Ver detalles">
+                                            <i class="fas fa-eye icon-md"></i>
+                                        </a>
                                         {% if row.urls.update and change_perm %}
                                             <a href="{{ row.urls.update }}" class="btn btn-sm btn-clean btn-icon"
                                                title="Editar detalles">
