@@ -87,7 +87,7 @@
                                 {% endfor %}
                                 <td>
                                     <div>
-                                        <a href="{{ row.urls.detail }}" class="btn btn-sm btn-clean btn-icon"
+                                        <a href="{% site_url row.instance 'detail' %}" class="btn btn-sm btn-clean btn-icon"
                                            title="Ver detalles">
                                             <i class="fas fa-eye icon-md"></i>
                                         </a>
