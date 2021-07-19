@@ -6,15 +6,17 @@ from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
 
 from .forms import PropertyForm
+from config.mixins import GenericFiltering
 
 
 @register("properties.Property")
 class FamilySite(BaseSite):
     form_class = PropertyForm
-    list_mixins = (NotPermissionRequiredMixin,)
+    list_mixins = (NotPermissionRequiredMixin, GenericFiltering)
     detail_mixins = (NotPermissionRequiredMixin,)
     form_template_name = None
     detail_template_name = None
+    list_template_name = None
 
     list_fields = ("property_type", "name", "vault", "inscription", "rol")
     detail_fields = (
@@ -22,3 +24,4 @@ class FamilySite(BaseSite):
         ("vault", "inscription", "rol"),
     )
     menu_is_public = True
+    search_param = "name"

@@ -1,0 +1,26 @@
+{% extends "base/base_list.html" %}
+{% load superadmin_utils %}
+{% block search %}
+    <input type="text" id="id_table_search" style="display: none;">
+
+    <form action="">
+        <input type="text" class="form-control" name="search"
+               placeholder="Buscar..." value="{{ search }}">
+        {% for key, param in params.items %}
+            <input type="text" name="{{ key }}" value="{{ param }}" style="display: none;">
+        {% endfor %}
+        <input type="submit" style="display: none;">
+    </form>
+
+    <br>
+    <a class="btn btn-info" type="button" href="?{% if search %}&search={{ search }}{% endif %}">
+        Todos
+    </a>
+    <a class="btn btn-primary" type="button" href="?property_type=0{% if search %}&search={{ search }}{% endif %}">
+        Familia
+    </a>
+    <a class="btn btn-secondary" type="button" href="?property_type=1{% if search %}&search={{ search }}{% endif %}">
+        Negocios
+    </a>
+    <hr>
+{% endblock %}

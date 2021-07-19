@@ -8,6 +8,9 @@ from config.base import BaseSite
 from .forms import WorkMonthForm
 from .mixins import WorkListMixin
 
+# Filtering
+from config.mixins import GenericFiltering
+
 
 @register("payments.Work")
 class WorkSite(BaseSite):
@@ -27,4 +30,8 @@ class MonthPaymentSite(BaseSite):
 @register("payments.PropertyPayment")
 class PropertyPaymentSite(BaseSite):
     detail_fields = (("month", "payment_type"),)
+    list_fields = ("month", "payment_type")
+
     detail_template_name = None
+    list_template_name = None
+    list_mixins = (GenericFiltering,)
