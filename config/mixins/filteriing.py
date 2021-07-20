@@ -13,6 +13,7 @@ class GenericFiltering:
         if search_params:
             params = search_params.dict()
             search = params.pop("search", None)
+            params.pop("page", None)
             model_site = site.get_modelsite(self.model)
             if (
                 search
