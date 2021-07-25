@@ -17,6 +17,7 @@ class PropertyForm(ModelForm):
             ("name", "owner", "property_type"),
             ("vault", "inscription", "rol"),
             "content",
+            "is_active",
         )
         widgets = {
             "content": CKEditorWidget(),
