@@ -138,7 +138,7 @@ class CreatePaymentView(DetailView):
                     "url": self.object.paid_url,
                 }
             )
-        if not self.object.work.post_url:
+        if not self.object.month.post_url:
             return JsonResponse(
                 {
                     "status_code": 403,
@@ -202,7 +202,7 @@ class CreatePaymentView(DetailView):
         html = self.post_html(
             data={
                 "previous_galleons": previous_galleons,
-                "url": self.object.work.post_url,
+                "url": self.object.month.post_url,
                 "reason": f"CMI {self.object.month.__str__()}",
                 "galleons": galleons,
                 "total_galleons": galleons + previous_galleons,
