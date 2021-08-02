@@ -26,6 +26,7 @@ class BaseService:
         json = response.json()
         results = json["results"]
         total_pages = int(json["totalPages"])
+        print(f"{page} de {total_pages}")
         if total_pages != page:
             return results + cls.get_posts(authors, per_page, page=page + 1)
         return results

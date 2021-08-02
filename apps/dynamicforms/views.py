@@ -13,6 +13,7 @@ from django.views.generic import DetailView
 # Local
 from apps.dynamicforms.forms import CreationDynamicForm
 from .models import Form, AuditAPI, Action
+from apps.profiles.models import Profile
 
 # Third party integration
 import requests
@@ -251,25 +252,28 @@ class UpdateLevelsForm(BaseForm):
             members = self.get_full_user_data(self.BASE_API_URL, timestamp)
             members_data = list()
             for member in members:
+                forum_id = member["id"]
+                profile = False
+                try:
+                    profile = Profile.objects.get(forum_user_id=forum_id)
+                except:
+                    print(forum_id)
                 """print(member)
                 data = self.calculate_level(self.BASE_API_URL, member)
                 if data:
                     members_data.append(data)"""
                 try:
-                    data = self.calculate_level(self.BASE_API_URL, member)
+                    data = self.calculate_level(self.BASE_API_URL, member, profile)
                     if data:
                         members_data.append(data)
                 except Exception as e:
-                    print(e)
+                    print(e, member)
 
-            AuditAPI.objects.create(
-                username=request.user, data=members_data, action="Niveles actualizados"
-            )
             return JsonResponse({"status": 200, "message": "Niveles actualizados"})
         except ValueError:
             return JsonResponse({}, status=500)
 
-    def calculate_level(self, base_url, member):
+    def calculate_level(self, base_url, member, profile):
         custom_fields = member["customFields"]
         raw_user_data = dict()
         for raw in custom_fields.values():
@@ -417,6 +421,15 @@ class UpdateLevelsForm(BaseForm):
             },
             "action": "updated",
         }
+
+        if profile:
+            profile.nick = member["name"]
+            profile.magic_level = level
+            # profile.range_of_creatures = user_data["35"] if user_data["35"] else ""
+            # profile.range_of_objects = user_data["36"] if user_data["36"] else ""
+            if member["photoUrl"]:
+                profile.avatar = member["photoUrl"]
+            profile.save()
         return response
 
     @staticmethod

@@ -45,7 +45,7 @@ class Sale(BaseModel):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        if not self.pk is None and self.product.check_stock() == 0:
+        if self.pk and self.product.check_stock() == 0:
             raise ValidationError(
                 for_humans(
                     f"No se puede vender {self.product.name} ya que su stock actual es 0"

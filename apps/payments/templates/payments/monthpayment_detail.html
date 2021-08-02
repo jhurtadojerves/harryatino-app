@@ -68,6 +68,30 @@
             </tbody>
         </table>
     </div>
+
+    <div class="row">
+
+        <div class="form-group">
+
+            <label for="id_work_description" class="form-label">Post para el Foro</label>
+            <textarea name="" cols="40" rows="10" class="form-control"
+                      id="">
+                <h1 style="text-align: center;">Pagos de {{ object }}</h1>
+                <ul>
+                {% for line in object.lines.all %}
+                    <li>
+                    {{ line.work.wizard.nick }} | Bóveda <a
+                    href="https://harrylatino.org/index.php?showtopic={{ line.work.wizard.vault_number }}">#
+                    {{ line.work.wizard.vault_number }}</a>
+                    | {{ line.number_of_posts }} posts | {{ line.work.wizard.salary_scale }}
+                    </li>
+                {% endfor %}
+                </ul>
+            </textarea>
+
+
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}

@@ -41,6 +41,9 @@ class MonthPayment(BaseModel):
     """Model to define monthly payment"""
 
     month = models.DateField(verbose_name="Mes y año", default=timezone.now)
+    post_url = models.URLField(
+        verbose_name="Link del pedido de pago", blank=True, null=True
+    )
 
     def __str__(self):
         locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")

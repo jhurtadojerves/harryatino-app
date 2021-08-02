@@ -88,8 +88,39 @@ class CalculatePaymentView(DetailView):
                         "calculated_value": calculated_value,
                     },
                 )
-
+            profile = work.wizard
+            salary_scale = profile.salary_scale
+            accumulated_posts = profile.accumulated_posts
+            data = self.get_payload(
+                {
+                    "customFields[74]": f"{salary_scale}",
+                    "customFields[73]": f"{accumulated_posts}",
+                    "customFields[31]": f"{number_of_posts}",
+                }
+            )
+            self.update_galleons_in_profile(
+                data,
+                profile.forum_user_id,
+                UpdateProfileForm.URL,
+            )
         return redirect(site_url(self.object, "detail"))
+
+    @staticmethod
+    def update_galleons_in_profile(data, user_id, url):
+        url = f"{url}{user_id}?key={API_KEY}"
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+        response = requests.request("POST", url, headers=headers, data=data)
+        return response.json()
+
+    @staticmethod
+    def get_payload(data):
+        payload = ""
+        for key, value in data.items():
+            payload += f"{key}={value}&"
+        payload = payload.encode("utf-8")
+        return payload
 
 
 class CreatePaymentView(DetailView):
@@ -107,8 +138,20 @@ class CreatePaymentView(DetailView):
                     "url": self.object.paid_url,
                 }
             )
+        if not self.object.work.post_url:
+            if self.object.paid:
+                return JsonResponse(
+                    {
+                        "status_code": 403,
+                        "message": "Debes configurar el link del post de petición",
+                        "url": False,
+                    }
+                )
         try:
             profile = self.object.work.wizard
+            salary_scale = profile.salary_scale
+            accumulated_posts = profile.accumulated_posts
+            number_of_posts = self.object.number_of_posts
             data = UpdateProfileForm.get_data(
                 UpdateProfileForm.URL, profile.forum_user_id
             )[0]
@@ -119,7 +162,14 @@ class CreatePaymentView(DetailView):
             response_post = self.create_post(
                 request, previous_galleons, profile.vault_number
             )
-            data = self.get_payload({"customFields[12]": total_galleons})
+            data = self.get_payload(
+                {
+                    "customFields[12]": f"{total_galleons}",
+                    "customFields[74]": f"{salary_scale}",
+                    "customFields[73]": f"{accumulated_posts}",
+                    "customFields[31]": f"{number_of_posts}",
+                }
+            )
             response_profile = self.update_galleons_in_profile(
                 data,
                 profile.forum_user_id,
@@ -152,7 +202,7 @@ class CreatePaymentView(DetailView):
         html = self.post_html(
             data={
                 "previous_galleons": previous_galleons,
-                "url": None,
+                "url": self.object.work.post_url,
                 "reason": f"CMI {self.object.month.__str__()}",
                 "galleons": galleons,
                 "total_galleons": galleons + previous_galleons,
@@ -188,6 +238,7 @@ class CreatePaymentView(DetailView):
 
 class CreatePaymentPropertyView(CreatePaymentView):
     model = PropertyPaymentLine
+    template_name = "payments/properties.html"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -221,7 +272,7 @@ class CreatePaymentPropertyView(CreatePaymentView):
             self.object.paid = True
             self.object.save()
             return JsonResponse(
-                {"status_code": 200, "message": "Deposito realizado correctamente"}
+                {"status_code": 200, "message": "Depósito realizado correctamente"}
             )
         except Exception as e:
             return {"status_code": 500, "message": str(e)}
