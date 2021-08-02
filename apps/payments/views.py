@@ -139,14 +139,14 @@ class CreatePaymentView(DetailView):
                 }
             )
         if not self.object.work.post_url:
-            if self.object.paid:
-                return JsonResponse(
-                    {
-                        "status_code": 403,
-                        "message": "Debes configurar el link del post de petición",
-                        "url": False,
-                    }
-                )
+            return JsonResponse(
+                {
+                    "status_code": 403,
+                    "message": "Debes configurar el link del post de petición",
+                    "url": False,
+                }
+            )
+
         try:
             profile = self.object.work.wizard
             salary_scale = profile.salary_scale
