@@ -48,7 +48,7 @@ class PropertyPaymentLine(BaseModel):
         PropertyPayment,
         verbose_name="Pago",
         related_name="lines",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     property = models.ForeignKey(
         "properties.Property",
