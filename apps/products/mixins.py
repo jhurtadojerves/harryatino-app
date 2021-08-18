@@ -52,7 +52,7 @@ class ProductListMixin:
         queryset = super().get_queryset(*args, **kwargs)
         category = self.request.GET.get("category", False)
         section = self.request.GET.get("section", False)
-        name = self.request.GET.get("name", False)
+        name = self.request.GET.get("search", False)
         search_name = dict()
         if name:
             search_name.update({"name__icontains": name})
