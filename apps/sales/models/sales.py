@@ -46,12 +46,16 @@ class Sale(BaseModel):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        if self.pk and self.product.check_stock() == 0 and not self.buyer:
-            raise ValidationError(
-                for_humans(
-                    f"No se puede vender {self.product.name} ya que su stock actual es 0"
+        if self.pk:
+            if self.vip_sale:
+                self.product.initial_stock = self.product.initial_stock + 1
+                self.product.save()
+            if self.product.check_stock() == 0:
+                raise ValidationError(
+                    for_humans(
+                        f"No se puede vender {self.product.name} ya que su stock actual es 0"
+                    )
                 )
-            )
         elif self.pk:
             sale = Sale.objects.get(pk=self.pk)
             if sale.product.pk != self.product.pk and self.product.check_stock() == 0:
