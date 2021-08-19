@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sales', '0003_sale_buyer'),
+        ("sales", "0003_sale_buyer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sale',
-            name='vip_sale',
-            field=models.BooleanField(default=False, verbose_name='Compra con llaves HL'),
+            model_name="sale",
+            name="vip_sale",
+            field=models.BooleanField(
+                default=False, verbose_name="Compra con llaves HL"
+            ),
         ),
     ]
