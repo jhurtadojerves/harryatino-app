@@ -32,6 +32,7 @@ class Sale(BaseModel):
         "Consumables. True = Consumable Used"
         "Creatures. True = In the creature pool",
     )
+    vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
     buyer = models.ForeignKey(
         "authentication.User", verbose_name="vendedor", on_delete=models.PROTECT
     )
@@ -45,7 +46,7 @@ class Sale(BaseModel):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        if self.pk and self.product.check_stock() == 0:
+        if self.pk and self.product.check_stock() == 0 and not self.buyer:
             raise ValidationError(
                 for_humans(
                     f"No se puede vender {self.product.name} ya que su stock actual es 0"

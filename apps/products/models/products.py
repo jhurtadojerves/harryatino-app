@@ -18,7 +18,7 @@ class Product(BaseModel):
     )  # I am sorry 2^n, but this value is very important
     points = models.PositiveIntegerField(verbose_name="Puntos")
     cost = models.PositiveIntegerField(verbose_name="Precio")
-    initial_stock = models.PositiveIntegerField(verbose_name="Stock inicial")
+    initial_stock = models.PositiveIntegerField(verbose_name="Stock inicial", default=1)
     image = models.URLField(verbose_name="Imagen")
     uploaded_image = models.ImageField(
         verbose_name="Imagen", null=True, upload_to=get_upload_path

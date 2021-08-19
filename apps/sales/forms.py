@@ -1,7 +1,7 @@
 """Forms file"""
 
 # Django
-from django.forms import ModelForm, Form
+from django.forms import Form
 from django import forms
 
 # Local
@@ -11,6 +11,7 @@ from apps.profiles.models import Profile
 
 # Third Party Integration
 from django_select2.forms import ModelSelect2Widget
+from superadmin.forms import ModelForm
 
 
 class SaleForm(ModelForm):
@@ -18,7 +19,7 @@ class SaleForm(ModelForm):
 
     class Meta:
         model = Sale
-        fields = ("date", "product", "profile", "available")
+        fieldsets = ("date", "product", "profile", ("available", "vip_sale"))
         widgets = {
             "product": ModelSelect2Widget(
                 model=Product,
