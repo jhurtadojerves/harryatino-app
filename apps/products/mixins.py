@@ -11,6 +11,7 @@ from django.http import Http404
 # Local
 from apps.products.models import Category, Section, Product
 from apps.menu.utils import get_site_url
+from .forms import ProductFormStaff
 
 
 class ProductListMixin:
@@ -174,6 +175,7 @@ class ProductDetailMixin:
 
 class ProductEditMixin:
     slug_field = "reference"
+    staff_form = ProductFormStaff
 
     def get(self, request, *args, **kwargs):
 
@@ -201,6 +203,12 @@ class ProductEditMixin:
                 f"No {queryset.model._meta.verbose_name} found matching the query"
             )
         return obj
+
+    def get_form_class(self):
+        """Return the form class to use."""
+        if self.request.user.is_staff:
+            return self.staff_form
+        return self.form_class
 
 
 class StockRequestDetail:

@@ -72,6 +72,20 @@ class StockRequestForm(ModelForm):
         )
 
 
+class ProductFormStaff(ProductForm):
+    class Meta(ProductForm.Meta):
+        fieldsets = (
+            ("name", "reference", "initial_stock"),
+            ("points", "cost"),
+            ("image", "uploaded_image"),
+            (
+                "section",
+                "category",
+            ),
+            ("description",),
+        )
+
+
 StockFormset = inlineformset_factory(
     StockRequest,
     StockProduct,

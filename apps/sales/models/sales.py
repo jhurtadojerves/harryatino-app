@@ -46,7 +46,7 @@ class Sale(BaseModel):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        if self.pk:
+        if not self.pk:
             if self.vip_sale:
                 self.product.initial_stock = self.product.initial_stock + 1
                 self.product.save()

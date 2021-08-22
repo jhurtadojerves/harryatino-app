@@ -1,1 +1,1 @@
-from .products import ProductForm, StockRequestForm, StockFormset
+from .products import ProductForm, StockRequestForm, StockFormset, ProductFormStaff
