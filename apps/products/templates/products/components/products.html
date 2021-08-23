@@ -6,7 +6,7 @@
                 <div class="card bg-light text-dark p-3 m-2">
                     <a href="{% site_url object 'detail' %}" class="mb-3">
                         <img
-                            src="{{ object.image }}"
+                            src="{{ object.get_image }}"
                             alt="{{ object.name }}"
                             class="rounded product_image"
                             style="{% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"

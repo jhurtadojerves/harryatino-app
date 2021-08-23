@@ -1,12 +1,20 @@
 """Product model"""
 
+# Python
+from io import BytesIO
+
 # Django
 from django.db import models
+from django.db.models.signals import post_save
+from django.core import files
 
 # Models
 from tracing.models import BaseModel
 from apps.products.models import Category
 from ..utils import get_upload_path
+
+# Third party integrations
+import requests
 
 
 class Product(BaseModel):
@@ -21,7 +29,7 @@ class Product(BaseModel):
     initial_stock = models.PositiveIntegerField(verbose_name="Stock inicial", default=1)
     image = models.URLField(verbose_name="Imagen")
     uploaded_image = models.ImageField(
-        verbose_name="Imagen", null=True, upload_to=get_upload_path
+        verbose_name="Imagen", null=True, upload_to=get_upload_path, blank=True
     )
     description = models.TextField(verbose_name="Descripción")
     category = models.ForeignKey(
@@ -66,3 +74,16 @@ class Product(BaseModel):
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ("pk",)
+
+
+def download_from_imgur_and_upload(sender, instance, created, **kwargs):
+    if not instance.uploaded_image and instance.image:
+        response = requests.get(instance.image, stream=True)
+        if response.status_code == requests.codes.ok:
+            file_name = instance.image.split("/")[-1]
+            fp = BytesIO()
+            fp.write(response.content)
+            instance.uploaded_image.save(file_name, files.File(fp))
+
+
+post_save.connect(download_from_imgur_and_upload, sender=Product)
