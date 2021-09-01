@@ -5,21 +5,21 @@
     {% endfor %}
 {% else %}
     {% for row in form.get_fieldsets %}
-    <div class="row">
-        {% for field in row.fields %}
-        {% if not field.is_hidden %}
-        <div class="col-md-{{ row.bs_cols }}">
-            {% include "forms/formgroup.html" with field=field %}
+        <div class="row">
+            {% for field in row.fields %}
+                {% if not field.is_hidden %}
+                    <div class="col-md-{{ row.bs_cols }}">
+                        {% include "forms/formgroup.html" with field=field %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-        {% endif %}
-        {% endfor %}
-    </div>
     {% endfor %}
 {% endif %}
 
 <!-- Hidden fields -->
-{% for field in form.hidden_fields %} 
-  {{ field }}
+{% for field in form.hidden_fields %}
+    {{ field }}
 {% endfor %}
 
 

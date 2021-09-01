@@ -83,7 +83,10 @@
                     {{ line.work.wizard.nick }} | Bóveda <a
                     href="https://harrylatino.org/index.php?showtopic={{ line.work.wizard.vault_number }}">#
                     {{ line.work.wizard.vault_number }}</a>
-                    | {{ line.number_of_posts }} posts | {{ line.work.wizard.salary_scale }}
+                    | {{ line.number_of_posts }} posts | {{ line.work.wizard.salary_scale }}{% if line.paid %}
+                    | <a
+                    href="{{ line.paid_url }}" target="_blank">Pago Realizado</a>
+                    {% endif %}
                     </li>
                 {% endfor %}
                 </ul>
