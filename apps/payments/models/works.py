@@ -19,7 +19,10 @@ class Work(BaseModel):
     """Work model."""
 
     wizard = models.ForeignKey(
-        "profiles.Profile", verbose_name="Usuario", on_delete=models.CASCADE
+        "profiles.Profile",
+        verbose_name="Usuario",
+        on_delete=models.CASCADE,
+        unique=True,
     )
     work = models.CharField(verbose_name="Trabajo", max_length=256)
     work_description = models.TextField(

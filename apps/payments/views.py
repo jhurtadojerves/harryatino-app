@@ -208,7 +208,8 @@ class CreatePaymentView(DetailView):
                 "total_galleons": galleons + previous_galleons,
             },
         )
-        author = request.user.profile.forum_user_id
+        # author = request.user.profile.forum_user_id
+        author = 121976
         payload = f"topic={topic}&author={author}&post={html}"
         url = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
         response = self.post_request(url, payload)
