@@ -157,6 +157,23 @@ class UpdateTopicsForm(BaseForm):
         return self.post_request(request, API_KEY_POST, self.get_payload)
 
 
+class UpdatePostForm(UpdateTopicsForm):
+    BASE_API_URL = "https://www.harrylatino.org/api/forums/posts/"
+    URL = "https://www.harrylatino.org/api/forums/posts/"
+
+    @staticmethod
+    def get_data(api_url, topic_id):
+        url = f"{api_url}{topic_id}?key=a558a350a81d71e06a6d0ae449d9d773"
+        response = requests.request("GET", url, headers={}, data={})
+        data = response.json()
+        return data, ""
+
+    def post(self, request, *args, **kwargs):
+        return self.post_request(
+            request, "a558a350a81d71e06a6d0ae449d9d773", self.get_payload
+        )
+
+
 class UpdateLevelsForm(BaseForm):
     """Get data for update levels"""
 
