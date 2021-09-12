@@ -281,7 +281,7 @@ class CreatePaymentPropertyView(CreatePaymentView):
     def create_post(self, request, data, topic):
 
         html = self.post_html(data)
-        author = request.user.profile.forum_user_id
+        author = 121976  # Forum payments profile
         payload = f"topic={topic}&author={author}&post={html}"
         url = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
         response = self.post_request(url, payload)
