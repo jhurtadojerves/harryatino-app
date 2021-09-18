@@ -4,6 +4,10 @@
 import calendar
 from datetime import datetime
 
+# Third party integration
+from django_fsm import FSMIntegerField
+
+
 # Django
 from django.db import models
 from django.utils import timezone
@@ -11,6 +15,10 @@ from django.utils import timezone
 
 # Models
 from tracing.models import BaseModel
+
+# Transitions
+from ..transitions import PostTransitions
+
 
 import locale
 
@@ -92,3 +100,33 @@ class MonthPaymentLine(BaseModel):
 
     class Meta:
         unique_together = ("work", "month")
+
+
+class Post(BaseModel, PostTransitions):
+    workflow = PostTransitions.workflow
+
+    content = models.JSONField(default=dict, verbose_name="contenido")
+    parse_content = models.JSONField(default=dict, verbose_name="contenido parseado")
+    month = models.DateField(verbose_name="Mes y año", default=timezone.now)
+
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
+    )
+
+    def last_day(self):
+        month = calendar.monthrange(self.month.year, self.month.month)
+        last_day_date = datetime(
+            self.month.year, self.month.month, month[1], hour=23, minute=59, second=59
+        )
+        return last_day_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def first_day(self):
+        first_day_date = datetime(self.month.year, self.month.month, 1)
+        return first_day_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def __str__(self):
+        locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
+        return self.month.strftime("%B del %Y")

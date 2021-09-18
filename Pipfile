@@ -20,6 +20,7 @@ django-extensions = "*"
 django-mathfilters = "*"
 requests = "*"
 djangorestframework = "*"
+django-fsm = "*"
 
 [requires]
 python_version = "3.7"

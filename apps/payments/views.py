@@ -9,13 +9,14 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 
 # Local
-from .service import ProfileService, PropertyService
+from .service import ProfileService, PropertyService, BaseService
 from apps.payments.models import (
     MonthPayment,
     MonthPaymentLine,
     Work,
     PropertyPayment,
     PropertyPaymentLine,
+    Post,
 )
 from apps.properties.models import Property
 from apps.dynamicforms.views import UpdateTopicsForm, UpdateProfileForm
@@ -59,6 +60,16 @@ class CalculatePaymentPropertyView(DetailView):
         elif quantity > 15:
             multiplier = 150
         return quantity * multiplier
+
+
+class GetPostPaymentView(DetailView):
+    model = Post
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.posts = BaseService.get_posts()
+        self.object.save()
+        return redirect(site_url(self.object, "detail"))
 
 
 class CalculatePaymentView(DetailView):
@@ -129,6 +140,7 @@ class CreatePaymentView(DetailView):
     update_title_url = "https://www.harrylatino.org/api/forums/topics/"
 
     def get(self, request, *args, **kwargs):
+
         self.object = self.get_object()
         if self.object.paid:
             return JsonResponse(

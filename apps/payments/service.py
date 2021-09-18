@@ -12,15 +12,12 @@ env = Env()
 
 API_KEY_GET = env("API_KEY")
 
-# Local
-from apps.payments.models import Work
-
 
 class BaseService:
     POSTS_GET_URL = "https://www.harrylatino.org/api/forums/posts"
 
     @classmethod
-    def get_posts(cls, authors, per_page=1000, page=1):
+    def get_posts(cls, authors=False, per_page=1000, page=1):
         url = cls.get_url(authors, page, per_page)
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
@@ -33,7 +30,21 @@ class BaseService:
 
     @classmethod
     def get_url(cls, authors, page, per_page):
-        return f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}&forums=510&authors={authors}&sortBy=date&sortDir=desc"
+        url = f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}&forums=510&sortBy=date&sortDir=desc"
+        if authors:
+            url = f"{url}&authors={authors}"
+        return url
+
+    @classmethod
+    def calculate_all_posts(cls, posts):
+        author_posts = {}
+        for post in posts:
+            data = author_posts.get(
+                post["author"]["id"], {"nick": post["author"]["name"], "data": list()}
+            )
+            data["data"].append({"url": post["url"], "date": post["date"]})
+            author_posts.update({post["author"]["id"]: data})
+        return author_posts
 
 
 class ProfileService(BaseService):
@@ -45,11 +56,10 @@ class ProfileService(BaseService):
         return authors
 
     @classmethod
-    def calculate_member_posts(cls, month, works, per_page=500):
+    def calculate_member_posts(cls, month, works, posts):
         authors = cls.get_profiles_id(works)
         monthly_posts = get_profiles(authors)
         total_posts = get_profiles(authors)
-        posts = cls.get_posts(authors, per_page)
         first_day = time.strptime(month.first_day(), "%Y-%m-%dT%H:%M:%SZ")
         last_day = time.strptime(month.last_day(), "%Y-%m-%dT%H:%M:%SZ")
         for post in posts:

@@ -1,0 +1,28 @@
+{% extends 'base/base_detail.html' %}
+
+{% block detail %}
+    {{ block.super }}
+    {% if object.parse_content %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID del foro</th>
+                <th scope="col">Nick</th>
+                <th scope="col">Fecha último post</th>
+                <th scope="col">Último post</th>
+            </tr>
+            </thead>
+            <tbody>{% for id, user in object.parse_content.items %}
+                <tr>
+                    <th scope="row">{{ id }}</th>
+                    <td>{{ user.nick }}</td>
+                    <td>{{ user.data.0.date }}</td>
+                    <td><a href="{{ user.data.0.url }}" target="_blank">Ver</a></td>
+                </tr>
+
+            {% endfor %}</tbody>
+        </table>
+
+
+    {% endif %}
+{% endblock %}

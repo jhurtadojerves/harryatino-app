@@ -32,6 +32,13 @@ class MonthPaymentLineSite(BaseSite):
     pass
 
 
+@register("payments.Post")
+class PostSite(BaseSite):
+    detail_fields = ("month",)
+    fields = ("month",)
+    detail_template_name = None
+
+
 @register("payments.PropertyPayment")
 class PropertyPaymentSite(BaseSite):
     detail_fields = (("month", "payment_type"),)
