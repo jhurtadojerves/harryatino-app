@@ -33,7 +33,10 @@ class PostTransitions:
         initial_date = datetime.now()
         print(initial_date)
         print("Comenzando...")
-        self.content = BaseService.get_posts(per_page=250)
+        try:
+            self.content = BaseService.get_posts(per_page=250)
+        except Exception as error:
+            raise WorkflowException(str(error))
         print("Terminado")
         end_date = datetime.now()
         print(end_date)
@@ -52,7 +55,10 @@ class PostTransitions:
         initial_date = datetime.now()
         print(initial_date)
         print("Comenzando...")
-        self.parse_content = BaseService.calculate_all_posts(self.content)
+        try:
+            self.parse_content = BaseService.calculate_all_posts(self.content)
+        except Exception as error:
+            raise WorkflowException(str(error))
         print("Terminado")
         end_date = datetime.now()
         print(end_date)
