@@ -34,21 +34,29 @@ class RenderFormView(View):
         model = app.get_model(model_name)
         model_site = site._registry[model]
 
-        if model_site.form_class:
+        if hasattr(model_site, "insoles_form"):
+            form_class = model_site.insoles_form
+        elif model_site.form_class:
             form_class = model_site.form_class
         else:
             form_class = modelform_factory(model, fields=model_site.fields)
-
         return form_class
 
     def get(self, request, *args, **kwargs):
-
         app_name = kwargs.get("app")
         model_name = kwargs.get("model")
+        perms = [
+            f"{app_name.lower()}.add_{model_name.lower()}",
+        ]
+        if model_name.lower() == "taxpayer":
+            perms.extend(
+                [
+                    f"{app_name.lower()}.add_naturaltaxpayer",
+                    f"{app_name.lower()}.add_legaltaxpayer",
+                ]
+            )
 
-        if not self.request.user.has_perm(
-            f"{app_name.lower()}.add_{model_name.lower()}"
-        ):
+        if not any([request.user.has_perm(perm) for perm in perms]):
             return HttpResponseForbidden()
         form_class = self.get_form_class(**kwargs)
         context = {
@@ -133,4 +141,78 @@ class RenderDetailView(View):
         res = {
             "template": template,
         }
+        return JsonResponse(res, status=200)
+
+
+class RenderEditView(View):
+
+    http_method_names = ["get", "post"]
+
+    def get_instance(self, **kwargs):
+        app_name = kwargs.get("app")
+        model_name = kwargs.get("model")
+        reverse_value = kwargs.get("slug")
+        field = kwargs.get("field")
+        if model_name == "User":
+            field = "username"
+        search = {field: reverse_value}
+        app = apps.get_app_config(app_name)
+        model = app.get_model(model_name)
+        instance = model.objects.filter(**search)
+        if instance.exists():
+            return instance.get()
+        return False
+
+    def get_form_class(self, **kwargs):
+        app_name = kwargs.get("app")
+        model_name = kwargs.get("model")
+        app = apps.get_app_config(app_name)
+        model = app.get_model(model_name)
+        model_site = site._registry[model]
+
+        if hasattr(model_site, "insoles_edit"):
+            form_class = model_site.insoles_edit
+        else:
+            form_class = modelform_factory(model, fields=model_site.fields)
+        return form_class
+
+    def get(self, request, *args, **kwargs):
+        app_name = kwargs.get("app")
+        model_name = kwargs.get("model")
+        perms = [
+            f"{app_name.lower()}.add_{model_name.lower()}",
+        ]
+        if model_name.lower() == "taxpayer":
+            perms.extend(
+                [
+                    f"{app_name.lower()}.add_naturaltaxpayer",
+                    f"{app_name.lower()}.add_legaltaxpayer",
+                ]
+            )
+        if not any([request.user.has_perm(perm) for perm in perms]):
+            return HttpResponseForbidden()
+        form_class = self.get_form_class(**kwargs)
+        instance = self.get_instance(**kwargs)
+        context = {
+            "form": form_class(instance=instance),
+        }
+        create_url = reverse_lazy("insoles_form", args=[app_name, model_name])
+        template = render_to_string("insoles/form.html", context=context)
+        res = {"create_url": create_url, "template": template, "app": app_name}
+
+        return JsonResponse(res, status=200)
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class(**kwargs)
+        instance = self.get_instance(**kwargs)
+        form = form_class(self.request.POST, self.request.FILES, instance=instance)
+
+        if form.is_valid():
+            instance = form.save()
+
+        res = {
+            "id": instance.id,
+            "text": str(instance),
+        }
+
         return JsonResponse(res, status=200)

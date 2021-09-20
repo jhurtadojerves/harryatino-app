@@ -100,6 +100,8 @@ class BaseForm(MixinDynamicForm, DetailView):
             template = render_to_string(self.template_name, context={"form": form})
             data = {"data": data, "user_id": user_id}
             AuditAPI.objects.create(username=request.user, data=data, action="obtener")
+            breakpoint()
+
             return JsonResponse(
                 {"create_url": create_url, "template": template, "username": username},
                 status=200,

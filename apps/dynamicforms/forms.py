@@ -10,19 +10,30 @@ from django.utils.text import slugify
 
 
 class BaseForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
+    def parse(self, fieldset):
+        def wrap(fields):
+            fields = fields if isinstance(fields, (list, tuple)) else [fields]
+            return {
+                "bs_cols": int(12 / len(fields)),
+                "fields": [self[field] for field in fields],
+            }
+
+        fieldset_list = list(map(wrap, fieldset))
+        return fieldset_list
+
     def get_fieldsets(self):
-        sets = list()
-        for fieldset in self.fieldsets:
-            if isinstance(fieldset, tuple):
-                sets.append(
-                    {
-                        "bs_cols": int(12 / len(fieldset)),
-                        "fields": [self[field] for field in fieldset],
-                    }
-                )
-            else:
-                sets.append({"bs_cols": 12, "fields": [self[fieldset]]})
-        return sets
+        fieldsets_list = self.fieldsets
+        fieldsets = (
+            [(None, fieldsets_list)]
+            if isinstance(fieldsets_list, (list, tuple))
+            else fieldsets_list.items()
+        )
+        fieldsets = [
+            {"title": title or "", "fieldset": self.parse(fieldset)}
+            for title, fieldset in fieldsets
+        ]
+
+        return fieldsets
 
     def has_fieldsets(self):
         return hasattr(self, "fieldsets")
@@ -81,7 +92,9 @@ class FieldForm(ModelForm):
                     "data-model": "Fieldset",
                 },
             ),
-            "type": Select2Widget(attrs={"data-minimum-input-length": 0},),
+            "type": Select2Widget(
+                attrs={"data-minimum-input-length": 0},
+            ),
         }
 
 
@@ -95,7 +108,9 @@ class FieldLineForm(FieldForm):
         # FieldForm.Meta.exclude = ("name",)
         widgets = FieldForm.Meta.widgets
         widgets.update(
-            {"widget": forms.Textarea(attrs={"rows": 3}),}
+            {
+                "widget": forms.Textarea(attrs={"rows": 3}),
+            }
         )
 
 
