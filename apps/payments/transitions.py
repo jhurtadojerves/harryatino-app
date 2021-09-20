@@ -34,7 +34,7 @@ class PostTransitions:
         print(initial_date)
         print("Comenzando...")
         try:
-            self.content = BaseService.get_posts(per_page=250)
+            self.content = BaseService.get_posts(per_page=500)
         except Exception as error:
             raise WorkflowException(str(error))
         print("Terminado")
