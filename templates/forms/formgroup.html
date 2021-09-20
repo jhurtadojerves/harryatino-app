@@ -1,15 +1,12 @@
 {% load superadmin_forms %}
 
-<div class="form-group">
+<div class="form-group {% if field.errors %}validated{% endif %}">
     {% if field.widget_type != "checkbox" %}
         <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
     {% endif %}
     {% render_field field class="form-control" %}
-    <ul>
-        {% for error in field.errors %}
-            <li>
-                <span style="color: red; font-weight: bold;">{{ error }}</span>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if field.help_text %}
+        <span class="form-text text-muted">{{ field.help_text }}</span>
+    {% endif %}
+
 </div>

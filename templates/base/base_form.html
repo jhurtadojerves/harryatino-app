@@ -1,5 +1,11 @@
 {% extends 'base/base.html' %}
-
+{% block title %}
+    {% if object %}
+        Editando {{ object|title }} - {{ block.super }}
+    {% else %}
+        Creando {{ site.title }} - {{ block.super }}
+    {% endif %}
+{% endblock %}
 {% load static superadmin_forms %}
 {% block css %}
     {{ block.super }}
@@ -31,14 +37,18 @@
                 </h3>
             </div>
             <div class="card-toolbar">
-                {% if not object %}
-                    <a href="{{ site.urls.list }}" class="btn btn-light-primary font-weight-bolder mr-2">
-                        <i class="fas fa-arrow-left icon-sm"></i>Atrás
+                {% if object %}
+                    <span class="mr-2">{{ site.nav.current_index|add:"1" }} de {{ site.nav.total_entries }}</span>
+                    <a href="{{ site.nav.previous_url }}"
+                       class="btn btn-primary font-weight-bolder mr-2 {% if not site.nav.previous %}disabled{% endif %}">
+                        <i class="fas fa-angle-left"></i>
                     </a>
-                {% else %}
-                    <a href="{{ site.urls.detail }}" class="btn btn-light-primary font-weight-bolder mr-2">
-                        <i class="fas fa-arrow-left icon-sm"></i>Atrás
+                    <a href="{{ site.nav.next_url }}"
+                       class="btn btn-primary font-weight-bolder mr-2 {% if not site.nav.next %}disabled{% endif %}">
+                        <i class="fas fa-angle-right"></i>
                     </a>
+                {% endif %}
+                {% if object and site.urls.delete %}
                     <a href="{{ site.urls.delete }}" class="btn btn-light-danger font-weight-bolder mr-2">
                         <i class="fas fa-times icon-sm"></i>Eliminar
                     </a>
@@ -78,26 +88,19 @@
             </div>
         </div>
         <div class="card-body">
-            {% if states %}
-                {% include "components/statebar.html" with change_state_url=url_name %}
-            {% endif %}
             <form id="main-form" data-errors="{{ form.errors.as_json }}" action="" method="POST"
                   enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
 
-
                 {% block form %}
-                    <ul>
-                        {% for error in form.non_field_errors %}
-                            <li>
-                                <span style="color: red; font-weight: bold;">{{ error }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
                     {% include 'forms/form.html' with form=form %}
                 {% endblock %}
 
-                {% block extra_forms %}{% endblock %}
+                {% block inlines %}
+                    {% for inline in inlines %}
+                        {% include "forms/formset.html" with formset=inline %}
+                    {% endfor %}
+                {% endblock %}
             </form>
         </div>
     </div>
@@ -121,7 +124,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Cancelar</span>
                             </button>
@@ -142,6 +145,4 @@
     {{ block.super }}
     <script src="{% static 'vendors/formset/jquery.formset.js' %}"></script>
     <script src="{% static 'vendors/formset/formsets.init.js' %}"></script>
-    <!--<script src="{% static 'assets/js/forms/validation.js' %}"></script>-->
-    <!--<script src="{% static 'assets/js/required_fields.js' %}"></script>-->
 {% endblock %}

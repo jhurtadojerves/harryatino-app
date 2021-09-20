@@ -4,22 +4,14 @@
         {% include "forms/formgroup.html" with field=field %}
     {% endfor %}
 {% else %}
-    {% for row in form.get_fieldsets %}
-        <div class="row">
-            {% for field in row.fields %}
-                {% if not field.is_hidden %}
-                    <div class="col-md-{{ row.bs_cols }}">
-                        {% include "forms/formgroup.html" with field=field %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+    {% for fieldset in form.get_fieldsets %}
+    {% include "forms/fieldset.html" with title=fieldset.title fieldset=fieldset.fieldset %}
     {% endfor %}
 {% endif %}
 
 <!-- Hidden fields -->
-{% for field in form.hidden_fields %}
-    {{ field }}
+{% for field in form.hidden_fields %} 
+  {{ field }}
 {% endfor %}
 
 

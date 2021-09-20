@@ -19,7 +19,12 @@ class SaleForm(ModelForm):
 
     class Meta:
         model = Sale
-        fieldsets = ("date", "product", "profile", ("available", "vip_sale"))
+        # fields = ("date", "product", "profile", ("available", "vip_sale"))
+        # fields = ("date", "product", "profile", "available", "vip_sale")
+        fieldsets = {
+            "Información de la Venta": ("date", "product", "profile"),
+            "Información Adicional": ("available", "vip_sale"),
+        }
         widgets = {
             "product": ModelSelect2Widget(
                 model=Product,
