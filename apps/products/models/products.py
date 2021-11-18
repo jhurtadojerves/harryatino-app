@@ -39,6 +39,7 @@ class Product(BaseModel):
         related_name="products",
     )
     slug = models.SlugField(max_length=256, editable=False)
+    can_be_sold = models.BooleanField(default=False, verbose_name="¿Puede ser vendido?")
 
     def check_stock(self):
         return self.initial_stock - self.sales.all().count()

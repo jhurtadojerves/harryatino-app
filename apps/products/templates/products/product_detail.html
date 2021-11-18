@@ -18,11 +18,17 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col-md-6">
                         <img
-                            class="card-img img-fluid product_image"
-                            src="{{ object.get_image }}"
-                            alt="{{ object.name }}"
-                            style="width: 240px; {% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                                class="card-img img-fluid product_image"
+                                src="{{ object.get_image }}"
+                                alt="{{ object.name }}"
+                                style="width: 240px; {% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
                         >
+                        {% if not object.can_be_sold %}
+                            <br><br>
+                            <small class="d-block text-muted" style="color: red !important; font-weight: bold;">EL
+                                PRODUCTO NO
+                                SE PUEDE VENDER</small>
+                        {% endif %}
                     </div>
                     <div class="col-md-6">
                         <div class="card-body">
@@ -54,7 +60,9 @@
             <div class="w-100"></div>
             <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
                 <div class="card-body">
-                    <p class="card-text text-justify">{{ object.description|safe }}</p>
+                    <p class="card-text text-justify">
+                        {{ object.description|safe }}
+                    </p>
                 </div>
             </div>
         </div>

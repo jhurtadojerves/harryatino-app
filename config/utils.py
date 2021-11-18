@@ -1,5 +1,8 @@
 # Python
 
+# Third party integration
+import requests
+
 
 def get_user_menu(menu_list, user):
     menus = list()
@@ -20,3 +23,16 @@ def get_user_menu(menu_list, user):
         menus.append(obj_menu)
 
     return menus
+
+
+def get_short_url(long_url):
+    headers = {
+        "Authorization": "Bearer 53565e69c665d3c4cd8f42059e45efa5ebb3b686",
+        "Content-Type": "application/json",
+    }
+
+    params = {"long_url": long_url}
+    response = requests.post(
+        "https://api-ssl.bitly.com/v4/shorten", headers=headers, json=params
+    )
+    return response.json()

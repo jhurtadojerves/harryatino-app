@@ -33,6 +33,9 @@ class Sale(BaseModel):
         "Creatures. True = In the creature pool",
     )
     vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
+    is_award = models.BooleanField(
+        verbose_name="Premio de Gala (sin importar stock)", default=False
+    )
     buyer = models.ForeignKey(
         "authentication.User", verbose_name="vendedor", on_delete=models.PROTECT
     )
@@ -47,7 +50,7 @@ class Sale(BaseModel):
 
     def clean(self):
         if not self.pk:
-            if self.vip_sale:
+            if self.vip_sale or self.is_award:
                 self.product.initial_stock = self.product.initial_stock + 1
                 self.product.save()
             if self.product.check_stock() == 0:

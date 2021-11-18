@@ -8,6 +8,7 @@ import re
 from environs import Env
 import requests
 
+
 env = Env()
 
 API_KEY_GET = env("API_KEY")
@@ -17,7 +18,7 @@ class BaseService:
     POSTS_GET_URL = "https://www.harrylatino.org/api/forums/posts"
 
     @classmethod
-    def get_posts(cls, authors=False, per_page=1000, page=1):
+    def get_posts(cls, authors=(), per_page=1000, page=1):
         url = cls.get_url(authors, page, per_page)
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()
@@ -56,12 +57,15 @@ class ProfileService(BaseService):
         return authors
 
     @classmethod
-    def calculate_member_posts(cls, month, works, posts):
+    def calculate_member_posts(cls, month, works):
+        from .models import Post
+
         authors = cls.get_profiles_id(works)
         monthly_posts = get_profiles(authors)
         total_posts = get_profiles(authors)
         first_day = time.strptime(month.first_day(), "%Y-%m-%dT%H:%M:%SZ")
         last_day = time.strptime(month.last_day(), "%Y-%m-%dT%H:%M:%SZ")
+        posts = BaseService.get_posts(authors=authors, per_page=1000)
         for post in posts:
             author = post["author"]  # Get author object
             author_id = author["id"]  # Get author id

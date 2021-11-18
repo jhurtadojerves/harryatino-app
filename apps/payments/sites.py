@@ -5,7 +5,7 @@ from superadmin.decorators import register
 from config.base import BaseSite
 
 # Forms
-from .forms import WorkMonthForm
+from .forms import WorkMonthForm, PaymentForm, PaymentLineFormset
 from .mixins import WorkListMixin
 
 # Filtering
@@ -42,3 +42,12 @@ class PropertyPaymentSite(BaseSite):
     detail_template_name = None
     list_template_name = None
     list_mixins = (GenericFiltering,)
+
+
+@register("payments.Payment")
+class PaymentSite(BaseSite):
+    form_class = PaymentForm
+    inlines = (PaymentLineFormset,)
+    list_fields = ("wizard", "created_date")
+    detail_fields = (("wizard", "created_date"),)
+    detail_template_name = None

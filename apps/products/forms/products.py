@@ -45,6 +45,7 @@ class ProductForm(ModelForm):
                 "category",
             ),
             ("description",),
+            "can_be_sold",
         )
         widgets = {
             "category": ModelSelect2Widget(
@@ -83,6 +84,7 @@ class ProductFormStaff(ProductForm):
                 "category",
             ),
             ("description",),
+            "can_be_sold",
         )
 
 

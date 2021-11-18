@@ -6,10 +6,10 @@
                 <div class="card bg-light text-dark p-3 m-2">
                     <a href="{% site_url object 'detail' %}" class="mb-3">
                         <img
-                            src="{{ object.get_image }}"
-                            alt="{{ object.name }}"
-                            class="rounded product_image"
-                            style="{% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                                src="{{ object.get_image }}"
+                                alt="{{ object.name }}"
+                                class="rounded product_image"
+                                style="{% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
                         >
                     </a>
                     <div class="d-flex align-items-center px-2">
@@ -19,6 +19,10 @@
                             <small class="d-block text-muted">Sección: {{ object.category.section }}</small>
                             <small class="d-block text-muted">Categoría: {{ object.category.name }}</small>
                             <small class="d-block text-muted">Stock Disponible: {{ object.check_stock }}</small>
+                            {% if not object.can_be_sold %}
+                                <small class="d-block text-muted" style="color: red !important; font-weight: bold;">EL PRODUCTO NO
+                                    SE PUEDE VENDER</small>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -29,7 +33,7 @@
     <div class="alert alert-warning">
         <h4>¡Lo sentimos!</h4>
         <p>Los criterios de búsqueda seleccionados no obtuvieron ningún resultado.
-           Puede intentarlo de nuevo o resetear los filtros</p>
+            Puede intentarlo de nuevo o resetear los filtros</p>
         <div class="btn-list">
             <a href="#" class="btn btn-info">
                 <i class="bx bx-plus"></i> Reiniciar Búsqueda
