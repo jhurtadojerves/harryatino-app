@@ -50,15 +50,16 @@ class Sale(BaseModel):
 
     def clean(self):
         if not self.pk:
-            if self.vip_sale or self.is_award:
-                self.product.initial_stock = self.product.initial_stock + 1
-                self.product.save()
             if self.product.check_stock() == 0:
-                raise ValidationError(
-                    for_humans(
-                        f"No se puede vender {self.product.name} ya que su stock actual es 0"
+                if self.vip_sale or self.is_award:
+                    self.product.initial_stock = self.product.initial_stock + 1
+                    self.product.save()
+                else:
+                    raise ValidationError(
+                        for_humans(
+                            f"No se puede vender {self.product.name} ya que su stock actual es 0"
+                        )
                     )
-                )
         elif self.pk:
             sale = Sale.objects.get(pk=self.pk)
             if sale.product.pk != self.product.pk and self.product.check_stock() == 0:
