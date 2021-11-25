@@ -28,6 +28,7 @@ class ProductSite(BaseSite):
     list_template_name = None
     detail_template_name = None
     menu_is_public = True
+    paginate_by = 20
 
 
 @register("products.Section")

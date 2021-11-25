@@ -4,6 +4,34 @@
 
 {% block list %}
     <div class="row mb-3">
+        <div class="col-sm-12">
+            <div class="card bg-light text-dark" style="height:100%;">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <h3 class="align-center">Búsquedas por stock</h3>
+
+                            <form action="">
+                                <div class="mb-3 row">
+                                    <label for="to_stock" class="col-form-label">Desde</label>
+                                    <input type="number" class="form-control" id="to_stock" name="to_stock" value="{{ to_stock }}">
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="from_stock" class="col-form-label">Hasta</label>
+                                    <input type="number" class="form-control" id="from_stock" name="from_stock" value="{{ from_stock }}">
+                                </div>
+                                <div class="mb-3 row">
+                                    <button type="submit" class="btn btn-success">Buscar</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
         {% include "products/components/sections.html" %}
     </div>
     {% include 'products/components/products.html' %}

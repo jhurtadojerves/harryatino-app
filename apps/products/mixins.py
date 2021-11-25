@@ -38,8 +38,16 @@ class ProductListMixin:
             search_url = f"&section={section}{name_value}"
             search_name = "section"
             search_value = section
+        to_stock = self.request.GET.get("to_stock", False)
+        from_stock = self.request.GET.get("from_stock", False)
+        if to_stock:
+            search_url = f"{search_url}&to_stock={to_stock}"
+        if from_stock:
+            search_url = f"{search_url}&from_stock={from_stock}"
         context.update(
             {
+                "to_stock": to_stock if to_stock else "",
+                "from_stock": from_stock if from_stock else "",
                 "search_url": search_url,
                 "sections": Section.objects.all(),
                 "search_name": search_name,
@@ -57,7 +65,7 @@ class ProductListMixin:
         search_name = dict()
         if name:
             search_name.update({"name__icontains": name})
-        queryset = self.model.objects.all()
+        # queryset = self.model.objects.all()
         if category and Category.objects.filter(name=category.upper()).exists():
             potions = False
             if category in ("P", "PP", "PPP", "PPPP", "PPPPP"):
@@ -122,6 +130,15 @@ class ProductListMixin:
             queryset = self.model.objects.filter(
                 Q(**search_name) | Q(reference__istartswith=name)
             )
+        from django.db.models import Count, F
+
+        to_stock = self.request.GET.get("to_stock", False)
+        from_stock = self.request.GET.get("from_stock", False)
+        if not category and not section and not name and (to_stock and from_stock):
+            total_sales = Count("sales")
+            queryset = self.model.objects.annotate(
+                total_sales=total_sales, stock=F("initial_stock") - F("total_sales")
+            ).filter(stock__gte=to_stock, stock__lte=from_stock)
 
         return queryset
 
