@@ -22,7 +22,7 @@ class SaleSite(BaseSite):
     list_fields = ("pk:código", "date", "product", "profile", "buyer")
     form_mixins = (SaleFormMixin,)
     list_mixins = (NotPermissionRequiredMixin, SaleListMixin)
-    detail_mixins = (SaleDetailMixin,)
+    detail_mixins = (SaleDetailMixin, NotPermissionRequiredMixin)
     list_template_name = None
     detail_template_name = None
     form_template_name = None

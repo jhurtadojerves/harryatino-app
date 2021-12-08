@@ -1,5 +1,9 @@
 """Mixin for products"""
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+
+# Third party integration
+from superadmin.templatetags.superadmin_utils import site_url
 
 
 class SaleListMixin:
@@ -76,6 +80,12 @@ class SaleListMixin:
 
 class SaleDetailMixin:
     context_object_name = "sale"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not request.user.is_authenticated:
+            return redirect(site_url(self.object.product, "detail"))
+        return super().get(request, *args, **kwargs)
 
 
 class SaleFormMixin:

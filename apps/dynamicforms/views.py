@@ -474,7 +474,7 @@ class UpdateLevelsForm(BaseForm):
                 return "Templario"
             elif 37 <= level <= 55:
                 return "Knight"
-            # elif 56 <= level <= 60:
+            # elif 56 <= level <= 76:
             else:
                 return "Demon Hunter"
         if team == "Marca Tenebrosa":
@@ -486,7 +486,7 @@ class UpdateLevelsForm(BaseForm):
                 return "Mago Oscuro"
             elif 37 <= level <= 55:
                 return "Nigromante"
-            # elif 56 <= level <= 60:
+            # elif 56 <= level <= 76:
             else:
                 return "Ángel Caído"
 
