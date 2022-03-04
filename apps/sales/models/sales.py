@@ -27,10 +27,10 @@ class Sale(BaseModel):
     available = models.BooleanField(
         default=True,
         verbose_name="Disponible?",
-        help_text="Este campo se utiliza para marcar una compra de libros de hechizos o consumibles"
-        "Spell books. True = Can Use"
-        "Consumables. True = Consumable Used"
-        "Creatures. True = In the creature pool",
+        help_text="Este campo se utiliza para marcar una compra de libros de hechizos o consumibles. <br>"
+        "Libros de Hechizos. Marcado = Se puede usar<br>"
+        "Consumibles. Desmarcado = Consumible utilizado<br>"
+        "Criaturas (Premios y/o Régimen Transitorio). Desmarcado = La criatura se encuentra en la reserva de animales<br>",
     )
     vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
     is_award = models.BooleanField(

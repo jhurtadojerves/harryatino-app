@@ -263,8 +263,23 @@ class UpdateLevelsForm(BaseForm):
 
     def get(self, request, *args, **kwargs):
         try:
+            if not request.user.is_staff():
+                raise ValueError("No tienes permisos para realizar esta acción")
             now = datetime.now()
-            previous_date = now.replace(day=1, month=now.month - 3)
+            if now.month == 3:
+                month = 12
+                year = now.year - 1
+            elif now.month == 2:
+                month = 11
+                year = now.year - 1
+            elif now.month == 1:
+                month = 10
+                year = now.year - 1
+            else:
+                month = now.month - 3
+                year = now.year
+
+            previous_date = now.replace(day=1, month=month, year=year)
             timestamp = datetime.timestamp(previous_date)
             members = self.get_full_user_data(self.BASE_API_URL, timestamp)
             members_data = list()
@@ -287,8 +302,8 @@ class UpdateLevelsForm(BaseForm):
                     print(e, member)
 
             return JsonResponse({"status": 200, "message": "Niveles actualizados"})
-        except ValueError:
-            return JsonResponse({}, status=500)
+        except ValueError as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
     def calculate_level(self, base_url, member, profile):
         custom_fields = member["customFields"]
