@@ -81,12 +81,6 @@ class SaleListMixin:
 class SaleDetailMixin:
     context_object_name = "sale"
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not request.user.is_authenticated:
-            return redirect(site_url(self.object.product, "detail"))
-        return super().get(request, *args, **kwargs)
-
 
 class SaleFormMixin:
     def form_valid(self, form):

@@ -74,4 +74,4 @@ class Sale(BaseModel):
 
         verbose_name = "Venta"
         verbose_name_plural = "Ventas"
-        ordering = ("date",)
+        ordering = ("id",)

@@ -27,3 +27,4 @@ class SaleSite(BaseSite):
     detail_template_name = None
     form_template_name = None
     paginate_by = 50
+    menu_is_public = True
