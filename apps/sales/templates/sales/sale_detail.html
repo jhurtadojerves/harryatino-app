@@ -1,6 +1,5 @@
 {% extends "base/base_detail.html" %}
-{% load static %}
-
+{% load static superadmin_utils %}
 {% block detail %}
   <div class="row" style="justify-content: center;">
     <div class="col-sm-12 col-md-6">
@@ -16,7 +15,8 @@
           </div>
           <div class="col-md-6">
             <div class="card-body">
-              <h4 class="card-title">{{ sale.product.name }}</h4>
+              <h4 class="card-title">{{ sale.product.name }} <a target="_blank"
+                                                                href="{% site_url sale.product "detail" %}">+</a></h4>
               <p class="card-text"><strong>Sección: </strong>{{ sale.product.category.section }}</p>
               <p class="card-text"><strong>Categoría: </strong>{{ sale.product.category.show_name }}</p>
               <p class="card-text"><strong>Puntos: </strong>{{ sale.product.points }}</p>
@@ -41,6 +41,17 @@
           <p class="card-text text-justify">{{ sale.product.description|safe }}</p>
         </div>
       </div>
+      {% if request.user.is_authenticated and sale.product.category.name == "CS" and sale.available %}
+        <div class="w-100">
+          <a href="#"
+             type="button"
+             class="btn btn-light-primary font-weight-bolder mr-2 mb-2 form-instance-insoles"
+             data-url="{% url 'sales_sale_consumable_form' object.pk %}"
+          >
+            <i class="fa fa-tag"></i> Marcar como utilizado
+          </a>
+        </div>
+      {% endif %}
     </div>
     <div class="col-sm-12 col-md-6">
       <div class="card p3 m-2 col">
@@ -64,12 +75,38 @@
         </div>
       </div>
     </div>
-
   </div>
+  {% if sale.product.category.name == "CS" and not sale.available %}
+  <div class="row" style="justify-content: center;">
+  <div class="col-12">
+    <b>Link de uso: </b> <a href="{{ sale.consumable_url }}" target="_blank">Ver en el Foro</a> <br>
+    <b>Comentario de uso: </b> <br>
+    <p>{{ sale.consumable_comment }}</p>
+  </div>
+  </div>
+  {% endif %}
 
 {% endblock %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url "product:product_list" %}">Productos</a></li>
   <li class="breadcrumb-item active">{{ sale.object.name }}</li>
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  {% include "insoles/modal.html" %}
+{% endblock %}
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'vendors/formset/jquery.formset.js' %}"></script>
+  <script src="{% static 'vendors/formset/formsets.init.js' %}"></script>
+  <script src="{% static 'assets/js/csrftoken.vanilla.js' %}"></script>
+  <script src="{% static 'assets/js/forms/inputmask.js' %}"></script>
+  <script src="{% static 'assets/js/apps/insoles_form.js' %}"></script>
+  <script>
+    const select2create = function (btn) {
+      toastr.error('Los sentimos no tienes los permisos para realizar esta acción.', 'No autorizado');
+    }
+  </script>
 {% endblock %}

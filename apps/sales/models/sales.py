@@ -39,6 +39,10 @@ class Sale(BaseModel):
     buyer = models.ForeignKey(
         "authentication.User", verbose_name="vendedor", on_delete=models.PROTECT
     )
+    consumable_comment = models.TextField(
+        verbose_name="Comentario", blank=True, null=True
+    )
+    consumable_url = models.URLField(verbose_name="URL uso", null=True)
 
     # This field is used to mark a purchase of spell books or consumables.
     # Spell books. True = Can Use

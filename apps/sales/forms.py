@@ -48,3 +48,9 @@ class SaleForm(ModelForm):
                 },
             ),
         }
+
+
+class SaleConsumableUsedForm(ModelForm):
+    class Meta:
+        model = Sale
+        fields = ("consumable_comment", "consumable_url")

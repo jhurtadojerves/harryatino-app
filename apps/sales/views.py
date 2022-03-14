@@ -1,55 +1,20 @@
-"""Views for sales"""
-from django.contrib.auth.mixins import LoginRequiredMixin
+"""Custom views for model"""
+# Django
+from django.urls import reverse_lazy
 
-# Views
-from apps.utils.views import (
-    GenericCreateView,
-    GenericDetailView,
-    GenericListView,
-    GenericUpdateView,
-)
-
+# Local
+from .forms import SaleConsumableUsedForm
 from apps.sales.models import Sale
-from apps.sales.forms import SaleForm
+from apps.insoles.views import InstanceBaseFormView
 
 
-class SaleCreate(GenericCreateView):
-    """Sale Create View"""
-
+class UseConsumableFormView(InstanceBaseFormView):
     model = Sale
-    form_class = SaleForm
-    prefix = "sale"
-    app_name = "sale"
+    form_class = SaleConsumableUsedForm
+    create_url_name = "sales_sale_consumable_form"
 
-
-class SaleUpdate(GenericUpdateView):
-    """Sale Create View"""
-
-    model = Sale
-    form_class = SaleForm
-    prefix = "sale"
-    app_name = "sale"
-
-
-class SaleDetail(LoginRequiredMixin, GenericDetailView):
-    """Sale Create View"""
-
-    model = Sale
-    template_name = "sales/sales_detail.html"
-    fields = "__all__"
-    context_object_name = "sale"
-
-
-class SaleList(LoginRequiredMixin, GenericListView):
-    """Sale Create View"""
-
-    model = Sale
-    template_name = "sales/sales_list.html"
-    context_object_name = "sales"
-    paginate_by = 20
-    list_display = (
-        "id",
-        "date",
-        "product",
-        "profile",
-    )
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.available = False
+        instance.save()
+        return self.success("Formulario guardado éxito.")

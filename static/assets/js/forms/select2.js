@@ -17,3 +17,8 @@ const initSelect2 = function (selector) {
       }
     });
 }
+
+const initSelect = function (selector) {
+    let elem = selector ? $(selector) : $(document)
+    elem.find('.selectpicker').selectpicker('refresh');
+}

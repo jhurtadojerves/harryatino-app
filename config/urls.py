@@ -32,6 +32,7 @@ urlpatterns = [
         "",
         include("apps.authentication.urls"),
     ),
+    path("", include("apps.sales.urls")),
     path("", include("apps.workflows.urls")),
     path("", include("apps.insoles.urls")),
     path("", include("apps.dynamicforms.urls")),
