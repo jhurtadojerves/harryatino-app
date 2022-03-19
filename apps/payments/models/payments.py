@@ -73,3 +73,6 @@ class PaymentLine(BaseModel):
 
     def get_shorturl(self):
         return LinkService.get_resolved_short_url(self.link)
+
+    class Meta:
+        ordering = ("pk",)
