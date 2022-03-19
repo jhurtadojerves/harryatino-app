@@ -46,6 +46,9 @@ class Payment(BaseModel, PaymentTransitions):
     def get_int_total_payments(self):
         return int(self.total_payments())
 
+    def get_lines(self):
+        return self.lines.order_by("pk")
+
     class Meta:
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"

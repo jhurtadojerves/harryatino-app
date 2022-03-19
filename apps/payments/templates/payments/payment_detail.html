@@ -14,7 +14,7 @@
     </thead>
 
     <tbody>
-    {% for line in object.lines.all %}
+    {% for line in object.get_lines %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
         <td>{{ line.amount|floatformat:"2" }}</td>
