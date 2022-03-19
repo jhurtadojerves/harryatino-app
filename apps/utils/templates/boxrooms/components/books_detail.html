@@ -1,0 +1,17 @@
+{% load superadmin_utils %}
+
+{% for sale in products_list %}
+    <div class="col-12 mb-4">
+        Nombre del Producto: {{ sale.product.name }}<br>
+        Descripción: <a href="{% site_url sale.product 'detail' %}" target="_blank">Tarjeta</a> <br>
+        Nivel: {{ sale.product.level_book }} <br>
+        Precio pagado: {{ sale.product.cost }} G<br>
+        Puntos obtenidos: {{ sale.product.points }} <br>
+        Fecha de compra: {{ sale.date|date:"d.m.Y" }} <br>
+        Habilitado para su uso: {% if sale.available %}Si {% else %} No{% endif %}
+        {% if request.user.is_authenticated %}
+            <br>Gestionar: <a href="{{ sale.update_url }}" target="_blank">Editar compra</a>
+        {% endif %}
+    </div>
+{% endfor %}
+

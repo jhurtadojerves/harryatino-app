@@ -5,9 +5,13 @@ from django.db import models
 from django.db.models import Sum
 from django_fsm import FSMIntegerField
 
-# Models
+# Third party integration
 from tracing.models import BaseModel
-from ..transitions import PaymentTransitions
+
+# Local
+from apps.payments.transitions import PaymentTransitions
+from apps.payments.choices import PaymentType
+from apps.utils.services import LinkService
 
 
 class Payment(BaseModel, PaymentTransitions):
@@ -23,7 +27,13 @@ class Payment(BaseModel, PaymentTransitions):
         protected=True,
         verbose_name="estado",
     )
+    payment_type = models.SmallIntegerField(
+        choices=PaymentType.choices,
+        default=PaymentType.BUY,
+        verbose_name="Tipo de pago",
+    )
     url = models.URLField(verbose_name="url", editable=False, blank=True, null=True)
+    html = models.TextField(verbose_name="html generado", editable=False, null=True)
 
     def __str__(self):
         date = f"{self.created_date.day}/{self.created_date.month}/{self.created_date.year}"
@@ -47,6 +57,15 @@ class PaymentLine(BaseModel):
     amount = models.FloatField(verbose_name="cantidad")
     verbose = models.CharField(verbose_name="leyenda", max_length=128)
     link = models.URLField(verbose_name="url", blank=True, null=True)
-    short_link = models.URLField(
-        verbose_name="short url", blank=True, null=True, editable=False
-    )
+
+    def get_encoded_verbose(self):
+        a, b = "áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN"
+        trans = str.maketrans(a, b)
+        translate = self.verbose.translate(trans)
+        return str(translate)
+
+    def get_integer_amount(self):
+        return int(self.amount)
+
+    def get_shorturl(self):
+        return LinkService.get_resolved_short_url(self.link)

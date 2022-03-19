@@ -5,12 +5,14 @@ import time
 import re
 
 # Third party integration
+from django.http import HttpRequest
+from django.shortcuts import render
+from django.template.loader import render_to_string
 from environs import Env
 import requests
 
-
 env = Env()
-
+API_KEY = env("API_KEY")
 API_KEY_GET = env("API_KEY")
 
 

@@ -1,0 +1,19 @@
+<ul>
+  <li>
+    Saldo Anterior: {{ old_galleons }} G
+  </li>
+  <li>
+    Descuento por compras realizadas en el Magic Mall:
+    <ul>
+      {% for line in payment.lines.all %}
+        <li>
+          <a href="{{ line.get_shorturl }}" target="_blank">{{ line.get_encoded_verbose }}</a>: <span style="color: #e74c3c; font-weight: bold">- {{ line.get_integer_amount }} G</span>
+        </li>
+      {% endfor %}
+    </ul>
+
+  </li>
+  <li>
+    Saldo: {{ new_galleons }} G
+  </li>
+</ul>

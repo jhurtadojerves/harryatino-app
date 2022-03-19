@@ -49,5 +49,5 @@ class PaymentSite(BaseSite):
     form_class = PaymentForm
     inlines = (PaymentLineFormset,)
     list_fields = ("wizard", "created_date")
-    detail_fields = (("wizard", "created_date"),)
+    detail_fields = (("wizard", "created_date", "url"), "html")
     detail_template_name = None

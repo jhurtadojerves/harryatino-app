@@ -80,6 +80,7 @@ LOCAL_APPS = [
     "apps.profiles",
     "apps.properties",
     "apps.sales",
+    "apps.utils",
     "apps.workflows",
 ]
 
@@ -118,6 +119,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "tracing.middleware.TracingMiddleware",
+    "config.middleware.GlobalRequestMiddleware",
 ]
 
 # Static files

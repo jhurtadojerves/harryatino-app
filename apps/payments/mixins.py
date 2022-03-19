@@ -1,6 +1,7 @@
 """Mixins for work site"""
 # Django
 from django.db.models import Q
+from django.shortcuts import redirect
 
 
 class WorkListMixin:
@@ -13,3 +14,11 @@ class WorkListMixin:
                 | Q(wizard__forum_user_id__icontains=search)
             )
         return queryset
+
+
+"""
+class PaymentFormMixin:
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        return redirect(self.get_success_url())
+"""

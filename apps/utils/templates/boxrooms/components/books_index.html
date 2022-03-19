@@ -1,0 +1,9 @@
+{% load mathfilters %}
+
+{% for obj in products_list %}
+    <div class="col-12 mb-4">
+        Libro: {{ obj.product }}<br>
+        Nivel: {{ obj.product.level_book }} <br>
+    </div>
+{% endfor %}
+

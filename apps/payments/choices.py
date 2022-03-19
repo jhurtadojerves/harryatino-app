@@ -11,3 +11,8 @@ class TypeVaultChoices(models.IntegerChoices):
 class SchoolPaymentLineChoices(models.IntegerChoices):
     PAY = 0, "Pago"
     DISCOUNT = 1, "Descuento"
+
+
+class PaymentType(models.IntegerChoices):
+    BUY = 0, "Compra"
+    OTHER = 99, "Otro"

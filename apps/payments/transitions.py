@@ -17,7 +17,7 @@ from apps.workflows.exceptions import WorkflowException
 from .workflows import PostWorkflow, PaymentWorkflow
 
 # Services
-from .service import BaseService
+from apps.payments.service import BaseService
 from config.utils import get_short_url
 
 env = Env()
@@ -76,33 +76,39 @@ class PaymentTransitions:
 
     @transition(
         field="state",
-        source=[
-            workflow.CREATED,
-        ],
+        source=[workflow.CREATED],
         target=workflow.PAY,
         custom=dict(verbose="Pagar"),
     )
     def to_pay(self, **kwargs):
-        for line in self.lines.all():
-            if line.link:
-                data = get_short_url(line.link)
-                line.short_link = data.get("link", False)
-                line.save()
+        from apps.utils.services import APIService
 
-    def create_post(self, request, previous_galleons, topic):
-        galleons = self.object.calculated_value
-        html = self.post_html(
-            data={
-                "previous_galleons": previous_galleons,
-                "url": self.object.month.post_url,
-                "reason": f"CMI {self.object.month.__str__()}",
-                "galleons": galleons,
-                "total_galleons": galleons + previous_galleons,
-            },
+        vault = self.wizard.vault_number
+        vault = 116689
+        context = self.get_context(self.wizard)
+        response, html = APIService.create_post(
+            topic=vault,
+            context=context,
+            template="payments/posts/magic_mall.html",
         )
-        # author = request.user.profile.forum_user_id
-        author = 121976
-        payload = f"topic={topic}&author={author}&post={html}"
-        url = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
-        response = self.post_request(url, payload)
-        return response.json()
+        response_url = response["url"]
+        update_profile_data = {
+            "customFields[12]": f"{context['new_galleons']}",
+        }
+        APIService.update_user_profile(
+            self.wizard.forum_user_id, raw_data=update_profile_data
+        )
+        self.html = html
+        self.url = response_url
+
+    def get_context(self, wizard):
+        from apps.utils.services import APIService
+
+        data = APIService.get_forum_user_data(wizard)
+        old_galleons = int(data.get("customFields[12]")) or 0
+        context = {
+            "payment": self,
+            "old_galleons": old_galleons,
+            "new_galleons": int(old_galleons - self.total_payments()),
+        }
+        return context

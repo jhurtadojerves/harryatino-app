@@ -31,7 +31,7 @@ class WorkMonthForm(ModelForm):
 class PaymentForm(ModelForm):
     class Meta:
         model = Payment
-        fieldsets = ("wizard",)
+        fieldsets = (("wizard", "payment_type"),)
         widgets = {
             "wizard": ModelSelect2Widget(
                 model="profiles.Profile",
