@@ -78,7 +78,7 @@ class PaymentTransitions:
         field="state",
         source=[workflow.CREATED],
         target=workflow.PAY,
-        permission="payments.change_payment",
+        permission="payments.create_payment_post",
         custom=dict(verbose="Pagar"),
     )
     def to_pay(self, **kwargs):

@@ -53,6 +53,9 @@ class Payment(BaseModel, PaymentTransitions):
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"
         ordering = ("-pk",)
+        permissions = [
+            ("create_payment_post", "Crear posteo del pago"),
+        ]
 
 
 class PaymentLine(BaseModel):
