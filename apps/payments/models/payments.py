@@ -49,6 +49,7 @@ class Payment(BaseModel, PaymentTransitions):
     class Meta:
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"
+        ordering = ("-pk",)
 
 
 class PaymentLine(BaseModel):
