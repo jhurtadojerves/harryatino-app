@@ -9,4 +9,5 @@ from superadmin.templatetags.superadmin_utils import site_url
 
 class LinkDetailMixin:
     def get(self, request, *args, **kwargs):
-        return redirect(site_url(self, "detail"))
+        self.object = self.get_object()
+        return redirect(site_url(self.object, "detail"))
