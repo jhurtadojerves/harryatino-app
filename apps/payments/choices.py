@@ -15,4 +15,5 @@ class SchoolPaymentLineChoices(models.IntegerChoices):
 
 class PaymentType(models.IntegerChoices):
     BUY = 0, "Compra"
+    PLUS = 1, "Pluses"
     OTHER = 99, "Otro"

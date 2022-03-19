@@ -88,7 +88,7 @@ class PaymentTransitions:
         response, html = APIService.create_post(
             topic=vault,
             context=context,
-            template="payments/posts/magic_mall.html",
+            template=self.get_template(),
         )
         response_url = response["url"]
         update_profile_data = {
@@ -105,9 +105,24 @@ class PaymentTransitions:
 
         data = APIService.get_forum_user_data(wizard)
         old_galleons = int(data.get("customFields[12]")) or 0
+        if self.payment_type == 0:
+            new_galleons = int(old_galleons - self.total_payments())
+        elif self.payment_type == 1:
+            new_galleons = int(old_galleons + self.total_payments())
+        else:
+            new_galleons = int(old_galleons + self.total_payments())
+
         context = {
             "payment": self,
             "old_galleons": old_galleons,
-            "new_galleons": int(old_galleons - self.total_payments()),
+            "new_galleons": new_galleons,
         }
+
         return context
+
+    def get_template(self):
+        templates = {
+            0: "payments/posts/magic_mall.html",
+            1: "payments/posts/plus_equipo.html",
+        }
+        return templates.get(self.payment_type)
