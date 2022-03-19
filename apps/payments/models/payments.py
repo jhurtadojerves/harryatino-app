@@ -43,6 +43,9 @@ class Payment(BaseModel, PaymentTransitions):
         payments = self.lines.aggregate(total=Sum("amount"))
         return payments.get("total")
 
+    def get_int_total_payments(self):
+        return int(self.total_payments())
+
     class Meta:
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"
