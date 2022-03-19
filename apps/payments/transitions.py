@@ -84,7 +84,6 @@ class PaymentTransitions:
         from apps.utils.services import APIService
 
         vault = self.wizard.vault_number
-        vault = 116689
         context = self.get_context(self.wizard)
         response, html = APIService.create_post(
             topic=vault,
