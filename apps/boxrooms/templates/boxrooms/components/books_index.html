@@ -1,9 +1,10 @@
 {% load mathfilters %}
 
 {% for obj in products_list %}
-    <div class="col-12 mb-4">
-        Libro: {{ obj.product }}<br>
-        Nivel: {{ obj.product.level_book }} <br>
-    </div>
+  <div class="col-12 mb-4" style="{% if not obj.available %}color: red;{% endif %}">
+    Libro: {{ obj.product }}<br>
+    Nivel: {{ obj.product.level_book }} <br>
+    Habilitado para su uso: {% if obj.available %}Si {% else %} No{% endif %}
+  </div>
 {% endfor %}
 

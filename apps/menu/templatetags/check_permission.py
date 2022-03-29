@@ -1,6 +1,7 @@
 """Sim templatetags"""
 # Django
 from django import template
+from django.db.models import Sum
 from django.urls import NoReverseMatch
 from django.contrib.contenttypes.models import ContentType
 
@@ -25,3 +26,9 @@ def check_permission(user, permission):
 def concat_all(*args):
     """concatenate all args"""
     return "".join(map(str, args))
+
+
+@register.simple_tag
+def sum_sales_products_queryset(queryset):
+    aggregation = queryset.aggregate(Sum("product__points"))
+    return aggregation.get("product__points__sum") or 0

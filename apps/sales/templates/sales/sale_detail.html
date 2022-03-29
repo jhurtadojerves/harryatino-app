@@ -39,6 +39,18 @@
       <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
         <div class="card-body">
           <p class="card-text text-justify">{{ sale.product.description|safe }}</p>
+          {% if request.user.is_authenticated and sale.state == 2 %}
+            <p class="mt-5">
+              {% if sale.payment %}
+                <a class="btn btn-primary" type="button"
+                   href="{% site_url sale.payment 'detail' %}">
+                  Ver Pago
+                </a>
+              {% else %}
+                <span style="font-weight: bold;">Pago realizado sin utilizar el sistema de Pagos Automáticos</span>
+              {% endif %}
+            </p>
+          {% endif %}
         </div>
       </div>
       {% if request.user.is_authenticated and sale.product.category.name == "CS" and sale.available %}
@@ -77,13 +89,13 @@
     </div>
   </div>
   {% if sale.product.category.name == "CS" and not sale.available %}
-  <div class="row" style="justify-content: center;">
-  <div class="col-12">
-    <b>Link de uso: </b> <a href="{{ sale.consumable_url }}" target="_blank">Ver en el Foro</a> <br>
-    <b>Comentario de uso: </b> <br>
-    <p>{{ sale.consumable_comment }}</p>
-  </div>
-  </div>
+    <div class="row" style="justify-content: center;">
+      <div class="col-12">
+        <b>Link de uso: </b> <a href="{{ sale.consumable_url }}" target="_blank">Ver en el Foro</a> <br>
+        <b>Comentario de uso: </b> <br>
+        <p>{{ sale.consumable_comment }}</p>
+      </div>
+    </div>
   {% endif %}
 
 {% endblock %}

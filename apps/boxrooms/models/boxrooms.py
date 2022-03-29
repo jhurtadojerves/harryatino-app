@@ -78,9 +78,12 @@ class Boxroom(BaseModel):
         )
 
     def get_potions_list(self):
-        return self.profile.sales.filter(product__reference__icontains="P").order_by(
-            "date"
+        return self.detail_objects_creatures_or_potions("Objetos").exclude(
+            product__reference__icontains="A"
         )
+
+    def get_creatures_list(self):
+        return self.detail_objects_creatures_or_potions("Criaturas")
 
     def get_objects_index(self):
         return self.get_objects_creatures_or_potions_for_index("Objetos")
@@ -95,7 +98,11 @@ class Boxroom(BaseModel):
         return self.profile.sales.filter(product__category__name="LH").order_by("date")
 
     def get_consumables_list(self):
-        return self.profile.sales.filter(product__category__name="CS").order_by("date")
+        return (
+            self.profile.sales.filter(product__category__name="CS", available=True)
+            .order_by("date")
+            .distinct()
+        )
 
     def get_absolute_url(self):
         return reverse("boxroom:boxroom_detail", args=[str(self.slug)])
