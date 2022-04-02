@@ -113,7 +113,7 @@
                         {% endif %}
                         <div class="row">
                             {% for row in fieldset.fieldset %}
-                                {% for label, value, widget in row.fields %}
+                                {% for label, value, widget, field  in row.fields %}
                                     <div class="col-md-{{ row.bs_cols }}">
                                         <div class="form-group">
                                             {% detail_widget label value widget as template %}

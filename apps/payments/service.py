@@ -1,15 +1,15 @@
 """Define services to profile"""
 
-# Python
-import time
 import re
 
-# Third party integration
-from django.http import HttpRequest
-from django.shortcuts import render
-from django.template.loader import render_to_string
-from environs import Env
+# Python
+import time
+
 import requests
+from environs import Env
+
+# Third party integration
+from superadmin.templatetags.superadmin_utils import site_url
 
 env = Env()
 API_KEY = env("API_KEY")
@@ -60,7 +60,6 @@ class ProfileService(BaseService):
 
     @classmethod
     def calculate_member_posts(cls, month, works):
-        from .models import Post
 
         authors = cls.get_profiles_id(works)
         monthly_posts = get_profiles(authors)
@@ -145,3 +144,22 @@ def get_profiles(authors):
     for author in authors:
         author_dictionary.update({author: list()})
     return author_dictionary
+
+
+class PaymentService:
+    from apps.sales.models import Sale
+
+    @classmethod
+    def get_or_create_payment_for_sale(cls, sale: Sale):
+        from apps.payments.models import Payment, PaymentLine
+
+        sale_url = f"https://magicmall.rol-hl.com{site_url(sale, 'detail')}"
+        payment, created = Payment.objects.get_or_create(state=1, wizard=sale.profile)
+        PaymentLine.objects.create(
+            payment=payment,
+            amount=sale.product.cost,
+            verbose=sale.product.name,
+            link=sale_url,
+        )
+
+        return payment
