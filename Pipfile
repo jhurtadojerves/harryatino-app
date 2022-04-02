@@ -9,7 +9,7 @@ django-extensions = "*"
 [packages]
 django = "*"
 django-select2 = "*"
-django-superadmin = "*"
+django-superadmin = "==1.2.6"
 django-tracing = "*"
 django-ckeditor = "*"
 environs = "*"

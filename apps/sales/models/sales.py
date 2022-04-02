@@ -3,18 +3,29 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as for_humans
-from django.urls import reverse
+
+# Third party integration
+from django_fsm import FSMIntegerField
+
 
 # Models
 from tracing.models import BaseModel
 from apps.products.models import Product
 from apps.profiles.models import Profile
+from apps.sales.transitions import SaleTransitions
 
 
-class Sale(BaseModel):
+class Sale(BaseModel, SaleTransitions):
     """Sale model."""
 
+    workflow = SaleTransitions.workflow
     date = models.DateField(verbose_name="Fecha")
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
+    )
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, verbose_name="Producto", related_name="sales"
     )
@@ -43,7 +54,13 @@ class Sale(BaseModel):
         verbose_name="Comentario", blank=True, null=True
     )
     consumable_url = models.URLField(verbose_name="URL uso", null=True)
-
+    payment = models.ForeignKey(
+        to="payments.Payment",
+        on_delete=models.SET_NULL,
+        verbose_name="Pago",
+        null=True,
+        editable=False,
+    )
     # This field is used to mark a purchase of spell books or consumables.
     # Spell books. True = Can Use
     # Consumables. True = Consumable Used
@@ -79,3 +96,6 @@ class Sale(BaseModel):
         verbose_name = "Venta"
         verbose_name_plural = "Ventas"
         ordering = ("id",)
+        permissions = [
+            ("can_send_to_payment", "Puede enviar la compra para pago"),
+        ]

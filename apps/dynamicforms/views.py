@@ -263,7 +263,7 @@ class UpdateLevelsForm(BaseForm):
 
     def get(self, request, *args, **kwargs):
         try:
-            if not request.user.is_staff():
+            if not request.user.is_staff:
                 raise ValueError("No tienes permisos para realizar esta acción")
             now = datetime.now()
             if now.month == 3:
