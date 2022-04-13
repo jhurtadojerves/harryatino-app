@@ -77,6 +77,15 @@ class PaymentTransitions:
     @transition(
         field="state",
         source=[workflow.CREATED],
+        target=workflow.CANCELED,
+        custom=dict(verbose="Cancelar"),
+    )
+    def to_cancel(self, **kwargs):
+        pass
+
+    @transition(
+        field="state",
+        source=[workflow.CREATED],
         target=workflow.PAY,
         permission="payments.create_payment_post",
         custom=dict(verbose="Pagar"),
