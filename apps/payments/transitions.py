@@ -74,15 +74,6 @@ class PostTransitions:
 class PaymentTransitions:
     workflow = PaymentWorkflow()
 
-    @transition(
-        field="state",
-        source=[workflow.CREATED],
-        target=workflow.CANCELED,
-        permission="payments.create_payment_post",
-        custom=dict(verbose="Cancelar"),
-    )
-    def to_cancel(self, **kwargs):
-        pass
 
     @transition(
         field="state",
@@ -110,6 +101,16 @@ class PaymentTransitions:
         )
         self.html = html
         self.url = response_url
+
+    @transition(
+        field="state",
+        source=[workflow.CREATED],
+        target=workflow.CANCELED,
+        permission="payments.create_payment_post",
+        custom=dict(verbose="Cancelar", icon="fa-solid fa-ban", back_verbose="CANCELAR"),
+    )
+    def to_cancel(self, **kwargs):
+        pass
 
     def get_context(self, wizard):
         from apps.utils.services import APIService

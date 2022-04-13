@@ -82,8 +82,8 @@
                                                data-placeholder="{{ transition.custom.placeholder }}"
                                                data-title="{{ transition.custom.title }}"
                                                class="nav-link transition">
-                                                <i class="{{ transition.custom.icon|default:'far fa-hand-point-right' }} icon-lg mr-3"></i>
-                                                <span class="nav-text">
+                                                <i class="{{ transition.custom.icon|default:'far fa-hand-point-right' }} icon-lg mr-3" {% if transition.target == 0 %} style="color: var(--danger); font-weight: bold;"{% endif %}></i>
+                                                <span class="nav-text" {% if transition.target == 0 %} style="color: var(--danger); font-weight: bold;"{% endif %}>
                                                     {% if object.state > transition.target and transition.custom.back_verbose%}
                                                     {{ transition.custom.back_verbose }}
                                                     {% else %}
