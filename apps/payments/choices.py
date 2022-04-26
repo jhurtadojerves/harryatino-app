@@ -14,6 +14,9 @@ class SchoolPaymentLineChoices(models.IntegerChoices):
 
 
 class PaymentType(models.IntegerChoices):
-    BUY = 0, "Compra"
-    PLUS = 1, "Pluses"
+    BUY = 0, "Compra"  # magic_mall
+    PLUS = 1, "Pluses"  # plus_equipo
+    SCHOLAR_PLUS = 2, "Pago profesores/arcanos/uzzas"  # scholar_plus
+    SCHOLAR_PAYMENT = 3, "Pago estudiantes"  # scholar_payment
+    SCHOLAR_CHARGE = 4, "Descuento estudiantes"  # scholar_charge
     OTHER = 99, "Otro"

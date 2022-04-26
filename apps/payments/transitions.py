@@ -117,7 +117,7 @@ class PaymentTransitions:
 
         data = APIService.get_forum_user_data(wizard)
         old_galleons = int(data.get("customFields[12]")) or 0
-        if self.payment_type == 0:
+        if self.payment_type in (0, 4):
             new_galleons = int(old_galleons - self.total_payments())
         elif self.payment_type == 1:
             new_galleons = int(old_galleons + self.total_payments())
@@ -136,5 +136,8 @@ class PaymentTransitions:
         templates = {
             0: "payments/posts/magic_mall.html",
             1: "payments/posts/plus_equipo.html",
+            2: "payments/posts/scholar_plus.html",
+            3: "payments/posts/scholar_payment.html",
+            4: "payments/posts/scholar_charge.html",
         }
         return templates.get(self.payment_type)
