@@ -3,7 +3,7 @@
     Saldo Anterior: {{ old_galleons }} G
   </li>
   <li>
-    Pagos por pluses de Escuelas Mágicas: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
+    Pagos por pluses de Escuelas: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
     <ul>
       {% for line in payment.get_lines %}
         <li>
