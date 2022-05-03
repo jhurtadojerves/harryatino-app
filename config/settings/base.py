@@ -245,6 +245,9 @@ CKEDITOR_CONFIGS = {
 }
 TEMPLATE_WIDGETS_DETAIL = {
     "default": "detail_widgets/textinput.html",
+    "DateTimeField": "detail_widgets/textinput.html",
+    "CharField": "detail_widgets/textinput.html",
+    "URLField": "detail_widgets/urlinput.html",
     "TextField": "detail_widgets/textarea.html",
     "ForeignKey": "detail_widgets/foreignkey.html",
     "OneToOneField": "detail_widgets/foreignkey.html",
