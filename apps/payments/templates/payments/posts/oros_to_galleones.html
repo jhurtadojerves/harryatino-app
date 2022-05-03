@@ -1,0 +1,19 @@
+<ul>
+  <li>
+    Saldo Anterior: {{ old_galleons }} G
+  </li>
+  <li>
+    Cambio de Oros por Galeones: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
+    <ul>
+      {% for line in payment.get_lines %}
+        <li>
+          {{ line.get_encoded_verbose }}: <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
+        </li>
+      {% endfor %}
+    </ul>
+
+  </li>
+  <li>
+    Saldo: {{ new_galleons }} G
+  </li>
+</ul>

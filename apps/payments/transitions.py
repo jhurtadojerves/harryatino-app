@@ -139,5 +139,6 @@ class PaymentTransitions:
             2: "payments/posts/scholar_plus.html",
             3: "payments/posts/scholar_payment.html",
             4: "payments/posts/scholar_charge.html",
+            5: "payments/posts/oros_to_galleons.html",
         }
         return templates.get(self.payment_type)
