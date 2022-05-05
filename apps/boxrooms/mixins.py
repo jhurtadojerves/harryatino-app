@@ -17,11 +17,11 @@ class BoxroomListMixin:
             params.pop("page", None)
             params.pop("paginate_by", None)
             model_site = self.site
-            search = search.replace("+", ",").replace(";", ",")
-            search_split = search.split(",")
-            for search_value in search_split:
-                filters = {key: search_value.strip() for key in search_params_config}
-                params.update(**filters)
-                args = [Q(**{key: value}) for key, value in filters.items()]
-                queryset = queryset.filter(reduce(operator.__or__, args))
+            search = (search.replace("+", ",").replace(";", ",")).split(",") if search else None
+            if search:
+                for search_value in search:
+                    filters = {key: search_value.strip() for key in search_params_config}
+                    params.update(**filters)
+                    args = [Q(**{key: value}) for key, value in filters.items()]
+                    queryset = queryset.filter(reduce(operator.__or__, args))
         return queryset
