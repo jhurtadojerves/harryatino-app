@@ -14,11 +14,12 @@ class HomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
+        pages = Page.objects.filter(show_in_home_page=True)
+        page = pages.first() if pages else False
         context.update(
             {
-                "page": Page.objects.get(show_in_home_page=True)
-                if Page.objects.filter(show_in_home_page=True)
-                else False
+                "page": page,
+                "object": page
             }
         )
         return context
