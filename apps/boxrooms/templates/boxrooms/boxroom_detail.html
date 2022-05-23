@@ -1,4 +1,5 @@
 {% extends 'base/base_detail.html' %}
+{% load superadmin_utils %}
 
 {% block content %}
     <div class="col" style="color: #3F4254 !important;">
@@ -8,6 +9,14 @@
                 <p class="card-title-desc">
                     {{ object.content|safe }}
                 </p>
+                <br>
+                {% if boxroom_format %}
+                    <a href="{% site_url object 'detail' %}?format=viejo" class="btn btn-primary">Viejo formato
+                {% else %}
+                    <a href="{% site_url object 'detail' %}" class="btn btn-primary">Nuevo formato
+
+                {% endif %}
+                </a>
                 <hr>
                 <!-- Nav tabs -->
                 <ul class="nav nav-pills nav-justified" role="tablist">
