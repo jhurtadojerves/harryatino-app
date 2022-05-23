@@ -1,10 +1,13 @@
 {% load mathfilters %}
-
-{% for obj in products_list %}
-  <div class="col-12 mb-4" style="{% if not obj.available %}color: red;{% endif %}">
-    Libro: {{ obj.product }}<br>
-    Nivel: {{ obj.product.level_book }} <br>
-    Habilitado para su uso: {% if obj.available %}Si {% else %} No{% endif %}
-  </div>
-{% endfor %}
+<div class="col-12 mb-4">
+    {% for obj in products_list %}
+        <li>
+            {% if obj.available %}
+                {{ obj.product.name }}
+            {% else %}
+                <strong style="color: red;">{{ obj.product.name }}, en situación transitoria (sin poder hacer uso del mismo)</strong>
+            {% endif %}
+        </li>
+    {% endfor %}
+</div>
 

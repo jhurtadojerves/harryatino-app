@@ -26,12 +26,16 @@ class Category(BaseModel):
     )
 
     def __str__(self):
-        return f"{str(self.section)} {self.name}"
+        return self.full_name
 
     def show_name(self):
         if self.name == "LH":
             return "Libros de Hechizos"
         return self.name
+
+    @property
+    def full_name(self):
+        return f"{str(self.section)} {self.name}"
 
     class Meta(BaseModel.Meta):
         """Class Meta."""

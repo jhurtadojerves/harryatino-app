@@ -25,3 +25,18 @@ class BoxroomListMixin:
                     args = [Q(**{key: value}) for key, value in filters.items()]
                     queryset = queryset.filter(reduce(operator.__or__, args))
         return queryset
+
+
+class BoxroomDetailMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        new_format = "nuevo"
+        boxroom_format = self.request.GET.get("format", "nuevo")
+
+        if boxroom_format == new_format:
+            boxroom_format = True
+        else:
+            boxroom_format = False
+
+        context.update({"boxroom_format": boxroom_format})
+        return context
