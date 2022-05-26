@@ -154,7 +154,7 @@ class PaymentService:
         from apps.payments.models import Payment, PaymentLine
 
         sale_url = f"https://magicmall.rol-hl.com{site_url(sale, 'detail')}"
-        payment, created = Payment.objects.get_or_create(state=1, wizard=sale.profile)
+        payment, created = Payment.objects.get_or_create(state=1, wizard=sale.profile, payment_type=0)
         PaymentLine.objects.create(
             payment=payment,
             amount=sale.product.cost,
