@@ -11,6 +11,11 @@ from django.utils.translation import gettext_lazy as _
 from apps.authentication.models import User
 
 
+@admin.action(description='Disable selected users')
+def disable_users(modeladmin, request, queryset):
+    queryset.update(is_active=False, is_staff=False, is_superuser=False)
+
+
 @admin.register(User)
 class CustomUserAdmin(ImportExportModelAdmin, UserAdmin):
     """User model admin"""
@@ -37,3 +42,6 @@ class CustomUserAdmin(ImportExportModelAdmin, UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+    actions = [disable_users]
+
+

@@ -1,115 +1,160 @@
 {% extends 'base/base_detail.html' %}
+{% load superadmin_utils %}
 
 {% block content %}
-  <div class="col" style="color: #3F4254 !important;">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title"></h4>
-        <p class="card-title-desc">
-          {{ object.content|safe }}
-        </p>
-        <hr>
-        <!-- Nav tabs -->
-        <ul class="nav nav-pills nav-justified" role="tablist">
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link active" data-toggle="tab" href="#indice" role="tab" aria-selected="true">
-              <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-              <span class="d-none d-sm-block">Índice de Bienes</span>
-            </a>
-          </li>
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link" data-toggle="tab" href="#objetos" role="tab" aria-selected="false">
-              <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-              <span class="d-none d-sm-block">Objetos</span>
-            </a>
-          </li>
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link" data-toggle="tab" href="#pociones" role="tab" aria-selected="false">
-              <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-              <span class="d-none d-sm-block">Pociones</span>
-            </a>
-          </li>
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link" data-toggle="tab" href="#criaturas" role="tab" aria-selected="false">
-              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
-              <span class="d-none d-sm-block">Criaturas</span>
-            </a>
-          </li>
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link" data-toggle="tab" href="#books" role="tab" aria-selected="false">
-              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-              <span class="d-none d-sm-block">Libros de Hechizos</span>
-            </a>
-          </li>
-          <li class="nav-item waves-effect waves-light">
-            <a class="nav-link" data-toggle="tab" href="#consumables" role="tab" aria-selected="false">
-              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-              <span class="d-none d-sm-block">Consumibles</span>
-            </a>
-          </li>
-        </ul>
+    <div class="col" style="color: #3F4254 !important;">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"></h4>
+                <p class="card-title-desc">
+                    {{ object.content|safe }}
+                </p>
+                <br>
+                {% if boxroom_format %}
+                    <a href="{% site_url object 'detail' %}?format=viejo" class="btn btn-primary">Viejo formato
+                {% else %}
+                    <a href="{% site_url object 'detail' %}" class="btn btn-primary">Nuevo formato
 
-        <!-- Tab panes -->
-        <div class="tab-content p-3">
-          <div class="tab-pane active" id="indice" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE BIENES</strong></h3>
-            <hr>
-            <h5><strong>Objetos Mágicos</strong></h5>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_objects_index name="Objeto" %}
-            </div>
-            <h5><strong>Pociones Mágicas</strong></h5>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_potions_index name="Poción" %}
-            </div>
-            <h5><strong>Criaturas Mágicas</strong></h5>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_creatures_index name="Criatura" %}
-            </div>
-            <h5><strong>Libros de Hechizos</strong></h5>
-            <div class="row mb-0">
-              {% include "boxrooms/components/books_index.html" with products_list=object.get_books_index %}
-            </div>
+                {% endif %}
+                </a>
+                <hr>
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" href="#indice" role="tab" aria-selected="true">
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Índice de Bienes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" href="#objetos" role="tab" aria-selected="false">
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Objetos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" href="#pociones" role="tab" aria-selected="false">
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Pociones</span>
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" href="#criaturas" role="tab" aria-selected="false">
+                            <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                            <span class="d-none d-sm-block">Criaturas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" href="#books" role="tab" aria-selected="false">
+                            <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                            <span class="d-none d-sm-block">Libros de Hechizos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" href="#consumables" role="tab" aria-selected="false">
+                            <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                            <span class="d-none d-sm-block">Consumibles</span>
+                        </a>
+                    </li>
+                </ul>
 
-          </div>
-          <div class="tab-pane" id="objetos" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE OBJETOS</strong></h3>
-            <hr>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_objects_list title="Objetos" %}
-            </div>
-          </div>
-          <div class="tab-pane" id="pociones" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE POCIONES</strong></h3>
-            <hr>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_potions_list title="Pociones" %}
-            </div>
-          </div>
-          <div class="tab-pane" id="criaturas" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE CRIATURAS</strong></h3>
-            <hr>
-            <div class="row mb-0">
-              {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_creatures_list title="Criaturas" %}
-            </div>
-          </div>
-          <div class="tab-pane" id="books" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE LIBROS DE HECHIZOS</strong></h3>
-            <hr>
-            <div class="row mb-0">
-              {% include "boxrooms/components/books_detail.html" with products_list=object.get_books_index %}
-            </div>
-          </div>
-          <div class="tab-pane" id="consumables" role="tabpanel">
-            <h3 class="text-center"><strong>ÍNDICE DE CONSUMIBLES</strong></h3>
-            <hr>
-            <div class="row mb-0">
-              {% include "boxrooms/components/consumables_detail.html" with products_list=object.get_consumables_list %}
-            </div>
-          </div>
+                <!-- Tab panes -->
+                <div class="tab-content p-3">
+                    <div class="tab-pane active" id="indice" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE BIENES</strong></h3>
+                        <hr>
+                        <h2><strong>Objetos Mágicos</strong></h2>
+                        <div class="row mb-3 mt-3">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_objects_index name="Objeto" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_index.html" with products_list=object.get_objects_index name="Objeto" %}
+                            {% endif %}
+                        </div>
+                        <h2><strong>Pociones Mágicas</strong></h2>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_potions_index name="Poción" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_index.html" with products_list=object.get_potions_index name="Poción" %}
+                            {% endif %}
+                        </div>
+                        <h2><strong>Criaturas Mágicas</strong></h2>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_index.html" with products_list=object.get_creatures_index name="Criatura" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_index.html" with products_list=object.get_creatures_index name="Criatura" %}
+                            {% endif %}
+                        </div>
+                        <h2><strong>Libros de Hechizos</strong></h2>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/books_index.html" with products_list=object.get_books_index %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/books_index.html" with products_list=object.get_books_index %}
+                            {% endif %}
+                        </div>
 
+                    </div>
+                    <div class="tab-pane" id="objetos" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE OBJETOS</strong></h3>
+                        <hr>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_objects_list title="Objetos" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_detail.html" with products_list=object.get_objects_list title="Objetos" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="pociones" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE POCIONES</strong></h3>
+                        <hr>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_potions_list title="Pociones" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_detail.html" with products_list=object.get_potions_list title="Pociones" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="criaturas" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE CRIATURAS</strong></h3>
+                        <hr>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/normal_products_detail.html" with products_list=object.get_creatures_list title="Criaturas" %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/normal_products_detail.html" with products_list=object.get_creatures_list title="Criaturas" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="books" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE LIBROS DE HECHIZOS</strong></h3>
+                        <hr>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/books_detail.html" with products_list=object.get_books_index %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/books_detail.html" with products_list=object.get_books_index %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="consumables" role="tabpanel">
+                        <h3 class="text-center"><strong>ÍNDICE DE CONSUMIBLES</strong></h3>
+                        <hr>
+                        <div class="row mb-0">
+                            {% if boxroom_format %}
+                                {% include "boxrooms/components/consumables_detail.html" with products_list=object.get_consumables_list %}
+                            {% else %}
+                                {% include "boxrooms/components/old_format/consumables_detail.html" with products_list=object.get_consumables_list %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 {% endblock %}

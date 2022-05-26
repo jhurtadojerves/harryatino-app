@@ -3,7 +3,7 @@
     Saldo Anterior: {{ old_galleons }} G
   </li>
   <li>
-    Pagos por pluses del equipo: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
+    Cambio de Oros por Galeones: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
     <ul>
       {% for line in payment.get_lines %}
         <li>

@@ -12,6 +12,7 @@ from tracing.models import BaseModel
 from apps.payments.transitions import PaymentTransitions
 from apps.payments.choices import PaymentType
 from apps.utils.services import LinkService
+from config.fields import CustomURLField
 
 
 class Payment(BaseModel, PaymentTransitions):
@@ -32,7 +33,7 @@ class Payment(BaseModel, PaymentTransitions):
         default=PaymentType.BUY,
         verbose_name="Tipo de pago",
     )
-    url = models.URLField(verbose_name="url", editable=False, blank=True, null=True)
+    url = CustomURLField(verbose_name="url", editable=False, blank=True, null=True)
     html = models.TextField(verbose_name="html generado", editable=False, null=True)
 
     def __str__(self):

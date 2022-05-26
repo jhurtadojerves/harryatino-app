@@ -1,20 +1,11 @@
-{% load mathfilters %}
-
-{% for obj in products_list %}
-    {% if obj.sales > 1 %}
-        <div class="col-12 mb-4">
-            {{ name }}: {{ obj.product }} ({{ obj.sales }})<br>
-            Clasificación: {{ obj.product.category.name }} <br>
-            Puntos de poder: {{ obj.product.points }} x {{ obj.sales }}
-            = {{ obj.product.points|mul:obj.sales }}
-        </div>
-    {% else %}
-        <div class="col-12 mb-4">
-            {{ name }}: {{ obj.product }}<br>
-            Clasificación: {{ obj.product.category.name }} <br>
-            Puntos de poder: {{ obj.product.points }}
-        </div>
-    {% endif %}
-
+{% regroup products_list|dictsort:'name'|dictsort:'section' by section as regroup_products %}
+{% for group in regroup_products %}
+    <div class="col-12 mb-4">
+        <h3>Clasificación {{ group.grouper }}:</h3>
+        <ul>
+            {% for obj in group.list %}
+                <li>{{ obj.product }} {% if obj.sales  > 1 %}({{ obj.sales }}){% endif %}</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endfor %}
-

@@ -2,12 +2,7 @@
 {% for sale in products_list %}
     <div class="col-12 mb-4">
         Nombre del Producto: {{ sale.product.name }}<br>
-        Descripción: <a href="{% site_url sale.product 'detail' %}" target="_blank">Tarjeta</a> <br>
-        Precio pagado: {{ sale.product.cost }} G<br>
-        Fecha de compra: {{ sale.date|date:"d.m.Y" }}
-        {% if request.user.is_authenticated %}
-            <br>Gestionar: <a href="{% site_url sale 'update' %}" target="_blank">Editar compra</a>
-        {% endif %}
+        Link a la compra: <a href="{% site_url sale 'detail' %}" target="_blank">Ver</a>
     </div>
 {% endfor %}
 

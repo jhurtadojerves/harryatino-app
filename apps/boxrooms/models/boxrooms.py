@@ -46,8 +46,10 @@ class Boxroom(BaseModel):
             if not check:
                 sales_dict[sale.product.reference] = {
                     "product": sale.product,
+                    "name": sale.product.name,
                     "sales": 1,
                     "date": sale.date,
+                    "section": sale.product.category.name
                 }
             else:
                 sales = check.get("sales") + 1
@@ -56,8 +58,10 @@ class Boxroom(BaseModel):
                     {
                         sale.product.reference: {
                             "product": sale.product,
+                            "name": sale.product.name,
                             "sales": sales,
                             "date": date,
+                            "section": sale.product.category.name
                         }
                     }
                 )

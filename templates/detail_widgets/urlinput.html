@@ -1,0 +1,11 @@
+<label>{{ label|lower|capfirst }}</label>
+<div class="input-group">
+    <input class="form-control" type="text" value="{{ value|default:'--' }}" readonly>
+    {% if value %}
+        <div class="input-group-append">
+            <a href="{{ value }}" target="_blank" class="input-group-text" title="Abrir">
+                <i class="fa-solid fa-link text-success"></i>
+            </a>
+        </div>
+    {% endif %}
+</div>
