@@ -12,6 +12,9 @@ class CustomURLField(CharField):
         kwargs.setdefault("max_length", 200)
         super().__init__(verbose_name, name, **kwargs)
 
+    def db_type(self, connection):
+        return 'char(200)'
+
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         if kwargs.get("max_length") == 200:
