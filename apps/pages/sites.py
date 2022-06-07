@@ -2,13 +2,13 @@
 from superadmin.decorators import register
 
 # Base
-from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
+from config.model_site import DefaultSite
 from .forms import PageForm
 
 
 @register("pages.Page")
-class PageSite(BaseSite):
+class PageSite(DefaultSite):
     form_class = PageForm
     list_mixins = (NotPermissionRequiredMixin,)
     detail_mixins = (NotPermissionRequiredMixin,)
@@ -16,3 +16,4 @@ class PageSite(BaseSite):
     detail_template_name = None
     prepopulate_slug = ("name",)
     menu_is_public = True
+    url_detail_suffix = None
