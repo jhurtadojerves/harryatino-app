@@ -55,6 +55,6 @@ class Page(BaseModel):
     class Meta(BaseModel.Meta):
         """Class Meta"""
 
-        verbose_name = "Página"
-        verbose_name_plural = "Páginas"
+        verbose_name = "Concilio de Mercaderes"
+        verbose_name_plural = "Concilio de Mercaderes"
         ordering = ("id",)
