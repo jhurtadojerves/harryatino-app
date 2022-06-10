@@ -112,22 +112,23 @@ class PaymentTransitions:
     def to_cancel(self, **kwargs):
         pass
 
+    def get_new_total(self, galleons):
+        from apps.payments.choices import PaymentType
+        if self.payment_type in PaymentType.get_plus_choices():
+            return int(galleons + self.total_payments())
+        return int(galleons - self.total_payments())
+
     def get_context(self, wizard):
         from apps.utils.services import APIService
 
         data = APIService.get_forum_user_data(wizard)
         old_galleons = int(data.get("customFields[12]")) or 0
-        if self.payment_type in (0, 4):
-            new_galleons = int(old_galleons - self.total_payments())
-        elif self.payment_type == 1:
-            new_galleons = int(old_galleons + self.total_payments())
-        else:
-            new_galleons = int(old_galleons + self.total_payments())
+
 
         context = {
             "payment": self,
             "old_galleons": old_galleons,
-            "new_galleons": new_galleons,
+            "new_galleons": self.get_new_total(old_galleons),
         }
 
         return context
