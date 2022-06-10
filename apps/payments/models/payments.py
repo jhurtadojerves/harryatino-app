@@ -35,7 +35,7 @@ class Payment(BaseModel, PaymentTransitions):
     )
     url = CustomURLField(verbose_name="url", editable=False, blank=True, null=True)
     html = models.TextField(verbose_name="html generado", editable=False, null=True)
-    reason = models.CharField(verbose_name="Motivo", blank=True, null=True, default="")
+    reason = models.CharField(verbose_name="Motivo", blank=True, null=True, default="", max_length=256)
 
     def __str__(self):
         date = f"{self.created_date.day}/{self.created_date.month}/{self.created_date.year}"
