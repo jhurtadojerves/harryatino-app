@@ -35,6 +35,7 @@ class Payment(BaseModel, PaymentTransitions):
     )
     url = CustomURLField(verbose_name="url", editable=False, blank=True, null=True)
     html = models.TextField(verbose_name="html generado", editable=False, null=True)
+    reason = models.CharField(verbose_name="Motivo", blank=True, null=True, default="")
 
     def __str__(self):
         date = f"{self.created_date.day}/{self.created_date.month}/{self.created_date.year}"
@@ -49,6 +50,23 @@ class Payment(BaseModel, PaymentTransitions):
 
     def get_lines(self):
         return self.lines.order_by("pk")
+
+    def get_encoded_reason(self):
+        reason = self.get_default_reason
+        if self.reason:
+            reason = self.reason
+        a, b = "áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN"
+        trans = str.maketrans(a, b)
+        translate = reason.translate(trans)
+        return str(translate)
+
+    @property
+    def get_default_reason(self):
+        if self.payment_type == PaymentType.OTHER:
+            return "Otros Ingresos"
+        elif self.payment_type == PaymentType.OTHER_MINUS:
+            return "Otros Descuentos"
+        return ""
 
     class Meta:
         verbose_name = "Pago"

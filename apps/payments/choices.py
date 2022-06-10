@@ -20,4 +20,6 @@ class PaymentType(models.IntegerChoices):
     SCHOLAR_PAYMENT = 3, "Pago estudiantes"  # scholar_payment
     SCHOLAR_CHARGE = 4, "Descuento estudiantes"  # scholar_charge
     CHANGE_OROS = 5, "Cambio de oros por Galeones"
-    OTHER = 99, "Otro"
+    DUNGEONS = 6, "Recompensa por Mazmorras"
+    OTHER = 99, "Otros Depósitos"
+    OTHER_MINUS = 100, "Otros Descuentos"
