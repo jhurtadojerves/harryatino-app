@@ -36,3 +36,10 @@ def get_short_url(long_url):
         "https://api-ssl.bitly.com/v4/shorten", headers=headers, json=params
     )
     return response.json()
+
+
+def get_encoded_verbose(string):
+    a, b = "áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN"
+    trans = str.maketrans(a, b)
+    translate = string.translate(trans)
+    return str(translate)

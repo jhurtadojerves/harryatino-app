@@ -8,16 +8,24 @@ from django.urls import reverse
 # Models
 from tracing.models import BaseModel
 
+from config.utils import get_encoded_verbose
+
 
 class Profile(BaseModel):
     forum_user_id = models.PositiveIntegerField(unique=True, verbose_name="Id del foro")
     nick = models.CharField(max_length=128)
     magic_level = models.PositiveIntegerField(verbose_name="Nivel Mágico")
     range_of_creatures = models.CharField(
-        max_length=8, verbose_name="Rango de Criaturas"
+        max_length=32, verbose_name="Rango de Criaturas"
     )
-    range_of_objects = models.CharField(max_length=8, verbose_name="Rango de Objetos")
+    range_of_objects = models.CharField(max_length=32, verbose_name="Rango de Objetos")
     vault_number = models.IntegerField(verbose_name="Número de Bóveda")
+    boxroom_number = models.IntegerField(
+        verbose_name="Número de Bóveda Trastero", null=True, blank=True
+    )
+    character_sheet = models.IntegerField(
+        verbose_name="Número de Bóveda Trastero", null=True, blank=False
+    )
     avatar = models.URLField(null=True, blank=True)
     accumulated_posts = models.IntegerField(
         verbose_name="posteos acumulados", editable=False, default=0
@@ -36,6 +44,9 @@ class Profile(BaseModel):
 
     def __str__(self):
         return self.nick
+
+    def clean_nick(self):
+        return get_encoded_verbose(self.nick)
 
     def calculate_salary_scale(self):
         posts = self.accumulated_posts
