@@ -74,7 +74,7 @@ class Product(BaseModel):
     class Meta(BaseModel.Meta):
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
-        ordering = ("pk",)
+        ordering = ("-can_be_sold", "category__name", "name")
 
 
 def download_from_imgur_and_upload(sender, instance, created, **kwargs):

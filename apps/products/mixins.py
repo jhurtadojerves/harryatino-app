@@ -59,38 +59,50 @@ class ProductListMixin:
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
+        exclude_va = self.request.GET.get("exclude_va", True)
+
+        if exclude_va:
+            queryset = queryset.exclude(name__endswith="VA")
+
         category = self.request.GET.get("category", False)
         section = self.request.GET.get("section", False)
         name = self.request.GET.get("search", False)
         search_name = dict()
+
         if name:
             search_name.update({"name__icontains": name})
-        # queryset = self.model.objects.all()
+
         if category and Category.objects.filter(name=category.upper()).exists():
             potions = False
+
             if category in ("P", "PP", "PPP", "PPPP", "PPPPP"):
                 category = category.replace("P", "A")
                 potions = True
+
             category = Category.objects.get(name=category.upper())
+
             if name:
-                queryset = self.model.objects.filter(
+                queryset = queryset.filter(
                     Q(**search_name) | Q(reference__istartswith=name),
                     category=category,
                 )
+
                 if potions:
-                    queryset = self.model.objects.filter(
+                    queryset = queryset.filter(
                         Q(**search_name) | Q(reference__istartswith=name),
                         category=category,
                         reference__icontains="P",
                     )
                 else:
                     queryset = queryset.exclude(reference__icontains="P")
+
             else:
-                queryset = self.model.objects.filter(
+                queryset = queryset.filter(
                     category=category,
                 )
+
                 if potions:
-                    queryset = self.model.objects.filter(
+                    queryset = queryset.filter(
                         category=category, reference__icontains="P"
                     )
                 else:
@@ -98,45 +110,52 @@ class ProductListMixin:
 
         if section and Section.objects.filter(slug=slugify(section)).exists():
             potions = False
+
             if section == "Pociones":
                 section = "Objetos"
                 potions = True
+
             section = Section.objects.get(slug=slugify(section))
+
             if name:
-                queryset = self.model.objects.filter(
+                queryset = queryset.filter(
                     Q(**search_name) | Q(reference__istartswith=name),
                     category__section=section,
                 )
+
                 if potions:
-                    queryset = self.model.objects.filter(
+                    queryset = queryset.filter(
                         Q(**search_name) | Q(reference__istartswith=name),
                         category__section=section,
                         reference__icontains="P",
                     )
                 else:
                     queryset = queryset.exclude(reference__icontains="P")
+
             else:
-                queryset = self.model.objects.filter(
+                queryset = queryset.filter(
                     category__section=section,
                 )
+
                 if potions:
-                    queryset = self.model.objects.filter(
+                    queryset = queryset.filter(
                         category__section=section, reference__icontains="P"
                     )
                 else:
                     queryset = queryset.exclude(reference__icontains="P")
 
         if not category and not section and name:
-            queryset = self.model.objects.filter(
+            queryset = queryset.filter(
                 Q(**search_name) | Q(reference__istartswith=name)
             )
         from django.db.models import Count, F
 
         to_stock = self.request.GET.get("to_stock", False)
         from_stock = self.request.GET.get("from_stock", False)
+
         if not category and not section and not name and (to_stock and from_stock):
             total_sales = Count("sales")
-            queryset = self.model.objects.annotate(
+            queryset = queryset.annotate(
                 total_sales=total_sales, stock=F("initial_stock") - F("total_sales")
             ).filter(stock__gte=to_stock, stock__lte=from_stock)
 
