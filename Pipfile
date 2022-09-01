@@ -7,13 +7,13 @@ verify_ssl = true
 django-extensions = "*"
 
 [packages]
-django = "*"
+django = "==3.2.13"
 django-select2 = "*"
 django-superadmin = "==1.2.6"
-django-tracing = "*"
+django-tracing = "==1.0.6"
 django-ckeditor = "*"
 environs = "*"
-psycopg2 = "*"
+psycopg2 = "==2.9.3"
 pillow = "*"
 django-import-export = "*"
 django-extensions = "*"
