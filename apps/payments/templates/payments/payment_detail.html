@@ -28,6 +28,7 @@
     </table>
     {% if object.payment_type == 1 %}
         <textarea name="" id="" cols="30" rows="10">
+            <div>
             <strong>Nick:</strong> {{ object.wizard }} <br><br>
             {% for line in object.get_lines %}
                 <p>
@@ -35,6 +36,7 @@
                 <strong>Cantidad:</strong> {{ line.amount|floatformat:"0" }}
                 </p>
             {% endfor %}
+            </div>
         </textarea>
     {% endif %}
 
