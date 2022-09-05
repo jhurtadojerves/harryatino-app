@@ -17,7 +17,7 @@
         {% for line in object.get_lines %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ line.amount|floatformat:"2" }}</td>
+                <td>{{ line.amount|floatformat:"0" }}</td>
                 <td>{{ line.verbose }}</td>
                 <td>{{ line.link|default_if_none:"--" }}</td>
             </tr>
@@ -32,7 +32,7 @@
             {% for line in object.get_lines %}
                 <p>
                 <strong>Concepto:</strong> {{ line.verbose }} <br>
-                <strong>Cantidad:</strong> {{ line.amount|floatformat:"2" }}
+                <strong>Cantidad:</strong> {{ line.amount|floatformat:"0" }}
                 </p>
             {% endfor %}
         </textarea>
