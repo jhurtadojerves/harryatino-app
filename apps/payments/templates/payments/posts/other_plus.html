@@ -1,18 +1,24 @@
 <ul>
-  <li>
-    Saldo Anterior: {{ old_galleons }} G
-  </li>
-  <li>
-    {{ payment.get_encoded_reason }}: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
-    <ul>
-      {% for line in payment.get_lines %}
-        <li>
-          {{ line.get_encoded_verbose }}: <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
-        </li>
-      {% endfor %}
-    </ul>
-  </li>
-  <li>
-    Saldo: {{ new_galleons }} G
-  </li>
+    <li>
+        Saldo Anterior: {{ old_galleons }} G
+    </li>
+    <li>
+        {{ payment.get_encoded_reason }}: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
+        <ul>
+            {% for line in payment.get_lines %}
+                <li>
+                    {% if line.link %}
+                        <a href="{{ line.get_shorturl }}" target="_blank">{{ line.get_encoded_verbose }}</a>:
+                        <span style="color: #006666; font-weight: bold">-{{ line.get_integer_amount }} G</span>
+                    {% else %}
+                        {{ line.get_encoded_verbose }}:
+                        <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>
+        Saldo: {{ new_galleons }} G
+    </li>
 </ul>
