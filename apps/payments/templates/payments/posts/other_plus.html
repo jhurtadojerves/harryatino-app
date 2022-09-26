@@ -9,7 +9,7 @@
                 <li>
                     {% if line.link %}
                         <a href="{{ line.get_shorturl }}" target="_blank">{{ line.get_encoded_verbose }}</a>:
-                        <span style="color: #006666; font-weight: bold">-{{ line.get_integer_amount }} G</span>
+                        <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
                     {% else %}
                         {{ line.get_encoded_verbose }}:
                         <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
