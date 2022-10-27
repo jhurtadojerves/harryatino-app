@@ -1,1 +1,1 @@
-from .products import ProductViewSet
+from .products import ProductViewSet  # noqa F401

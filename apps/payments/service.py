@@ -33,7 +33,10 @@ class BaseService:
 
     @classmethod
     def get_url(cls, authors, page, per_page):
-        url = f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}&forums=510&sortBy=date&sortDir=desc"
+        url = (
+            f"{cls.POSTS_GET_URL}?key={API_KEY_GET}&page={page}&perPage={per_page}"
+            f"&forums=510&sortBy=date&sortDir=desc"
+        )
         if authors:
             url = f"{url}&authors={authors}"
         return url
@@ -90,7 +93,10 @@ class PropertyService(BaseService):
     # {id}/posts
     @classmethod
     def get_url(cls, topic_id, page, per_page):
-        return f"{cls.POSTS_GET_URL}{topic_id}/posts/?key={API_KEY_GET}&page={page}&perPage={per_page}&sortBy=date&sortDir=desc"
+        return (
+            f"{cls.POSTS_GET_URL}{topic_id}/posts/?key={API_KEY_GET}&page={page}"
+            f"&perPage={per_page}&sortBy=date&sortDir=desc"
+        )
 
     @classmethod
     def calculate_property_posts(cls, payment, topic_id, per_page=500):
@@ -154,7 +160,9 @@ class PaymentService:
         from apps.payments.models import Payment, PaymentLine
 
         sale_url = f"https://magicmall.rol-hl.com{site_url(sale, 'detail')}"
-        payment, created = Payment.objects.get_or_create(state=1, wizard=sale.profile, payment_type=0)
+        payment, created = Payment.objects.get_or_create(
+            state=1, wizard=sale.profile, payment_type=0
+        )
         PaymentLine.objects.create(
             payment=payment,
             amount=sale.product.cost,

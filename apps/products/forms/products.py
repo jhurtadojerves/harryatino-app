@@ -5,14 +5,11 @@ from django import forms
 from django.forms import inlineformset_factory
 
 # Third party integration
-from django_select2.forms import (
-    ModelSelect2Widget,
-    ModelSelect2MultipleWidget,
-)
+from django_select2.forms import ModelSelect2Widget
 from superadmin.forms import ModelForm
 
 # Local
-from apps.products.models import Product, Section, StockRequest, StockProduct
+from apps.products.models import Product, Section, StockProduct, StockRequest
 
 
 class ProductForm(ModelForm):

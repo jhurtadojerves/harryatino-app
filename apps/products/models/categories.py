@@ -2,21 +2,15 @@
 
 # Django
 from django.db import models
-from django.db.models.signals import post_save
-from django.utils.translation import gettext_lazy as for_humans
-
-
-# Models
-from apps.products.models import Section
 from tracing.models import BaseModel
 
 
 class Category(BaseModel):
     """Category model."""
 
-    name = models.CharField(max_length=32, verbose_name="Nombre", unique=True)
+    name = models.CharField(max_length=32, verbose_name="Nombre")
     section = models.ForeignKey(
-        Section,
+        "products.Section",
         on_delete=models.PROTECT,
         related_name="categories",
         verbose_name="Sección",
@@ -42,3 +36,4 @@ class Category(BaseModel):
 
         verbose_name = "Categoría"
         verbose_name_plural = "Categorías"
+        unique_together = ("name", "section")

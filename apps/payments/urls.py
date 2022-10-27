@@ -3,10 +3,10 @@ from django.urls import path
 
 # Views
 from .views import (
-    CalculatePaymentView,
-    CreatePaymentView,
     CalculatePaymentPropertyView,
+    CalculatePaymentView,
     CreatePaymentPropertyView,
+    CreatePaymentView,
 )
 
 app_name = "payments"

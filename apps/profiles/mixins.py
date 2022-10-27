@@ -1,12 +1,11 @@
 """Define mixins to profile"""
-# Django
-from django.core.paginator import Paginator
-from django.utils.text import slugify
-from django.db.models import Q
 
-# Local
-from apps.products.models import Category, Section, Product
-from apps.profiles.models import Profile
+
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.utils.text import slugify
+
+from apps.products.models import Category, Product, Section
 
 
 class ProfileListMixin:

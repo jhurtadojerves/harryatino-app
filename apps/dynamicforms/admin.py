@@ -7,7 +7,7 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 # Models
-from apps.products.models import Product, Category, Section
+from apps.products.models import Category, Product, Section
 
 
 @admin.register(Product)
@@ -15,14 +15,12 @@ class ProductAdmin(ImportExportModelAdmin):
     """Product admin."""
 
     list_display = (
-        "number",
         "reference",
         "name",
         "points",
         "cost",
         "initial_stock",
         "description",
-        "check_stock",
         "slug",
     )
 
@@ -33,7 +31,7 @@ class ProductAdmin(ImportExportModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin):
-    """Category admin. """
+    """Category admin."""
 
     list_display = ("name", "section")
     search_fields = ("name",)
@@ -43,7 +41,7 @@ class CategoryAdmin(ImportExportModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(ImportExportModelAdmin):
-    """Section admin. """
+    """Section admin."""
 
     list_display = ("name",)
     search_fields = ("name",)

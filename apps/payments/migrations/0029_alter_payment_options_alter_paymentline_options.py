@@ -6,16 +6,21 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('payments', '0028_alter_payment_payment_type'),
+        ("payments", "0028_alter_payment_payment_type"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='payment',
-            options={'ordering': ('-pk',), 'permissions': [('create_payment_post', 'Crear posteo del pago')], 'verbose_name': 'Pago', 'verbose_name_plural': 'Pagos'},
+            name="payment",
+            options={
+                "ordering": ("-pk",),
+                "permissions": [("create_payment_post", "Crear posteo del pago")],
+                "verbose_name": "Pago",
+                "verbose_name_plural": "Pagos",
+            },
         ),
         migrations.AlterModelOptions(
-            name='paymentline',
-            options={'ordering': ('pk',)},
+            name="paymentline",
+            options={"ordering": ("pk",)},
         ),
     ]

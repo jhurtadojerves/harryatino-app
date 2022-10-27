@@ -10,7 +10,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.DeleteModel(name="Field",),
-        migrations.DeleteModel(name="Fieldset",),
-        migrations.DeleteModel(name="Form",),
+        migrations.DeleteModel(
+            name="Field",
+        ),
+        migrations.DeleteModel(
+            name="Fieldset",
+        ),
+        migrations.DeleteModel(
+            name="Form",
+        ),
     ]

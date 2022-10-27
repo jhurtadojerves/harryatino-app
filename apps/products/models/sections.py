@@ -2,12 +2,11 @@
 
 # Django
 from django.db import models
-from django.db.models.signals import post_save
-
-# Utils
 
 # Models
 from tracing.models import BaseModel
+
+# Utils
 
 
 class Section(BaseModel):

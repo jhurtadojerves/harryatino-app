@@ -1,12 +1,12 @@
 # Third party integration
 from superadmin.decorators import register
 
+# Local
+from apps.utils.mixins import LinkDetailMixin
+
 # Base
 from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
-
-# Local
-from apps.utils.mixins import LinkDetailMixin
 
 
 @register("utils.Link")

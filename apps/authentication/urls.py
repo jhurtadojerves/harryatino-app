@@ -2,17 +2,17 @@
 
 # Django
 from django.contrib.auth.views import (
-    PasswordResetConfirmView,
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetCompleteView,
-    LogoutView,
     LoginView,
+    LogoutView,
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
 )
-from django.urls import path
-from django.urls import reverse_lazy
+from django.urls import path, reverse_lazy
 
 # Views
+from apps.authentication.views import LoginWithToken
 
 app_name = "auth"
 
@@ -20,7 +20,8 @@ urlpatterns = (
     path(
         route="login/",
         view=LoginView.as_view(
-            template_name="authentication/login.html", redirect_authenticated_user=True,
+            template_name="authentication/login.html",
+            redirect_authenticated_user=True,
         ),
         name="login",
     ),
@@ -55,5 +56,10 @@ urlpatterns = (
             template_name="authentication/reset_password_done_complete.html"
         ),
         name="password_reset_complete",
+    ),
+    path(
+        route="login/<slug:slug>/",
+        view=LoginWithToken.as_view(),
+        name="login_witch_token",
     ),
 )

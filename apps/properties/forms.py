@@ -1,13 +1,14 @@
 """Products form"""
 
 # Third party integration
-from superadmin.forms import ModelForm
 from ckeditor.widgets import CKEditorWidget
 from django_select2 import forms as s2forms
+from superadmin.forms import ModelForm
+
+from apps.profiles.models import Profile
 
 # Local
 from apps.properties.models import Property
-from apps.profiles.models import Profile
 
 
 class PropertyForm(ModelForm):

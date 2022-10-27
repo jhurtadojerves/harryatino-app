@@ -1,4 +1,4 @@
-from .sections import Section
-from .categories import Category
-from .products import Product
-from .stocks_request import StockProduct, StockRequest
+from .categories import Category  # noqa F401
+from .products import Product  # noqa F401
+from .sections import Section  # noqa F401
+from .stocks_request import StockProduct, StockRequest  # noqa F401

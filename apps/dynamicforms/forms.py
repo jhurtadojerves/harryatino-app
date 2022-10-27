@@ -4,9 +4,8 @@ from django.forms.forms import DeclarativeFieldsMetaclass
 from django_select2.forms import ModelSelect2Widget, Select2Widget
 from superadmin.forms import ModelForm
 
-from apps.dynamicforms.models import Field, Form, Fieldset
+from apps.dynamicforms.models import Field, Fieldset, Form
 from apps.dynamicforms.utils import FieldDynamic, get_type_and_widget
-from django.utils.text import slugify
 
 
 class BaseForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
@@ -126,8 +125,3 @@ class FormForm(ModelForm):
             "description",
         )
         widgets = {"description": forms.Textarea(attrs={"rows": 3})}
-
-
-"""
-choices=(("Teléfono", "Teléfono"),("Alcantarillado", "Alcantarillado"),("Energía eléctrica", "Energía eléctrica"),("Agua potable", "Agua potable"),("Barrido de calles", "Barrido de calles"),("Recolección de basura", "Recolección de basura"))
-"""

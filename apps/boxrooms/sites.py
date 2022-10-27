@@ -3,7 +3,7 @@ from superadmin.decorators import register
 
 # Base
 from apps.boxrooms.forms import BoxroomForm
-from apps.boxrooms.mixins import BoxroomListMixin, BoxroomDetailMixin
+from apps.boxrooms.mixins import BoxroomDetailMixin, BoxroomListMixin
 from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
 

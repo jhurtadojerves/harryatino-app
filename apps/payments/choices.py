@@ -26,7 +26,14 @@ class PaymentType(models.IntegerChoices):
 
     @classmethod
     def get_plus_choices(cls):
-        return cls.PLUS, cls.SCHOLAR_PLUS, cls.SCHOLAR_PAYMENT, cls.CHANGE_OROS, cls.DUNGEONS, cls.OTHER
+        return (
+            cls.PLUS,
+            cls.SCHOLAR_PLUS,
+            cls.SCHOLAR_PAYMENT,
+            cls.CHANGE_OROS,
+            cls.DUNGEONS,
+            cls.OTHER,
+        )
 
     @classmethod
     def get_minus_choices(cls):

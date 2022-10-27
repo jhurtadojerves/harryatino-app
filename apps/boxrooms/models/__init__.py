@@ -1,1 +1,1 @@
-from .boxrooms import Boxroom
+from .boxrooms import Boxroom  # noqa F401

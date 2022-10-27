@@ -1,7 +1,7 @@
 # Django
-from django.views.generic import View
-from django.http import JsonResponse
 from django.apps import apps
+from django.http import JsonResponse
+from django.views.generic import View
 
 # Libraries
 from django_fsm import has_transition_perm

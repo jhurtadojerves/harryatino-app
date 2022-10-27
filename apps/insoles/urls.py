@@ -3,10 +3,10 @@ from django.urls import path
 
 # Views
 from apps.insoles.views import (
-    RenderFormView,
-    RenderFieldView,
     RenderDetailView,
     RenderEditView,
+    RenderFieldView,
+    RenderFormView,
 )
 
 urlpatterns = [

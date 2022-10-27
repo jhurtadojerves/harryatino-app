@@ -1,16 +1,28 @@
-from django.urls import path
+# Base
+from functools import reduce
 
+from django.contrib.admin.utils import flatten
+from django.core.exceptions import FieldDoesNotExist, ImproperlyConfigured
+
+# Django
+from django.urls import path
+from django.utils.html import format_html
+from superadmin.services import FieldService as BaseFieldService
+from superadmin.services import settings
+
+# Third party integration
 from superadmin.views import (
-    ListView,
     CreateView,
-    UpdateView,
-    MassUpdateView,
-    DetailView,
     DeleteView,
+    DetailView,
+    DuplicateView,
+    ListView,
     MassDeleteView,
-    DuplicateView
+    MassUpdateView,
+    UpdateView,
 )
 
+# Local
 from config.base import BaseSite
 
 
@@ -70,7 +82,6 @@ class DefaultSite(BaseSite):
                 ),
             ]
 
-
         if "delete" in self.allow_views:
             url_delete_name = self.get_base_url_name("delete")
 
@@ -95,3 +106,101 @@ class DefaultSite(BaseSite):
             ),
         ]
         return urlpatterns
+
+
+class CustomFieldServiceMixin:
+    def get_results(self):
+        if isinstance(self.site.detail_fields, (list, tuple)):
+            fields = flatten(self.site.detail_fields)
+        elif isinstance(self.site.detail_fields, dict):
+            fields = reduce(
+                lambda acc, fieldset: acc + flatten(fieldset),
+                self.site.detail_fields.values(),
+                [],
+            )
+        else:
+            raise ImproperlyConfigured(
+                "The fieldsets must be an instance of list, tuple or dict"
+            )
+        fields = fields if fields else (field.name for field in self.model._meta.fields)
+        results = {
+            field: (
+                FieldService.get_field_label(self.object, field),
+                FieldService.get_field_value(self.object, field),
+                FieldService.get_field_type(self.object, field),
+            )
+            for field in fields
+        }
+
+        flatten_results = results.values()
+
+        def parse(fieldset):
+            def wrap(fields):
+                fields = fields if isinstance(fields, (list, tuple)) else [fields]
+                return {
+                    "bs_cols": int(12 / len(fields)),
+                    "fields": [results.get(field, ("", "", "")) for field in fields],
+                }
+
+            fieldset_list = list(map(wrap, fieldset))
+            return fieldset_list
+
+        fieldsets_list = self.site.detail_fields
+        fieldsets = (
+            [(None, fieldsets_list)]
+            if isinstance(fieldsets_list, (list, tuple))
+            else fieldsets_list.items()
+        )
+        fieldsets_results = [
+            {"title": title or "", "fieldset": parse(fieldset)}
+            for title, fieldset in fieldsets
+        ]
+
+        return flatten_results, fieldsets_results
+
+
+class FieldService(BaseFieldService):
+    @classmethod
+    def get_field_value(cls, object, field):
+        if "__str__" in field:
+            return object
+        if object is None:
+            return object
+        field = field.split(cls.LABEL_SEPARATOR)[0]
+        names = field.split(cls.FIELD_SEPARATOR)
+        name = names.pop(0)
+        if not hasattr(object, name):
+            raise AttributeError(
+                f"Does not exist attribute <{name}> for {str(object)}."
+            )
+        if len(names):
+            attr = getattr(object, name)
+            return cls.get_field_value(
+                attr() if callable(attr) else attr, cls.FIELD_SEPARATOR.join(names)
+            )
+        try:
+            field = object._meta.get_field(name)
+            if hasattr(field, "choices") and field.choices:
+                return dict(field.choices).get(field.value_from_object(object))
+            elif field.related_model:
+                if field.one_to_many or field.many_to_many:
+                    raise ImproperlyConfigured(
+                        "OneToMany or ManyToMany is not supported: '%s' " % field.name
+                    )
+                try:
+                    return field.related_model.objects.get(
+                        pk=field.value_from_object(object)
+                    )
+                except AttributeError:
+                    if field.one_to_one:
+                        return getattr(object, field.related_name)
+                except field.related_model.DoesNotExist:
+                    return None
+            else:
+                return field.value_from_object(object)
+        except FieldDoesNotExist:
+            attr = getattr(object, name)
+            attr = attr() if callable(attr) else attr
+            if isinstance(attr, bool):
+                attr = settings.BOOLEAN_YES if attr else settings.BOOLEAN_NO
+            return format_html(str(attr))

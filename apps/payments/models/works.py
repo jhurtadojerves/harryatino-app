@@ -2,25 +2,21 @@
 
 # Python
 import calendar
+import locale
 from datetime import datetime
-
-# Third party integration
-from django_fsm import FSMIntegerField
-
 
 # Django
 from django.db import models
 from django.utils import timezone
 
+# Third party integration
+from django_fsm import FSMIntegerField
 
 # Models
 from tracing.models import BaseModel
 
 # Transitions
 from ..transitions import PostTransitions
-
-
-import locale
 
 
 class Work(BaseModel):

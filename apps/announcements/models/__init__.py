@@ -1,1 +1,1 @@
-from .announcements import Announcement
+from .announcements import Announcement  # noqa F401

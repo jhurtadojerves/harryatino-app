@@ -8,7 +8,7 @@ from django_select2.forms import ModelSelect2Widget
 
 
 class MyChoiceField(ChoiceField):
-    """Overwrite class ChoiceField """
+    """Overwrite class ChoiceField"""
 
     def __init__(self, *, choices=(), queryset, to_field_name=None, **kwargs):
         super().__init__(**kwargs)

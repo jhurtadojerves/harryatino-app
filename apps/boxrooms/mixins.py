@@ -1,5 +1,6 @@
 import operator
 from functools import reduce
+
 from django.db.models import Q
 
 
@@ -16,11 +17,16 @@ class BoxroomListMixin:
             search = params.pop("search", None)
             params.pop("page", None)
             params.pop("paginate_by", None)
-            model_site = self.site
-            search = (search.replace("+", ",").replace(";", ",")).split(",") if search else None
+            search = (
+                (search.replace("+", ",").replace(";", ",")).split(",")
+                if search
+                else None
+            )
             if search:
                 for search_value in search:
-                    filters = {key: search_value.strip() for key in search_params_config}
+                    filters = {
+                        key: search_value.strip() for key in search_params_config
+                    }
                     params.update(**filters)
                     args = [Q(**{key: value}) for key, value in filters.items()]
                     queryset = queryset.filter(reduce(operator.__or__, args))

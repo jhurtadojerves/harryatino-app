@@ -3,6 +3,7 @@
         <legend class="font-weight-bold">{{ title|capfirst }}</legend>
         <div class="separator separator-solid separator-border-2 separator-primary mb-10"></div>
     {% endif %}
+    <div class="row" id="form-errors"></div>
     {% for row in fieldset %}
         <div class="row">
             {% for field in row.fields %}

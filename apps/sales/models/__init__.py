@@ -1,1 +1,1 @@
-from .sales import Sale
+from .sales import Sale  # noqa F401

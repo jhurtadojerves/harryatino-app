@@ -1,1 +1,1 @@
-from .short_urls import Link
+from .short_urls import Link  # noqa F401

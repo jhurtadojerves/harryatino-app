@@ -1,7 +1,7 @@
-from django.db.models import CharField
-from django.core import checks, exceptions, validators
-from django.utils.translation import gettext_lazy as _
 from django import forms
+from django.core import validators
+from django.db.models import CharField
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomURLField(CharField):
@@ -13,7 +13,7 @@ class CustomURLField(CharField):
         super().__init__(verbose_name, name, **kwargs)
 
     def db_type(self, connection):
-        return 'char(200)'
+        return "char(200)"
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()

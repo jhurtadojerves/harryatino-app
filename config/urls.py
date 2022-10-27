@@ -14,16 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.conf import settings
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.static import static
-from django.views.generic import TemplateView
-
-from django.contrib.auth.decorators import login_required
-from apps.pages.views import HomePage
-
 import superadmin
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+
+from apps.pages.views import HomePage
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -41,4 +38,5 @@ urlpatterns = [
     # Api v1
     path(route="api/v1/", view=include("api.urls")),
     path("select2/", include("django_select2.urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,19 +1,16 @@
 """Sales sites"""
 # Third party integration
 from superadmin.decorators import register
-from config.base import BaseSite
 
-# Models
-from apps.sales.models import Sale
+# Forms
+from apps.sales.forms import SaleForm
+from config.base import BaseSite
 
 # Utils
 from config.mixins import NotPermissionRequiredMixin
 
 # Mixins
-from .mixins import SaleListMixin, SaleDetailMixin, SaleFormMixin
-
-# Forms
-from apps.sales.forms import SaleForm
+from .mixins import SaleDetailMixin, SaleFormMixin, SaleListMixin
 
 
 @register("sales.Sale")

@@ -2,15 +2,17 @@
 
 # Django
 from django.contrib import messages
-from django.db.models import Q
-from django.shortcuts import redirect, reverse
-from django.utils.text import slugify
 from django.core.paginator import Paginator
+from django.db.models import F, Q
 from django.http import Http404
+from django.shortcuts import redirect
+from django.utils.text import slugify
+
+from apps.menu.utils import get_site_url
 
 # Local
-from apps.products.models import Category, Section, Product
-from apps.menu.utils import get_site_url
+from apps.products.models import Category, Product, Section
+
 from .forms import ProductFormStaff
 
 
@@ -73,12 +75,6 @@ class ProductListMixin:
             search_name.update({"name__icontains": name})
 
         if category and Category.objects.filter(name=category.upper()).exists():
-            potions = False
-
-            if category in ("P", "PP", "PPP", "PPPP", "PPPPP"):
-                category = category.replace("P", "A")
-                potions = True
-
             category = Category.objects.get(name=category.upper())
 
             if name:
@@ -86,34 +82,12 @@ class ProductListMixin:
                     Q(**search_name) | Q(reference__istartswith=name),
                     category=category,
                 )
-
-                if potions:
-                    queryset = queryset.filter(
-                        Q(**search_name) | Q(reference__istartswith=name),
-                        category=category,
-                        reference__icontains="P",
-                    )
-                else:
-                    queryset = queryset.exclude(reference__icontains="P")
-
             else:
                 queryset = queryset.filter(
                     category=category,
                 )
 
-                if potions:
-                    queryset = queryset.filter(
-                        category=category, reference__icontains="P"
-                    )
-                else:
-                    queryset = queryset.exclude(reference__icontains="P")
-
         if section and Section.objects.filter(slug=slugify(section)).exists():
-            potions = False
-
-            if section == "Pociones":
-                section = "Objetos"
-                potions = True
 
             section = Section.objects.get(slug=slugify(section))
 
@@ -122,42 +96,23 @@ class ProductListMixin:
                     Q(**search_name) | Q(reference__istartswith=name),
                     category__section=section,
                 )
-
-                if potions:
-                    queryset = queryset.filter(
-                        Q(**search_name) | Q(reference__istartswith=name),
-                        category__section=section,
-                        reference__icontains="P",
-                    )
-                else:
-                    queryset = queryset.exclude(reference__icontains="P")
-
             else:
                 queryset = queryset.filter(
                     category__section=section,
                 )
 
-                if potions:
-                    queryset = queryset.filter(
-                        category__section=section, reference__icontains="P"
-                    )
-                else:
-                    queryset = queryset.exclude(reference__icontains="P")
-
         if not category and not section and name:
             queryset = queryset.filter(
                 Q(**search_name) | Q(reference__istartswith=name)
             )
-        from django.db.models import Count, F
 
         to_stock = self.request.GET.get("to_stock", False)
         from_stock = self.request.GET.get("from_stock", False)
 
         if not category and not section and not name and (to_stock and from_stock):
-            total_sales = Count("sales")
             queryset = queryset.annotate(
-                total_sales=total_sales, stock=F("initial_stock") - F("total_sales")
-            ).filter(stock__gte=to_stock, stock__lte=from_stock)
+                stock_available=F("stock") - F("reserved_stock")
+            ).filter(stock_available__gte=to_stock, stock_available__lte=from_stock)
 
         return queryset
 
@@ -242,7 +197,7 @@ class ProductEditMixin:
 
     def get_form_class(self):
         """Return the form class to use."""
-        if self.request.user.is_staff:
+        if self.request.user.is_moderator:
             return self.staff_form
         return self.form_class
 
@@ -281,7 +236,8 @@ class StockRequestDetail:
             messages.add_message(
                 request,
                 messages.ERROR,
-                f"No se puede realizara acciones sobre solicitudes con estado {self.object.get_status_request_display()}",
+                f"No se puede realizara acciones sobre solicitudes con estado "
+                f"{self.object.get_status_request_display()}",
             )
         elif status and status == "approve":
             products = self.object.product_requests.all()
@@ -315,7 +271,8 @@ class StockRequestFormMixin:
             messages.add_message(
                 request,
                 messages.ERROR,
-                f"No se puede editar solicitudes solicitudes con estado {self.object.get_status_request_display()}",
+                f"No se puede editar solicitudes solicitudes con estado "
+                f"{self.object.get_status_request_display()}",
             )
             return redirect(get_site_url(self.object, "detail"))
         return super().get(request, *args, **kwargs)
@@ -323,5 +280,5 @@ class StockRequestFormMixin:
     def get_object_or_none(self):
         try:
             return self.get_object()
-        except:
+        except Exception:
             return None

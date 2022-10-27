@@ -1,9 +1,5 @@
 """Mixin for products"""
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
-
-# Third party integration
-from superadmin.templatetags.superadmin_utils import site_url
 
 
 class SaleListMixin:

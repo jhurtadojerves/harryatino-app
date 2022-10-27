@@ -1,21 +1,12 @@
 """Profiles sites"""
 
-# Third party integration
 from superadmin.decorators import register
+
 from config.base import BaseSite
-
-
-# Models
-from apps.profiles.models import Profile
-
-# Utils
 from config.mixins.permissions import NotPermissionRequiredMixin
 
-# Mixins
-from .mixins import ProfileListMixin, ProfileDetailMixin
-
-# Forms
 from .forms import WizardForm
+from .mixins import ProfileDetailMixin, ProfileListMixin
 
 
 @register("profiles.Profile")
@@ -32,6 +23,10 @@ class ProfileSite(BaseSite):
         "range_of_creatures",
         "range_of_objects",
     )
+    detail_fields = [
+        ["pk:numero_de_comprador", "forum_user_id", "nick"],
+        ["magic_level", "galleons"],
+    ]
     search_fields = ("nick",)
     list_template_name = None
     detail_template_name = None

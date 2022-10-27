@@ -1,0 +1,94 @@
+{% extends "base/base_detail.html" %}
+{% load static superadmin_utils %}
+
+{% block detail %}
+    {{ block.super }}
+    {% if object.lines.all and not object.state == 3 %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead style="text-align: center;">
+                <tr>
+                    <th scope="col">Referencia</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Puntos</th>
+                    <th scope="col">Precio</th>
+                    {% if object.state == 1 and object.user == request.user %}
+                        <th scope="col">Acciones</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for line in object.lines.all %}
+                    <tr>
+                        <th scope="row"><a href="{% site_url line.product 'detail' %}" target="_blank">{{ line.product.reference }}</a></th>
+                        <td>{{ line.product.name }}</td>
+                        <td>{{ line.product.category }}</td>
+                        <td style="text-align: right;">{{ line.product.points }}</td>
+                        <td style="text-align: right;">{{ line.product.cost }} G</td>
+                        {% if object.state == 1 and object.user == request.user %}
+                            <td><a href="#" id="" class="btn btn-danger product-for-checkout"
+                                   data-reference="{{ line.product.pk }}" data-type="delete"
+                                   data-line="{{ line.pk }}">Quitar del carrito</a></td>
+                        {% endif %}
+
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5" style="text-align: right;">{{ object.get_number_of_galleons }} G</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% if object.state == 3 %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead style="text-align: center;">
+                <tr>
+                    <th scope="col">Referencia</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Puntos</th>
+                    <th scope="col">Galeones</th>
+                    {% if request.user.is_moderator %}
+                        <th scope="col">Ver venta</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for line in object.sales.all %}
+                    <tr>
+                        <th scope="row">{{ line.product.reference }}</th>
+                        <td>{{ line.product.name }}</td>
+                        <td>{{ line.product.category }}</td>
+                        <td style="text-align: right;">{{ line.product.points }}</td>
+                        <td style="text-align: right;">{{ line.product.cost }} G</td>
+                        {% if request.user.is_moderator %}
+                            <td>
+                            <a href="{% site_url line 'detail' %}" class="btn btn-primary">Ver venta</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5" style="text-align: right;">{{ object.get_number_of_galleons }} G</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block toolbar_menu %}
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'assets/js/ecommerce/add_product.js' %}"></script>
+    {{ block.super }}
+
+    <script>
+        init_checkout({{ request.user.purchase.pk }})
+    </script>
+{% endblock %}

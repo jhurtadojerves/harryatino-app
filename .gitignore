@@ -4,3 +4,4 @@
 Pipfile.lock
 *.pyc
 media
+node_modules

@@ -8,9 +8,10 @@ from django_fsm import FSMIntegerField
 # Third party integration
 from tracing.models import BaseModel
 
+from apps.payments.choices import PaymentType
+
 # Local
 from apps.payments.transitions import PaymentTransitions
-from apps.payments.choices import PaymentType
 from apps.utils.services import LinkService
 from config.fields import CustomURLField
 
@@ -35,10 +36,12 @@ class Payment(BaseModel, PaymentTransitions):
     )
     url = CustomURLField(verbose_name="url", editable=False, blank=True, null=True)
     html = models.TextField(verbose_name="html generado", editable=False, null=True)
-    reason = models.CharField(verbose_name="Motivo", blank=True, null=True, default="", max_length=256)
+    reason = models.CharField(
+        verbose_name="Motivo", blank=True, null=True, default="", max_length=256
+    )
 
     def __str__(self):
-        date = f"{self.created_date.day}/{self.created_date.month}/{self.created_date.year}"
+        date = f"{self.created_date.day}/{self.created_date.month}/{self.created_date.year}"  # noqa E501
         return f"{str(self.wizard)}. {date}"
 
     def total_payments(self):

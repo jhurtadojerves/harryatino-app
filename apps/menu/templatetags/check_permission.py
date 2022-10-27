@@ -2,15 +2,6 @@
 # Django
 from django import template
 from django.db.models import Sum
-from django.urls import NoReverseMatch
-from django.contrib.contenttypes.models import ContentType
-
-# Third party integration
-from superadmin import site
-from superadmin.shortcuts import get_urls_of_site
-
-# Local
-from ..utils import get_site_url as get_url
 
 register = template.Library()
 

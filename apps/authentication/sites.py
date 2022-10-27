@@ -2,13 +2,14 @@
 
 # Base
 from superadmin.decorators import register
+
 from config.base import BaseSite
 
 # Forms
-from .forms import UserForm
+from .forms import AccessTokenForm, UserForm
 
 # Local
-from .mixins import UserListMixin, UserProfileMixin
+from .mixins import AccessTokenCreateMixin, UserListMixin, UserProfileMixin
 
 
 @register("authentication.User")
@@ -19,7 +20,10 @@ class UserSite(BaseSite):
     # form_mixins = (UserFormMixin,)
     list_mixins = (UserListMixin,)
     detail_fields = (
-        ("username", "get_full_name:nombre completo",),
+        (
+            "username",
+            "get_full_name:nombre completo",
+        ),
         ("email", "old_number"),
     )
     list_fields = ("username:usuario", "email")
@@ -29,3 +33,11 @@ class UserSite(BaseSite):
 
 class UserProfileSite(UserSite):
     detail_mixins = (UserProfileMixin,)
+
+
+@register("authentication.AccessToken")
+class AccessTokenSite(BaseSite):
+    form_class = AccessTokenForm
+    form_mixins = (AccessTokenCreateMixin,)
+    detail_fields = ("user:Usuario",)
+    allow_views = ("create", "list", "detail", "delete")

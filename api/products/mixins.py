@@ -1,4 +1,4 @@
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 

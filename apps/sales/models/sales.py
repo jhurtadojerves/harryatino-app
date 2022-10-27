@@ -1,16 +1,15 @@
 """Model to Sales"""
 # Django
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as for_humans
 
 # Third party integration
 from django_fsm import FSMIntegerField
 
-
 # Models
 from tracing.models import BaseModel
-from apps.products.models import Product
+
 from apps.profiles.models import Profile
 from apps.sales.transitions import SaleTransitions
 
@@ -27,7 +26,10 @@ class Sale(BaseModel, SaleTransitions):
         verbose_name="estado",
     )
     product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, verbose_name="Producto", related_name="sales"
+        "products.Product",
+        on_delete=models.PROTECT,
+        verbose_name="Producto",
+        related_name="sales",
     )
     profile = models.ForeignKey(
         Profile,
@@ -38,10 +40,12 @@ class Sale(BaseModel, SaleTransitions):
     available = models.BooleanField(
         default=True,
         verbose_name="Disponible?",
-        help_text="Este campo se utiliza para marcar una compra de libros de hechizos o consumibles. <br>"
+        help_text="Este campo se utiliza para marcar una compra de libros de hechizos "
+        "o consumibles. <br>"
         "Libros de Hechizos. Marcado = Se puede usar<br>"
         "Consumibles. Desmarcado = Consumible utilizado<br>"
-        "Criaturas (Premios y/o Régimen Transitorio). Desmarcado = La criatura se encuentra en la reserva de animales<br>",
+        "Criaturas (Premios y/o Régimen Transitorio). "
+        "Desmarcado = La criatura se encuentra en la reserva de animales<br>",
     )
     vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
     is_award = models.BooleanField(
@@ -70,25 +74,44 @@ class Sale(BaseModel, SaleTransitions):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
+        breakpoint()
         if not self.pk:
-            if self.product.check_stock() == 0:
+            if self.product.stock <= 0:
                 if self.vip_sale or self.is_award:
-                    self.product.initial_stock = self.product.initial_stock + 1
+                    self.product.stock = self.product.stock + 1
                     self.product.save()
                 else:
                     raise ValidationError(
                         for_humans(
-                            f"No se puede vender {self.product.name} ya que su stock actual es 0"
+                            f"No se puede vender {self.product.name} "
+                            f"ya que su stock actual es 0"
                         )
                     )
+            else:
+                self.product.stock = self.product.stock - 1
+                self.product.save()
         elif self.pk:
+            # TODO: Define logic for change stock
             sale = Sale.objects.get(pk=self.pk)
-            if sale.product.pk != self.product.pk and self.product.check_stock() == 0:
+            if sale.product.pk != self.product.pk and self.product.stock == 0:
                 raise ValidationError(
                     for_humans(
-                        f"No se puede vender {self.product.name} ya que su stock actual es 0"
+                        f"No se puede vender {self.product.name} "
+                        f"ya que su stock actual es 0"
                     )
                 )
+            elif sale.product.pk != self.product.pk:
+                sale.product.stock = sale.product.stock + 1
+                self.product.stock = self.product.stock - 1
+                self.product.save()
+                sale.product.save()
+
+    @property
+    def get_sale_level(self):
+        if self.product.level_book():
+            return f"Nivel {self.product.level_book()}"
+        else:
+            return f"{self.product.category.name}"
 
     class Meta(BaseModel.Meta):
         """Class Meta"""

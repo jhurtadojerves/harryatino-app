@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('payments', '0029_alter_payment_options_alter_paymentline_options'),
+        ("payments", "0029_alter_payment_options_alter_paymentline_options"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='payment',
-            name='payment_type',
-            field=models.SmallIntegerField(choices=[(0, 'Compra'), (1, 'Pluses'), (2, 'Pago profesores/arcanos/uzzas'), (3, 'Pago estudiantes'), (4, 'Descuento estudiantes'), (5, 'Cambio de oros por Galeones'), (99, 'Otro')], default=0, verbose_name='Tipo de pago'),
+            model_name="payment",
+            name="payment_type",
+            field=models.SmallIntegerField(
+                choices=[
+                    (0, "Compra"),
+                    (1, "Pluses"),
+                    (2, "Pago profesores/arcanos/uzzas"),
+                    (3, "Pago estudiantes"),
+                    (4, "Descuento estudiantes"),
+                    (5, "Cambio de oros por Galeones"),
+                    (99, "Otro"),
+                ],
+                default=0,
+                verbose_name="Tipo de pago",
+            ),
         ),
     ]

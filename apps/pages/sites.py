@@ -4,6 +4,7 @@ from superadmin.decorators import register
 # Base
 from config.mixins import NotPermissionRequiredMixin
 from config.model_site import DefaultSite
+
 from .forms import PageForm
 
 

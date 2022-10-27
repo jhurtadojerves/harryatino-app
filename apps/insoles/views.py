@@ -1,13 +1,12 @@
 """View to response rendered templates """
 
 # Django
-from django.views.generic import View
-from django.template.loader import render_to_string
-from django.http import HttpResponseForbidden, JsonResponse
-from django.urls import reverse_lazy
 from django.apps import apps
 from django.forms import modelform_factory
-from django.contrib.admin.utils import flatten
+from django.http import HttpResponseForbidden, JsonResponse
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views.generic import View
 
 # Third party integration
 from superadmin import site
@@ -248,7 +247,7 @@ class InstanceBaseFormView(View):
 
     def get_form(self):
         if not self.form_class:
-            raise Exception(f"La clase de formulario no se encuentra configurada")
+            raise Exception("La clase de formulario no se encuentra configurada")
         return self.form_class(**self.get_form_kwargs())
 
     def get_context(self, request, *args, **kwargs):

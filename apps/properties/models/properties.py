@@ -1,9 +1,8 @@
 """Base model to properties"""
 # Django
-from django.db import models
-
 # Third Party Integration Models
 from ckeditor.fields import RichTextField
+from django.db import models
 
 # Models
 from tracing.models import BaseModel

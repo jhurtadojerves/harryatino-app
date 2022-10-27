@@ -1,17 +1,14 @@
 """Forms file"""
 
-# Django
-from django.forms import Form
-from django import forms
-
-# Local
-from apps.sales.models import Sale
-from apps.products.models import Product
-from apps.profiles.models import Profile
-
 # Third Party Integration
 from django_select2.forms import ModelSelect2Widget
 from superadmin.forms import ModelForm
+
+from apps.products.models import Product
+from apps.profiles.models import Profile
+
+# Local
+from apps.sales.models import Sale
 
 
 class SaleForm(ModelForm):

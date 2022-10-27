@@ -1,13 +1,6 @@
 """Social Rank model."""
 
-# Django
 from django.db import models
-from django.db.models.signals import post_save
-from django.urls import reverse
-
-# Utils
-
-# Models
 from tracing.models import BaseModel
 
 
@@ -21,12 +14,6 @@ class SocialRank(BaseModel):
 
     def __str__(self):
         return self.name
-
-    def update_url(self):
-        return reverse("profile:rank_update", args=(self.slug,))
-
-    def detail_url(self):
-        return reverse("profile:rank_detail", args=(self.slug,))
 
     class Meta(BaseModel.Meta):
         """Meta options."""

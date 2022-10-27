@@ -1,14 +1,14 @@
 """Define models to boxroom vault"""
 
 # Django
+# Third Party Integration Models
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.urls import reverse
 
-# Third Party Integration Models
-from ckeditor.fields import RichTextField
-
 # Models
 from tracing.models import BaseModel
+
 from apps.profiles.models import Profile
 
 
@@ -30,17 +30,12 @@ class Boxroom(BaseModel):
         return f"Bóveda trastero de {self.profile.nick}"
 
     def get_objects_creatures_or_potions_for_index(self, term):
+
         sales_dict = dict()
         sales_list = list()
         sales = self.profile.sales.filter(
             product__category__section__name=term
         ).order_by("date")
-        if term == "Objetos":
-            sales = sales.exclude(product__reference__icontains="P")
-        if term == "Pociones":
-            sales = self.profile.sales.filter(
-                product__reference__icontains="P"
-            ).order_by("date")
         for sale in sales:
             check = sales_dict.get(sale.product.reference, False)
             if not check:
@@ -49,7 +44,7 @@ class Boxroom(BaseModel):
                     "name": sale.product.name,
                     "sales": 1,
                     "date": sale.date,
-                    "section": sale.product.category.name
+                    "section": sale.product.category.name,
                 }
             else:
                 sales = check.get("sales") + 1
@@ -61,7 +56,7 @@ class Boxroom(BaseModel):
                             "name": sale.product.name,
                             "sales": sales,
                             "date": date,
-                            "section": sale.product.category.name
+                            "section": sale.product.category.name,
                         }
                     }
                 )
@@ -77,14 +72,10 @@ class Boxroom(BaseModel):
         ).order_by("date")
 
     def get_objects_list(self):
-        return self.detail_objects_creatures_or_potions("Objetos").exclude(
-            product__reference__icontains="P"
-        )
+        return self.detail_objects_creatures_or_potions("Objetos")
 
     def get_potions_list(self):
-        return self.detail_objects_creatures_or_potions("Objetos").exclude(
-            product__reference__icontains="A"
-        )
+        return self.detail_objects_creatures_or_potions("Pociones")
 
     def get_creatures_list(self):
         return self.detail_objects_creatures_or_potions("Criaturas")

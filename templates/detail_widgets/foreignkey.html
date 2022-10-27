@@ -1,6 +1,5 @@
 {% load superadmin_utils insoles %}
 {% has_detail_url value as is_registered %}
-
 {% if is_registered %}
     <label>{{ label|capfirst }}</label> <br>
     {% if value %}

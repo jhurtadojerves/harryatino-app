@@ -1,10 +1,9 @@
 """Forms to announcements"""
 
 # Django
-from django import forms
-
 # Third party integration
 from ckeditor.widgets import CKEditorWidget
+from django import forms
 
 # Models
 from apps.announcements.models import Announcement

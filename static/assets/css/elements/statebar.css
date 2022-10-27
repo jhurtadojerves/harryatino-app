@@ -97,7 +97,7 @@
         .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"] .statebar-label .statebar-title {
           color: #181C32; }
         
-      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-icon, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-icon {
+      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-icon, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-icon {
         -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
         transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
         transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
@@ -111,6 +111,8 @@
       .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="current"]:last-child .statebar-label .statebar-title, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="done"] .statebar-label .statebar-title {
         color: #B5B5C3; }
 
+      .statebar .statebar-content .statebar-nav .statebar-steps .statebar-label .statebar-title, .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step[data-state="next"] .statebar-label .statebar-title {
+        color: #B5B5C3; }
 
 @media (max-width: 767.98px) {
   .statebar .statebar-content .statebar-nav .statebar-steps .statebar-step {

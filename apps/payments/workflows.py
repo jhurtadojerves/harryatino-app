@@ -1,5 +1,5 @@
 # Local
-from apps.workflows import WorkflowChoices, Workflow
+from apps.workflows import Workflow, WorkflowChoices
 
 
 class PostWorkflow(Workflow):

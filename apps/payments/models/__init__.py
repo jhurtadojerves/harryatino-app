@@ -1,4 +1,4 @@
-from .works import Work, MonthPayment, MonthPaymentLine, Post
-from .schools import SchoolPayment, SchoolPaymentLine
-from .properties import PropertyPayment, PropertyPaymentLine
-from .payments import Payment, PaymentLine
+from .payments import Payment, PaymentLine  # noqa F401
+from .properties import PropertyPayment, PropertyPaymentLine  # noqa F401
+from .schools import SchoolPayment, SchoolPaymentLine  # noqa F401
+from .works import MonthPayment, MonthPaymentLine, Post, Work  # noqa F401

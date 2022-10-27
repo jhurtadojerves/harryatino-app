@@ -1,0 +1,21 @@
+ID: {{ profile.forum_user_id }} <br/>
+Nick : <a
+        href="https://harrylatino.org/index.php?showtopic={{ profile.character_sheet }}">{{ profile.clean_nick }}</a>
+<br/>
+Link a la Boveda Trastero: <a
+        href="https://harrylatino.org/index.php?showtopic={{ profile.boxroom_number }}">#{{ profile.boxroom_number }}</a>
+<br/>
+Link a la Boveda de la cual se descontara: <a
+        href="https://harrylatino.org/index.php?showtopic={{ profile.vault_number }}">#{{ profile.vault_number }}</a>
+<br/>
+Fecha: {{ purchase.get_created_date }} <br /><br />
+
+{% for line in purchase.lines.all %}
+    Producto: {{ line.product.get_name }} <br/>
+    Puntos: {{ line.product.points }} P <br/>
+    Precio: {{ line.product.cost }} G <br/> <br/>
+{% endfor %}
+<br />
+
+Total de puntos: {{ purchase.get_number_of_point }} P <br />
+Total de galeones: {{ purchase.get_number_of_galleons }} G

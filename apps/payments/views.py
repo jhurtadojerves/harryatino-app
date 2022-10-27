@@ -1,30 +1,29 @@
 """Define views urls"""
 
-import re
-
-# Django
-from django.views.generic import DetailView
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.http import JsonResponse
-
-# Local
-from .service import ProfileService, PropertyService, BaseService
-from apps.payments.models import (
-    MonthPayment,
-    MonthPaymentLine,
-    Work,
-    PropertyPayment,
-    PropertyPaymentLine,
-    Post,
-)
-from apps.properties.models import Property
-from apps.dynamicforms.views import UpdateTopicsForm, UpdateProfileForm
-from apps.dynamicforms.views import API_KEY
 
 # Third party integration
 import requests
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+
+# Django
+from django.views.generic import DetailView
 from superadmin.templatetags.superadmin_utils import site_url
+
+from apps.dynamicforms.views import API_KEY, UpdateProfileForm
+from apps.payments.models import (
+    MonthPayment,
+    MonthPaymentLine,
+    Post,
+    PropertyPayment,
+    PropertyPaymentLine,
+    Work,
+)
+from apps.properties.models import Property
+
+# Local
+from .service import BaseService, ProfileService, PropertyService
 
 
 class CalculatePaymentPropertyView(DetailView):
@@ -182,7 +181,7 @@ class CreatePaymentView(DetailView):
                     "customFields[31]": f"{number_of_posts}",
                 }
             )
-            response_profile = self.update_galleons_in_profile(
+            self.update_galleons_in_profile(
                 data,
                 profile.forum_user_id,
                 UpdateProfileForm.URL,

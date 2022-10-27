@@ -1,11 +1,9 @@
 """Custom views for model"""
-# Django
-from django.urls import reverse_lazy
 
-# Local
-from .forms import SaleConsumableUsedForm
-from apps.sales.models import Sale
 from apps.insoles.views import InstanceBaseFormView
+from apps.sales.models import Sale
+
+from .forms import SaleConsumableUsedForm
 
 
 class UseConsumableFormView(InstanceBaseFormView):

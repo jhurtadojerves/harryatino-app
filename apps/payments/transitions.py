@@ -1,24 +1,17 @@
 """Transitions for Project"""
-# Django
-from django.core.exceptions import ObjectDoesNotExist
 
-# Python
 from datetime import datetime
 
-# Third party integration
-from apps import workflows
-from apps.workflows import exceptions
 from django_fsm import transition
-import requests
 from environs import Env
-
-# Local
-from apps.workflows.exceptions import WorkflowException
-from .workflows import PostWorkflow, PaymentWorkflow
 
 # Services
 from apps.payments.service import BaseService
-from config.utils import get_short_url
+
+# Local
+from apps.workflows.exceptions import WorkflowException
+
+from .workflows import PaymentWorkflow, PostWorkflow
 
 env = Env()
 API_KEY = env("API_KEY")
@@ -74,7 +67,6 @@ class PostTransitions:
 class PaymentTransitions:
     workflow = PaymentWorkflow()
 
-
     @transition(
         field="state",
         source=[workflow.CREATED],
@@ -84,6 +76,9 @@ class PaymentTransitions:
     )
     def to_pay(self, **kwargs):
         from apps.utils.services import APIService
+
+        creatures_points = kwargs.get("creatures_points", 0)
+        objects_points = kwargs.get("objects_points", 0)
 
         vault = self.wizard.vault_number
         context = self.get_context(self.wizard)
@@ -95,7 +90,10 @@ class PaymentTransitions:
         response_url = response["url"]
         update_profile_data = {
             "customFields[12]": f"{context['new_galleons']}",
+            "customFields[33]": f"{context['creatures_points'] + creatures_points}",
+            "customFields[34]": f"{context['objects_points'] + objects_points}",
         }
+
         APIService.update_user_profile(
             self.wizard.forum_user_id, raw_data=update_profile_data
         )
@@ -107,13 +105,16 @@ class PaymentTransitions:
         source=[workflow.CREATED],
         target=workflow.CANCELED,
         permission="payments.create_payment_post",
-        custom=dict(verbose="Cancelar", icon="fa-solid fa-ban", back_verbose="CANCELAR"),
+        custom=dict(
+            verbose="Cancelar", icon="fa-solid fa-ban", back_verbose="CANCELAR"
+        ),
     )
     def to_cancel(self, **kwargs):
         pass
 
     def get_new_total(self, galleons):
         from apps.payments.choices import PaymentType
+
         if self.payment_type in PaymentType.get_plus_choices():
             return int(galleons + self.total_payments())
         return int(galleons - self.total_payments())
@@ -123,12 +124,15 @@ class PaymentTransitions:
 
         data = APIService.get_forum_user_data(wizard)
         old_galleons = int(data.get("customFields[12]")) or 0
-
+        creatures_points = data.get("customFields[33]", 0)
+        objects_points = data.get("customFields[34]", 0)
 
         context = {
             "payment": self,
             "old_galleons": old_galleons,
             "new_galleons": self.get_new_total(old_galleons),
+            "creatures_points": int(creatures_points),
+            "objects_points": int(objects_points),
         }
 
         return context

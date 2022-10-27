@@ -1,7 +1,6 @@
 """Mixin from app"""
 
 # Django
-from django.shortcuts import redirect, reverse
 from django.http import HttpResponsePermanentRedirect
 
 # Local
@@ -18,10 +17,10 @@ class AnnouncementListMixin:
     def get(self, request, *args, **kwargs):
         if self.model.objects.all().exists():
             return HttpResponsePermanentRedirect(
-                reverse(get_site_url(self.model.objects.first(), "detail"))
+                get_site_url(self.model.objects.first(), "detail")
             )
 
-        return super(AnnouncementListMixin, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class AnnouncementDetailMixin:

@@ -11,7 +11,10 @@ def get_upload_path(instance, filename):
     extension = "".join(filename.split(".")[-1:])
 
     path = os.path.join(
-        "authentication", "profile", "avatars", f"{instance.user.username}.{extension}",
+        "authentication",
+        "profile",
+        "avatars",
+        f"{instance.user.username}.{extension}",
     )
     full_path = (
         os.path.join(BASE_DIR, MEDIA_ROOT, path).replace(" ", "_").replace("conf/", "")

@@ -1,0 +1,39 @@
+{% load superadmin_utils %}
+
+<div>
+    <div>
+        <p style="text-align:center">
+            <img alt="https://i.imgur.com/n1t3R3w.png" data-ratio="97.53" src="https://i.imgur.com/n1t3R3w.png"
+                 width="162">
+        </p>
+        <br><br>
+        <p>
+            Estimado <strong>{{ profile.clean_nick }}</strong>:
+        </p>
+    </div>
+    <div>
+        <p>Se le informa que las Compras realizadas en el Magic Mall el <strong>{{ sale.date|date:"Y.m.d" }}</strong>
+            han
+            sido debidamente certificadas, por lo que ya puede gozar de los bienes adquiridos:</p>
+        <br>
+        <ul>
+            {% for s in sales %}
+                <li><a href="{{ base_url }}{% site_url s 'detail' %}" target="_blank">{{ s.product.get_name }}</a>
+                    | {{ s.get_sale_level }}
+                    | {{ s.product.points }} P
+                    | {{ s.product.cost }} G
+                </li>
+            {% endfor %}
+        </ul>
+        <br>
+        <p>
+            {% if points.creatures %}
+                Total en Criaturas: {{ points.creatures }} P <br>
+            {% endif %}
+            {% if  points.creatures %}
+                Total en Objetos: {{ points.objects }} P <br>
+            {% endif %}
+        </p>
+    </div>
+
+</div>

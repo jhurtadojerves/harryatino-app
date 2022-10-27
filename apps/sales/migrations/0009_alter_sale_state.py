@@ -8,13 +8,18 @@ import django_fsm
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sales', '0008_alter_sale_options_sale_state'),
+        ("sales", "0008_alter_sale_options_sale_state"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='sale',
-            name='state',
-            field=django_fsm.FSMIntegerField(choices=[(0, 'Cancelado'), (1, 'Creado'), (2, 'Pagado')], default=apps.sales.workflows.SaleWorkflow.Choices['CREATED'], protected=True, verbose_name='estado'),
+            model_name="sale",
+            name="state",
+            field=django_fsm.FSMIntegerField(
+                choices=[(0, "Cancelado"), (1, "Creado"), (2, "Pagado")],
+                default=apps.sales.workflows.SaleWorkflow.Choices["CREATED"],
+                protected=True,
+                verbose_name="estado",
+            ),
         ),
     ]

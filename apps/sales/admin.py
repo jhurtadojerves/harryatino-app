@@ -3,11 +3,11 @@
 # Django
 from django.contrib import admin
 
-# Models
-from apps.sales.models import Sale
-
 # Third Party Integration
 from import_export.admin import ImportExportModelAdmin
+
+# Models
+from apps.sales.models import Sale
 
 
 @admin.register(Sale)

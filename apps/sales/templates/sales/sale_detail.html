@@ -80,7 +80,7 @@
             <tr>
               <td>{{ sale.date }}</td>
               <td>{{ sale.profile }}</td>
-              <td>{{ sale.created_user }}</td>
+              <td>{{ sale.buyer }}</td>
             </tr>
             </tbody>
           </table>
@@ -113,7 +113,6 @@
   {{ block.super }}
   <script src="{% static 'vendors/formset/jquery.formset.js' %}"></script>
   <script src="{% static 'vendors/formset/formsets.init.js' %}"></script>
-  <script src="{% static 'assets/js/csrftoken.vanilla.js' %}"></script>
   <script src="{% static 'assets/js/forms/inputmask.js' %}"></script>
   <script src="{% static 'assets/js/apps/insoles_form.js' %}"></script>
   <script>

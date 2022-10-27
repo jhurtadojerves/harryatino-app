@@ -8,26 +8,64 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Link',
+            name="Link",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_date', models.DateTimeField(auto_now_add=True, verbose_name='fecha de creación')),
-                ('created_user', models.CharField(editable=False, max_length=128, null=True, verbose_name='creado por')),
-                ('modified_date', models.DateTimeField(auto_now=True, verbose_name='última fecha de modificación')),
-                ('modified_user', models.CharField(editable=False, max_length=128, null=True, verbose_name='modificado por')),
-                ('is_active', models.BooleanField(default=True, verbose_name='activo')),
-                ('token', models.UUIDField(default=uuid.uuid4, editable=False)),
-                ('destination', models.URLField(db_index=True, editable=False, null=True, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="fecha de creación"
+                    ),
+                ),
+                (
+                    "created_user",
+                    models.CharField(
+                        editable=False,
+                        max_length=128,
+                        null=True,
+                        verbose_name="creado por",
+                    ),
+                ),
+                (
+                    "modified_date",
+                    models.DateTimeField(
+                        auto_now=True, verbose_name="última fecha de modificación"
+                    ),
+                ),
+                (
+                    "modified_user",
+                    models.CharField(
+                        editable=False,
+                        max_length=128,
+                        null=True,
+                        verbose_name="modificado por",
+                    ),
+                ),
+                ("is_active", models.BooleanField(default=True, verbose_name="activo")),
+                ("token", models.UUIDField(default=uuid.uuid4, editable=False)),
+                (
+                    "destination",
+                    models.URLField(
+                        db_index=True, editable=False, null=True, unique=True
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'link',
-                'verbose_name_plural': 'links',
-                'abstract': False,
+                "verbose_name": "link",
+                "verbose_name_plural": "links",
+                "abstract": False,
             },
         ),
     ]

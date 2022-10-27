@@ -1,10 +1,9 @@
 """Announcement model."""
 
 # Django
-from django.db import models
-
 # Third Party Integration Models
 from ckeditor.fields import RichTextField
+from django.db import models
 from tracing.models import BaseModel
 
 

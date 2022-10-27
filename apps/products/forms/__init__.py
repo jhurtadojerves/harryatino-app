@@ -1,1 +1,6 @@
-from .products import ProductForm, StockRequestForm, StockFormset, ProductFormStaff
+from .products import (  # noqa F401
+    ProductForm,
+    ProductFormStaff,
+    StockFormset,
+    StockRequestForm,
+)

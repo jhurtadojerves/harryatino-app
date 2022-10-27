@@ -1,7 +1,9 @@
 # Models
 from superadmin.models import Menu
-from .utils import get_user_menu
+
 from apps.pages.models import Page
+
+from .utils import get_user_menu
 
 
 def menu(request):

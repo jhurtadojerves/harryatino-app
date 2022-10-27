@@ -1,18 +1,20 @@
 """Model to Sales"""
 # Django
-from django.db import models
+# Third Party Integration Models
+from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as for_humans
-
 
 # Models
 from tracing.models import BaseModel
 
-
-# Third Party Integration Models
-from ckeditor.fields import RichTextField
-
 # Slug
+
+
+EXISTS_MESSAGE_ERROR = for_humans(
+    "Ya existe una página registrada para mostrarse en la página de inicio"
+)
 
 
 class Page(BaseModel):
@@ -36,21 +38,13 @@ class Page(BaseModel):
             and Page.objects.filter(show_in_home_page=True).exclude(pk=self.pk).exists()
             and self.show_in_home_page
         ):
-            raise ValidationError(
-                for_humans(
-                    f"Ya existe una página registrada para mostrarse en la página de inicio"
-                )
-            )
+            raise ValidationError(EXISTS_MESSAGE_ERROR)
         if (
             (not self.pk)
             and Page.objects.filter(show_in_home_page=True).exists()
             and self.show_in_home_page
         ):
-            raise ValidationError(
-                for_humans(
-                    f"Ya existe una página registrada para mostrarse en la página de inicio..."
-                )
-            )
+            raise ValidationError(EXISTS_MESSAGE_ERROR)
 
     class Meta(BaseModel.Meta):
         """Class Meta"""

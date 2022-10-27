@@ -6,22 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('payments', '0026_payment_state'),
+        ("payments", "0026_payment_state"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='paymentline',
-            name='short_link',
+            model_name="paymentline",
+            name="short_link",
         ),
         migrations.AddField(
-            model_name='payment',
-            name='html',
-            field=models.TextField(editable=False, null=True, verbose_name='html generado'),
+            model_name="payment",
+            name="html",
+            field=models.TextField(
+                editable=False, null=True, verbose_name="html generado"
+            ),
         ),
         migrations.AddField(
-            model_name='payment',
-            name='payment_type',
-            field=models.SmallIntegerField(choices=[(0, 'Compra'), (99, 'Otro')], default=0, verbose_name='Tipo de pago'),
+            model_name="payment",
+            name="payment_type",
+            field=models.SmallIntegerField(
+                choices=[(0, "Compra"), (99, "Otro")],
+                default=0,
+                verbose_name="Tipo de pago",
+            ),
         ),
     ]

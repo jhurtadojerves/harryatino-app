@@ -55,7 +55,9 @@ class Migration(migrations.Migration):
                 ),
                 ("is_active", models.BooleanField(default=True, verbose_name="activo")),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
         migrations.CreateModel(
             name="Field",
@@ -117,7 +119,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
         migrations.CreateModel(
             name="Choice",
@@ -173,6 +177,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False, "unique_together": {("name", "field")},},
+            options={
+                "abstract": False,
+                "unique_together": {("name", "field")},
+            },
         ),
     ]

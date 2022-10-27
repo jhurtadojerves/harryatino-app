@@ -11,7 +11,9 @@ from api.products.views import ProductViewSet
 
 router = routers.DefaultRouter()
 router.register(
-    r"product", ProductViewSet, basename="product",
+    r"product",
+    ProductViewSet,
+    basename="product",
 )
 urlpatterns = [
     path("", include(router.urls)),

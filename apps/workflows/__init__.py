@@ -1,12 +1,12 @@
 # Python
 import enum
-from types import DynamicClassAttribute
 from functools import partialmethod
+from types import DynamicClassAttribute
 
 # Django
 from django.db.models.enums import ChoicesMeta
-from django.utils.functional import Promise
 from django.db.models.query_utils import DeferredAttribute
+from django.utils.functional import Promise
 
 
 def get_all_states(cls, Choices):
@@ -57,7 +57,7 @@ class WorkflowChoicesMeta(ChoicesMeta):
         return [
             member
             for member in cls.__members__.values()
-            if not hasattr(member, "visible") or not member.visible == False
+            if not hasattr(member, "visible") or member.visible
         ]
 
 

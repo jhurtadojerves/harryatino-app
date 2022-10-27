@@ -1,15 +1,14 @@
 """Views for boxrooms"""
 
 # Base Views
+# Models
+from apps.boxrooms.models import Boxroom
 from apps.utils.views import (
     GenericCreateView,
     GenericDetailView,
     GenericListView,
     GenericUpdateView,
 )
-
-# Models
-from apps.boxrooms.models import Boxroom
 
 
 class BoxroomCreate(GenericCreateView):

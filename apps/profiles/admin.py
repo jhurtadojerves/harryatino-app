@@ -1,11 +1,11 @@
 """Profile admin."""
 from django.contrib import admin
 
-# Models
-from apps.profiles.models import Profile, SocialRank
-
 # Third party integration
 from import_export.admin import ImportExportModelAdmin
+
+# Models
+from apps.profiles.models import Profile, SocialRank
 
 
 @admin.register(Profile)

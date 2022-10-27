@@ -1,7 +1,10 @@
 """Views to custom forms"""
 # Python
-from datetime import datetime
 import time
+from datetime import datetime
+
+# Third party integration
+import requests
 
 # Django
 from django.http import JsonResponse
@@ -9,15 +12,13 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DetailView
+from environs import Env
 
 # Local
 from apps.dynamicforms.forms import CreationDynamicForm
-from .models import Form, AuditAPI, Action
 from apps.profiles.models import Profile
 
-# Third party integration
-import requests
-from environs import Env
+from .models import Action, AuditAPI
 
 env = Env()
 API_KEY_GET = env("API_KEY_GET")
@@ -288,12 +289,8 @@ class UpdateLevelsForm(BaseForm):
                 profile = False
                 try:
                     profile = Profile.objects.get(forum_user_id=forum_id)
-                except:
+                except Exception:
                     print(forum_id)
-                """print(member)
-                data = self.calculate_level(self.BASE_API_URL, member)
-                if data:
-                    members_data.append(data)"""
                 try:
                     data = self.calculate_level(self.BASE_API_URL, member, profile)
                     if data:
@@ -308,9 +305,12 @@ class UpdateLevelsForm(BaseForm):
     def calculate_level(self, base_url, member, profile):
         custom_fields = member["customFields"]
         raw_user_data = dict()
+
         for raw in custom_fields.values():
             raw_user_data.update(raw["fields"])
+
         user_data = dict()
+
         for key, value in raw_user_data.items():
             user_data.update({key: value["value"]})
 
@@ -420,12 +420,15 @@ class UpdateLevelsForm(BaseForm):
 
         if member["id"] in organization:
             level = 80
+
         actual_level = int(actual_level) if actual_level and actual_level != "" else 0
         graduate = user_data["40"] if user_data["40"] else ""
+
         if graduate == "Graduado":
             social_rank = self.social_ranks[f"{level}"]
         else:
             social_rank = "Aprendiz"
+
         payload_data = {
             "customFields[43]": f"{level}",
             "customFields[61]": f"{social_rank}",
@@ -435,8 +438,10 @@ class UpdateLevelsForm(BaseForm):
         # team, level, inactive
         team = user_data["18"] if user_data["18"] else ""
         range_team = self.get_range_team(team, level, user_data["76"])
+
         if range_team:
             payload_data.update({"customFields[22]": range_team})
+
         payload = self.get_payload(payload_data)
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -457,16 +462,35 @@ class UpdateLevelsForm(BaseForm):
         if profile:
             profile.nick = member["name"]
             profile.magic_level = level
-            # profile.range_of_creatures = user_data["35"] if user_data["35"] else ""
-            # profile.range_of_objects = user_data["36"] if user_data["36"] else ""
+            profile.range_of_creatures = user_data.get(35, "")
+            profile.range_of_objects = user_data.get(36, "")
+
+            boxroom_number = user_data.get("66", None)
+            vault_number = user_data.get("64", None)
+            character_sheet = user_data.get("65", None)
+
+            if boxroom_number:
+                profile.boxroom_number = int(boxroom_number)
+
+            if vault_number:
+                profile.vault_number = int(vault_number)
+
+            if character_sheet:
+                profile.character_sheet = int(character_sheet)
+
             if member["photoUrl"]:
                 profile.avatar = member["photoUrl"]
+
             profile.save()
+
         return response
 
     @staticmethod
     def get_full_user_data(base_url, timestamp, per_page=1000):
-        url = f"{base_url}?key={API_KEY_GET}&perPage={per_page}&activity_after={timestamp}"
+        url = (
+            f"{base_url}?key={API_KEY_GET}&perPage={per_page}"
+            f"&activity_after={timestamp}"
+        )
         # &group=126 this key can be used to filter by id group
         response = requests.request("GET", url, headers={}, data={})
         json = response.json()

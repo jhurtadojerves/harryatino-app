@@ -5,17 +5,17 @@ from superadmin.decorators import register
 from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
 
+# Forms
+from .forms import ProductForm, StockFormset, StockRequestForm
+
 # Local
 from .mixins import (
-    ProductListMixin,
     ProductDetailMixin,
     ProductEditMixin,
-    StockRequestFormMixin,
+    ProductListMixin,
     StockRequestDetail,
+    StockRequestFormMixin,
 )
-
-# Forms
-from .forms import ProductForm, StockRequestForm, StockFormset
 
 
 @register("products.Product")

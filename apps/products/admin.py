@@ -7,7 +7,7 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 # Models
-from apps.dynamicforms.models import Fieldset, Field, Form
+from apps.dynamicforms.models import Field, Fieldset, Form
 
 
 @admin.register(Fieldset)
@@ -17,9 +17,9 @@ class FieldsetAdmin(ImportExportModelAdmin):
 
 @admin.register(Field)
 class FieldAdmin(ImportExportModelAdmin):
-    """Field admin. """
+    """Field admin."""
 
 
 @admin.register(Form)
 class FormAdmin(ImportExportModelAdmin):
-    """Form admin. """
+    """Form admin."""

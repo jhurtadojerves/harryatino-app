@@ -5,6 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 django-extensions = "*"
+black = "==22.3.0"
+isort = "==5.10.1"
+flake8 = "==4.0.1"
 
 [packages]
 django = "==3.2.13"
@@ -21,6 +24,7 @@ django-mathfilters = "*"
 requests = "*"
 djangorestframework = "*"
 django-fsm = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"

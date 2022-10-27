@@ -1,16 +1,12 @@
 """Announcements sites"""
 
 # Hydra
-from config.base import BaseSite
 from superadmin.decorators import register
 
-
-# Models
-from .models import Announcement
-
-# Mixins
-from .mixins import AnnouncementListMixin, AnnouncementDetailMixin
+from config.base import BaseSite
 from config.mixins import NotPermissionRequiredMixin
+
+from .mixins import AnnouncementDetailMixin, AnnouncementListMixin
 
 
 @register("announcements.Announcement")

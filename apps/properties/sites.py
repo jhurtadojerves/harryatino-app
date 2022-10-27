@@ -3,10 +3,9 @@ from superadmin.decorators import register
 
 # Base
 from config.base import BaseSite
-from config.mixins import NotPermissionRequiredMixin
+from config.mixins import GenericFiltering, NotPermissionRequiredMixin
 
 from .forms import PropertyForm
-from config.mixins import GenericFiltering
 
 
 @register("properties.Property")

@@ -1,15 +1,8 @@
 """Define models to short urls"""
-# Python
+
 import uuid
 
-# Django
 from django.db import models
-from django.urls import reverse
-
-# Third Party Integration Models
-from ckeditor.fields import RichTextField
-
-# Models
 from tracing.models import BaseModel
 
 

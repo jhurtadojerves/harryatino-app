@@ -5,7 +5,6 @@ from django import forms
 from django.apps import apps
 
 from .utils import items_attr
-from .fields import MyChoiceField, MySelect2Widget
 
 
 # Create your views here.

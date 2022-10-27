@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pages', '0002_auto_20210404_1352'),
+        ("pages", "0002_auto_20210404_1352"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='page',
-            options={'ordering': ('id',), 'verbose_name': 'Historia y Funcionamiento', 'verbose_name_plural': 'Historia y Funcionamiento'},
+            name="page",
+            options={
+                "ordering": ("id",),
+                "verbose_name": "Historia y Funcionamiento",
+                "verbose_name_plural": "Historia y Funcionamiento",
+            },
         ),
     ]

@@ -12,7 +12,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="auditapi", options={"ordering": ("-created_date",)},
+            name="auditapi",
+            options={"ordering": ("-created_date",)},
         ),
         migrations.AlterField(
             model_name="field",
@@ -91,6 +92,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
     ]

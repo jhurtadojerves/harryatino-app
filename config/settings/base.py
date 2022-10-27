@@ -1,7 +1,8 @@
 """Base settings to build other settings files upon."""
 
-from environs import Env
 from pathlib import Path
+
+from environs import Env
 
 env = Env()
 
@@ -72,6 +73,7 @@ LOCAL_APPS = [
     "apps.authentication",
     "apps.boxrooms",
     "apps.dynamicforms",
+    "apps.ecommerce",
     "apps.insoles",
     "apps.members",
     "apps.menu",
@@ -97,7 +99,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 ]"""
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -166,8 +168,6 @@ TEMPLATES = [
 # SECURE_BROWSER_XSS_FILTER = True
 # X_FRAME_OPTIONS = 'DENY'
 
-# Email
-# EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 
 # Admin
 ADMIN_URL = "admin/"
@@ -252,3 +252,16 @@ TEMPLATE_WIDGETS_DETAIL = {
     "ForeignKey": "detail_widgets/foreignkey.html",
     "OneToOneField": "detail_widgets/foreignkey.html",
 }
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ]
+}
+
+SITE_URL = env.url("SITE_URL", "http://localhost:8000")
+TOPIC_QUESTIONS = env.int("TOPIC_QUESTIONS", 106688)
+
+MAGIC_MALL_TOPIC = env.int("MAGIC_MALL_TOPIC")
+CHECKOUT_COOLDOWN_HOURS = env.int("CHECKOUT_COOLDOWN_HOURS", 12)

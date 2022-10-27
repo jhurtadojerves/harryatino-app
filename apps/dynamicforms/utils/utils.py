@@ -1,4 +1,4 @@
-from .regex import split_regex_text, get_match_regex
+from .regex import get_match_regex, split_regex_text
 
 
 def items_attr(attrs):

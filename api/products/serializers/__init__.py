@@ -1,1 +1,1 @@
-from .products import ProductSerializers
+from .products import ProductSerializer  # noqa F401

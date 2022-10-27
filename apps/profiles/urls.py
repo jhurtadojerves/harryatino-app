@@ -1,6 +1,6 @@
 # Django
-from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path
 
 # Views
 from apps.profiles.views import (
@@ -13,7 +13,6 @@ from apps.profiles.views import (
     SocialRankList,
     SocialRankUpdate,
 )
-
 from apps.utils.generate_url import pattern
 
 app_name = "profile"

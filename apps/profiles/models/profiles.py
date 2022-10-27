@@ -1,11 +1,6 @@
 """Define models to User Profile"""
 
-# Django
 from django.db import models
-from django.urls import reverse
-
-
-# Models
 from tracing.models import BaseModel
 
 from config.utils import get_encoded_verbose
@@ -15,6 +10,7 @@ class Profile(BaseModel):
     forum_user_id = models.PositiveIntegerField(unique=True, verbose_name="Id del foro")
     nick = models.CharField(max_length=128)
     magic_level = models.PositiveIntegerField(verbose_name="Nivel Mágico")
+    galleons = models.IntegerField(verbose_name="Galeones", default=0)
     range_of_creatures = models.CharField(
         max_length=32, verbose_name="Rango de Criaturas"
     )
@@ -24,7 +20,7 @@ class Profile(BaseModel):
         verbose_name="Número de Bóveda Trastero", null=True, blank=True
     )
     character_sheet = models.IntegerField(
-        verbose_name="Número de Bóveda Trastero", null=True, blank=False
+        verbose_name="Número de Ficha de Personaje", null=True, blank=False
     )
     avatar = models.URLField(null=True, blank=True)
     accumulated_posts = models.IntegerField(
@@ -81,11 +77,22 @@ class Profile(BaseModel):
         }
         return switcher.get(salary_scale, 0)
 
-    def update_url(self):
-        return reverse("profile:profile_update", args=(self.id,))
+    @property
+    def get_boxroom_number(self):
+        if self.boxroom_number and self.boxroom_number != 75080:
+            return self.boxroom_number
 
-    def detail_url(self):
-        return reverse("profile:profile_detail", args=(self.id,))
+        return self.character_sheet
+
+    @property
+    def number_of_consumables(self):
+        return self.sales.filter(
+            product__category__name__startswith="CS", available=True
+        ).count()
+
+    @property
+    def books(self):
+        return self.sales.filter(product__category__name__startswith="LH")
 
     class Meta(BaseModel.Meta):
         """Meta options."""

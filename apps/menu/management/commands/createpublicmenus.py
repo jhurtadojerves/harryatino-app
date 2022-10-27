@@ -1,13 +1,13 @@
 # Django
-from django.core.management.base import BaseCommand, CommandError
 from django.core.management import call_command
-
-# Models
-from apps.menu.models import Menu as PublicMenu
+from django.core.management.base import BaseCommand
 
 # Third party integration
 from superadmin import site
 from superadmin.models import Action, Menu
+
+# Models
+from apps.menu.models import Menu as PublicMenu
 
 
 class Command(BaseCommand):

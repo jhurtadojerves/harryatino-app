@@ -7,13 +7,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('payments', '0030_alter_payment_payment_type'),
+        ("payments", "0030_alter_payment_payment_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='payment',
-            name='url',
-            field=config.fields.CustomURLField(blank=True, editable=False, null=True, verbose_name='url'),
+            model_name="payment",
+            name="url",
+            field=config.fields.CustomURLField(
+                blank=True, editable=False, null=True, verbose_name="url"
+            ),
         ),
     ]

@@ -91,7 +91,6 @@
             <form id="main-form" data-errors="{{ form.errors.as_json }}" action="" method="POST"
                   enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
-
                 {% block form %}
                     {% include 'forms/form.html' with form=form %}
                 {% endblock %}

@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="section", name="available_by_default",),
+        migrations.RemoveField(
+            model_name="section",
+            name="available_by_default",
+        ),
         migrations.AddField(
             model_name="category",
             name="available_by_default",

@@ -3,12 +3,12 @@ from django.urls import path
 
 # Views
 from .views import (
-    UpdateProfileForm,
-    UpdateLevelsForm,
-    UpdateTopicsForm,
-    UpdatePostForm,
     CountMonthlyPostsForm,
     GetVault,
+    UpdateLevelsForm,
+    UpdatePostForm,
+    UpdateProfileForm,
+    UpdateTopicsForm,
 )
 
 urlpatterns = [

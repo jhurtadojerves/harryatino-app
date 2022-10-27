@@ -2,7 +2,6 @@
 # Django
 from django import template
 from django.shortcuts import reverse
-from django.urls import NoReverseMatch
 
 # Third party integration
 from superadmin import site
@@ -41,13 +40,6 @@ def insoles_edit(instance):
 
 
 @register.simple_tag()
-def insoles_create_url(instance):
-    model_site = site.get_modelsite(instance.__class__)
-    app_name = instance.__class__._meta.app_label
-    model_name = instance._meta.model.__name__
-
-
-@register.simple_tag()
 def render_insoles_detail(instance):
     is_registered = site.is_registered(instance.__class__)
     data = {
@@ -73,5 +65,5 @@ def has_detail_url(instance):
     try:
         site_url(instance, "detail")
         return True
-    except Exception as e:
+    except Exception:
         return False

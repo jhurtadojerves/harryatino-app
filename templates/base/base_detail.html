@@ -28,14 +28,6 @@
             <div class="card-toolbar">
                 {% block detail_actions %}
                     <span class="mr-2">{{ site.nav.current_index|add:"1" }} de {{ site.nav.total_entries }}</span>
-                    <a href="{{ site.nav.previous_url }}"
-                       class="btn btn-primary font-weight-bolder mr-2 {% if not site.nav.previous %}disabled{% endif %}">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                    <a href="{{ site.nav.next_url }}"
-                       class="btn btn-primary font-weight-bolder mr-2 {% if not site.nav.next %}disabled{% endif %}">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
                     {% if site.urls.delete %}
                         <a href="{{ site.urls.delete }}" class="btn btn-light-danger font-weight-bolder mr-2">
                             <i class="fas fa-times icon-sm"></i>Eliminar

@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('profiles', '0008_profile_boxroom_number_profile_character_sheet'),
+        ("profiles", "0008_profile_boxroom_number_profile_character_sheet"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='range_of_creatures',
-            field=models.CharField(max_length=32, verbose_name='Rango de Criaturas'),
+            model_name="profile",
+            name="range_of_creatures",
+            field=models.CharField(max_length=32, verbose_name="Rango de Criaturas"),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='range_of_objects',
-            field=models.CharField(max_length=32, verbose_name='Rango de Objetos'),
+            model_name="profile",
+            name="range_of_objects",
+            field=models.CharField(max_length=32, verbose_name="Rango de Objetos"),
         ),
     ]

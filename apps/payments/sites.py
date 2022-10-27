@@ -4,12 +4,12 @@ from superadmin.decorators import register
 # Base
 from config.base import BaseSite
 
-# Forms
-from .forms import WorkMonthForm, PaymentForm, PaymentLineFormset
-from .mixins import WorkListMixin, PaymentListMixin
-
 # Filtering
 from config.mixins import GenericFiltering
+
+# Forms
+from .forms import PaymentForm, PaymentLineFormset, WorkMonthForm
+from .mixins import PaymentListMixin, WorkListMixin
 
 
 @register("payments.Work")
@@ -47,7 +47,7 @@ class PropertyPaymentSite(BaseSite):
 @register("payments.Payment")
 class PaymentSite(BaseSite):
     form_class = PaymentForm
-    list_mixins = (PaymentListMixin, )
+    list_mixins = (PaymentListMixin,)
     inlines = (PaymentLineFormset,)
     list_fields = ("wizard", "payment_type", "state", "created_date")
     detail_fields = (("wizard", "created_date", "url"), "html")
