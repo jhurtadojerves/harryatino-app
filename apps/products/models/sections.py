@@ -2,6 +2,7 @@
 
 # Django
 from django.db import models
+from django.db.models import Count
 
 # Models
 from tracing.models import BaseModel
@@ -20,19 +21,9 @@ class Section(BaseModel):
         return self.name
 
     def number_of_products(self):
-        number = 0
-        categories = self.categories.all()
-        if self.name == "Pociones":
-            categories = Section.objects.get(name="Objetos").categories.all()
-        for category in categories:
-            products = category.products
-            if self.name == "Pociones":
-                products = category.products.filter(reference__icontains="P")
-            if self.name == "Objetos":
-                products = category.products.exclude(reference__icontains="P")
+        result = self.categories.aggregate(products_count=Count("products"))
 
-            number = number + products.count()
-        return number
+        return result.get("products_count", 0)
 
     class Meta(BaseModel.Meta):
         """Class Meta."""

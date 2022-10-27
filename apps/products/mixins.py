@@ -61,6 +61,7 @@ class ProductListMixin:
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.annotate(stock_available=F("stock") - F("reserved_stock"))
         exclude_va = self.request.GET.get("exclude_va", True)
 
         if exclude_va:
@@ -110,11 +111,16 @@ class ProductListMixin:
         from_stock = self.request.GET.get("from_stock", False)
 
         if not category and not section and not name and (to_stock and from_stock):
-            queryset = queryset.annotate(
-                stock_available=F("stock") - F("reserved_stock")
-            ).filter(stock_available__gte=to_stock, stock_available__lte=from_stock)
+            queryset = queryset.filter(
+                stock_available__gte=to_stock, stock_available__lte=from_stock
+            )
 
-        return queryset
+        return queryset.order_by(
+            "-can_be_sold",
+            "category__id",
+            "-stock_available",
+            "name",
+        )
 
 
 class ProductDetailMixin:

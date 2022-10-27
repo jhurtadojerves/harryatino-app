@@ -26,7 +26,6 @@ class AccessTokenCreateMixin:
     def form_valid(self, form):
         profile = form.cleaned_data.get("wizard")
         self.object = form.save(commit=False)
-
         profile = APIService.download_user_data_and_update(profile)
         group = Group.objects.filter(name="Usuarios").first()
 

@@ -9,7 +9,7 @@
                                 src="{{ object.get_image }}"
                                 alt="{{ object.name }}"
                                 class="rounded product_image"
-                                style="{% if object.check_stock < 1 %} filter: grayscale(1);{% endif %}"
+                                style="{% if object.available_stock < 1 %} filter: grayscale(1);{% endif %}"
                         >
                     </a>
                     <div class="d-flex align-items-center px-2">

@@ -8,7 +8,9 @@ Link a la Boveda Trastero: <a
 Link a la Boveda de la cual se descontara: <a
         href="https://harrylatino.org/index.php?showtopic={{ profile.vault_number }}">#{{ profile.vault_number }}</a>
 <br/>
-Fecha: {{ purchase.get_created_date }} <br /><br />
+Fecha: {{ purchase.get_created_date }} <br />
+Link a la Compra: <a
+        href="{{ purchase.detail_url }}" target="_blank">Ver pedido</a> <br /><br />
 
 {% for line in purchase.lines.all %}
     Producto: {{ line.product.get_name }} <br/>

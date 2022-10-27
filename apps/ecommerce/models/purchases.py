@@ -1,4 +1,5 @@
 """Models to purchases"""
+from django.conf import settings
 from django.db import models
 from django.db.models import Q, Sum
 
@@ -11,6 +12,7 @@ from tracing.models import BaseModel
 
 from apps.ecommerce.signals import cancel_reserve_stock, reserve_stock
 from apps.ecommerce.transitions import PurchaseTransitions
+from apps.menu.utils import get_site_url
 
 
 class Purchase(BaseModel, PurchaseTransitions):
@@ -82,6 +84,12 @@ class Purchase(BaseModel, PurchaseTransitions):
     def books(self):
         lines = self.lines.filter(product__category__name__startswith="LH")
         return [line.product for line in lines]
+
+    @property
+    def detail_url(self):
+        base_url = settings.SITE_URL.geturl()
+        path = get_site_url(self, "detail")
+        return f"{base_url}{path}"
 
     class Meta:
         verbose_name = "Compra"
