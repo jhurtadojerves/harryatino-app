@@ -22,9 +22,10 @@ class PurchaseService:
                     product=sale.product,
                 )
             )
-
-            sale.product.stock -= 1
-            sale.product.reserved_stock -= 1
+            new_stock = max(0, sale.product.stock - 1)
+            new_reserved_stock = max(0, sale.product.reserved_stock - 1)
+            sale.product.stock = new_stock
+            sale.product.reserved_stock = new_reserved_stock
             products.append(sale.product)
 
         created_sales = Sale.objects.bulk_create(sales)

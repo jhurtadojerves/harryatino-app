@@ -127,6 +127,12 @@ class PaymentTransitions:
         creatures_points = data.get("customFields[33]", 0)
         objects_points = data.get("customFields[34]", 0)
 
+        if creatures_points == "":
+            creatures_points = 0
+
+        if objects_points == "":
+            objects_points = 0
+
         context = {
             "payment": self,
             "old_galleons": old_galleons,
