@@ -74,7 +74,6 @@ class Sale(BaseModel, SaleTransitions):
         return f"{self.date} - {str(self.product)}"
 
     def clean(self):
-        breakpoint()
         if not self.pk:
             if self.product.stock <= 0:
                 if self.vip_sale or self.is_award:
@@ -93,6 +92,7 @@ class Sale(BaseModel, SaleTransitions):
         elif self.pk:
             # TODO: Define logic for change stock
             sale = Sale.objects.get(pk=self.pk)
+
             if sale.product.pk != self.product.pk and self.product.stock == 0:
                 raise ValidationError(
                     for_humans(

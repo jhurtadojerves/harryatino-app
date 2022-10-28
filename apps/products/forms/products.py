@@ -73,7 +73,7 @@ class StockRequestForm(ModelForm):
 class ProductFormStaff(ProductForm):
     class Meta(ProductForm.Meta):
         fieldsets = (
-            ("name", "reference", "initial_stock"),
+            ("name", "reference", "stock"),
             ("points", "cost"),
             ("image", "uploaded_image"),
             (

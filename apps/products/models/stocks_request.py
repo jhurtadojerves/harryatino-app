@@ -2,6 +2,8 @@
 
 # Django
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 # Models
 from tracing.models import BaseModel
@@ -48,3 +50,9 @@ class StockProduct(models.Model):
     requested_amount = models.PositiveIntegerField(
         blank=False, null=False, verbose_name="Cantidad a Aumentar"
     )
+    current_stock = models.PositiveIntegerField(default=0, verbose_name="Stock actual")
+
+
+@receiver(pre_save, sender=StockProduct)
+def update_current_stock(sender, instance: StockProduct, *args, **kwargs):
+    instance.current_stock = instance.product.stock

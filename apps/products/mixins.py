@@ -222,10 +222,12 @@ class StockRequestDetail:
             and request.user.is_superuser
             and self.object.status_request == 1
         ):
-            products = self.object.product_requests.all()
-            for product in products:
-                product.product.initial_stock -= product.requested_amount
-                product.product.save()
+            lines = self.object.product_requests.all()
+            updated_products = []
+
+            for line in lines:
+                line.product.stock -= line.requested_amount
+                updated_products.append(line.product)
                 self.object.status_request = 2
                 self.object.save()
                 messages.add_message(
@@ -234,6 +236,9 @@ class StockRequestDetail:
                     "La operación fue cancelada",
                 )
                 status = False
+
+            Product.objects.bulk_update(updated_products, fields=("stock",))
+
         if status and not request.user.has_perm("products.can_approve"):
             messages.add_message(
                 request, messages.ERROR, "No tienes permisos para realizar esta acción"
