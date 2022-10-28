@@ -8,6 +8,7 @@ from rest_framework.viewsets import GenericViewSet
 # Local
 from api.purchases.serializers.purchases import PurchaseLineSerializer
 from apps.ecommerce.models import Purchase, PurchaseLine
+from apps.ecommerce.workflows import PurchaseWorkflow
 from apps.products.models import Product
 
 
@@ -46,6 +47,15 @@ class PurchaseLineView(
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
+
+        if instance.purchase.state != PurchaseWorkflow.Choices.CREATED:
+            return Response(
+                data={
+                    "purchase": "No puedes eliminar la línea porque tu compra está en proceso 🥺"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         product = instance.product
         purchase = instance.purchase
         self.perform_destroy(instance)
