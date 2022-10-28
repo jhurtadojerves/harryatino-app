@@ -6,17 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0013_merge_20221027_1143'),
+        ("products", "0013_merge_20221027_1143"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='product',
-            options={'ordering': ('-can_be_sold', 'category__id', 'name'), 'verbose_name': 'Producto', 'verbose_name_plural': 'Productos'},
+            name="product",
+            options={
+                "ordering": ("-can_be_sold", "category__id", "name"),
+                "verbose_name": "Producto",
+                "verbose_name_plural": "Productos",
+            },
         ),
         migrations.AddField(
-            model_name='stockproduct',
-            name='current_stock',
-            field=models.PositiveIntegerField(default=0, verbose_name='Stock actual'),
+            model_name="stockproduct",
+            name="current_stock",
+            field=models.PositiveIntegerField(default=0, verbose_name="Stock actual"),
         ),
     ]

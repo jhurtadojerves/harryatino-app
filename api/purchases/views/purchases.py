@@ -51,7 +51,7 @@ class PurchaseLineView(
         if instance.purchase.state != PurchaseWorkflow.Choices.CREATED:
             return Response(
                 data={
-                    "purchase": "No puedes eliminar la línea porque tu compra está en proceso 🥺"
+                    "purchase": "No puedes eliminar el producto porque tu compra está en proceso 🥺"  # noqa E501
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )

@@ -128,6 +128,7 @@ class APIService:
         wizard.range_of_objects = profile_data.get("customFields[36]", "")
         wizard.galleons = int(profile_data.get("customFields[12]", 0))
         wizard.magic_level = int(profile_data.get("customFields[43]", 0))
+        wizard.nick = nick
         boxroom_number = profile_data.get("customFields[66]", None)
         vault_number = profile_data.get("customFields[64]", None)
         character_sheet = profile_data.get("customFields[65]", None)
