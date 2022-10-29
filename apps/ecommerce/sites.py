@@ -21,5 +21,8 @@ class PurchaseSite(DefaultSite):
         "Detalle de usuario": [
             ["user__profile:Perfil", "user__profile__galleons", "user"]
         ],
-        "Detalle de la Compra": ["confirm_date"],
+        "Detalle de la Compra": [
+            ["confirm_date"],
+            ["purchase_url", "certification_url", "discount_url"],
+        ],
     }

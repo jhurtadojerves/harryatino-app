@@ -39,6 +39,7 @@ class PurchaseTransitions:
             template="ecommerce/posts/user_post.html",
             author=profile.forum_user_id,
         )
+        self.purchase_url = response.get("url")
         self.html = html
         self.confirm_date = datetime.now()
 
@@ -97,6 +98,8 @@ class PurchaseTransitions:
                 template="ecommerce/posts/user_vault.html",
                 author=seller.profile.forum_user_id,
             )
+            self.certification_url = response.get("url")
+            self.discount_url = payment.url
             self.boxroom_html = html
         else:
             raise WorkflowException(str("No se pudo realizar "))

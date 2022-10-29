@@ -13,6 +13,7 @@ from tracing.models import BaseModel
 from apps.ecommerce.signals import cancel_reserve_stock, reserve_stock
 from apps.ecommerce.transitions import PurchaseTransitions
 from apps.menu.utils import get_site_url
+from config.fields import CustomURLField
 
 
 class Purchase(BaseModel, PurchaseTransitions):
@@ -36,6 +37,15 @@ class Purchase(BaseModel, PurchaseTransitions):
     html = models.TextField(verbose_name="HTML", null=True)
     boxroom_html = models.TextField(verbose_name="HTML trastero", null=True)
     confirm_date = models.DateTimeField(null=True, verbose_name="Fecha de confirmación")
+    purchase_url = CustomURLField(
+        null=True, verbose_name="Link de la compra en el foro"
+    )
+    certification_url = CustomURLField(
+        null=True, verbose_name="Link de la certificación"
+    )
+    discount_url = CustomURLField(
+        null=True, verbose_name="Link al descuento en la bóveda"
+    )
 
     def __str__(self):
         return (
