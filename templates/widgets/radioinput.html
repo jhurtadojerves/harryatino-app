@@ -1,9 +1,11 @@
-<div class="radio-inline">
+<div class="">
   {% for radio in field %}
-  <label class="radio">
-      {{ radio.tag }}
-      <span></span>
-      {{ radio.choice_label }}
-  </label>
+    <div class="form-check">
+          {{ radio.tag }}
+      <label class="form-check-label">
+        {{ radio.choice_label }}
+      </label>
+    </div>
+
   {% endfor %}
 </div>

@@ -6,7 +6,7 @@ from config.base import BaseSite
 from config.mixins.permissions import NotPermissionRequiredMixin
 
 from .forms import WizardForm
-from .mixins import ProfileDetailMixin, ProfileListMixin
+from .mixins import ProfileDetailMixin, ProfileFormMixin, ProfileListMixin
 
 
 @register("profiles.Profile")
@@ -15,6 +15,7 @@ class ProfileSite(BaseSite):
 
     list_mixins = (NotPermissionRequiredMixin, ProfileListMixin)
     detail_mixins = (NotPermissionRequiredMixin, ProfileDetailMixin)
+    form_mixins = (ProfileFormMixin,)
     list_fields = (
         "pk:numero_de_comprador",
         "forum_user_id",

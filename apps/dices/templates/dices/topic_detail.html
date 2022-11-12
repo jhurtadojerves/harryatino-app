@@ -1,0 +1,173 @@
+{% extends 'base/base_detail.html' %}
+
+{% load static humanize superadmin_utils %}
+
+{% block detail %}
+  {{ block.super }}
+
+  <div class="row" style="display: none;">
+    <div class="col-12">{{ object.data.content|safe }}</div>
+  </div>
+  <div id="kt_inbox_view">
+    <div class="card-body p-0">
+      <div class="mb-3">
+        {% for roll in current_page.object_list %}
+          <div class="cursor-pointer shadow-xs toggle-on card-shadowless"
+               data-inbox="message" id="roll{{ roll.id }}">
+            <div class="d-flex align-items-center card-spacer-x py-6">
+                        <span class="symbol symbol-50 mr-4">
+                            {% if roll.user.profile.avatar %}
+                              {% with avatar=roll.user.profile.avatar %}
+                                <span class="symbol-label" style="background-image: url('{{ avatar }}')"></span>
+                              {% endwith %}
+                            {% else %}
+                              {% with name=roll.user.profile.nick %}
+                                <span class="symbol-label font-size-h5 font-weight-bold">{{ name|first }}</span>
+                              {% endwith %}
+                            {% endif %}
+                        </span>
+              <div class="d-flex flex-column flex-grow-1 flex-wrap mr-2">
+                <div class="d-flex">
+                  {% if roll.user.profile %}
+                    <a href="{% site_url roll.user.profile 'detail' %}" target="_blank"
+                       class="font-size-lg font-weight-bolder text-dark-75 text-hover-primary mr-2">
+                      {{ roll.user.profile.nick }}
+                    </a>
+                  {% else %}
+                    <a href="{% site_url roll.user 'detail' %}" target="_blank"
+                       class="font-size-lg font-weight-bolder text-dark-75 text-hover-primary mr-2">
+                      {{ roll.user }}
+                    </a>
+                  {% endif %}
+                  <div class="font-weight-bold text-muted">
+                    <span class="label label-success label-dot mr-2"></span>
+                    {{ roll.created_date|naturaltime }}
+                  </div>
+                </div>
+                <div class="d-flex flex-column">
+                  <div class="toggle-off-item">
+                                    <span class="font-weight-bold text-muted cursor-pointer">
+                                        @<a
+                                      href="https://www.harrylatino.org/profile/{{ roll.user.profile.forum_user_id }}-x/"
+                                      target="_blank">{{ roll.user.profile.formatted_name|safe }}</a>
+                                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="font-weight-bold text-muted mr-2">
+                  <a href="?roll={{ roll.id }}">{{ roll.created_date }}</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-spacer-x py-7 toggle-off-item text-justify">
+              {{ roll.result|safe }}
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center text-black-50 p-5">No se ha lanzado ningún dado</div>
+        {% endfor %}
+      </div>
+      <div class="w-100"></div>
+      {% if request.user.is_authenticated %}
+        <button type="button" class="btn btn-primary" id="diceDetailBtn">
+          Lanzar dado predefinido
+        </button>
+        <button type="button" class="btn btn-primary" id="diceDetailCustomBtn">
+          Lanzar dado personalizado
+        </button>
+      {% endif %}
+      <div class="w-100"></div>
+      {% include "base/paginator.html" with page_obj=current_page %}
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block modals %}
+  <div class="modal fade text-left" id="defaultDice" tabindex="3" role="dialog" aria-labelledby="modalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalLabel">Lanzar dado </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="main-form" data-errors="{{ form.errors.as_json }}" action="" method="POST"
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'forms/form.html' with form=default_form %}
+            <button type="submit" class="btn btn-primary ml-1">
+              <i class="bx bx-check d-block d-sm-none"></i>
+              <span class="d-none d-sm-block">Enviar</span>
+            </button>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade text-left" id="customDice" tabindex="3" role="dialog" aria-labelledby="modalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalLabel">Lanzar dado </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="main-form" data-errors="{{ form.errors.as_json }}" action="" method="POST"
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            {% block form %}
+              {% include 'forms/form.html' with form=form %}
+            {% endblock %}
+            <button type="submit" class="btn btn-primary ml-1">
+              <i class="bx bx-check d-block d-sm-none"></i>
+              <span class="d-none d-sm-block">Enviar</span>
+            </button>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block js %}
+  {{ block.super }}
+  <script>
+    let launcherCustom = document.getElementById("diceDetailCustomBtn")
+    let launcher = document.getElementById("diceDetailBtn")
+
+
+    launcherCustom.addEventListener("click", ev => {
+      $('#customDice').modal('show')
+    })
+
+    launcher.addEventListener("click", ev => {
+      $('#defaultDice').modal('show')
+    })
+
+    let hash = window.location.hash
+      if (hash) {
+        let roll = document.querySelector(hash)
+        if (roll){
+          roll.style = "box-shadow: 5px 1px 18px #CB6F2D;"
+        }
+      }
+
+
+  </script>
+{% endblock %}

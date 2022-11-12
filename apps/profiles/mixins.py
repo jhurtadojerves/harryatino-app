@@ -2,10 +2,11 @@
 
 
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 
 from apps.products.models import Category, Product, Section
+from apps.utils.services import UserAPIService
 
 
 class ProfileListMixin:
@@ -70,43 +71,32 @@ class ProfileDetailMixin:
             search_url = f"&category={category}"
             search_name = "category"
             search_value = category
-            potions = False
-            if category in ("P", "PP", "PPP", "PPPP", "PPPPP"):
-                category = category.replace("P", "A")
-                potions = True
             category = Category.objects.get(name=category.upper())
             sales = self.object.sales.filter(
                 product__category=category,
             )
-            if potions:
-                sales = sales.exclude(~Q(product__reference__icontains="P"))
-            else:
-                sales = sales.exclude(product__reference__icontains="P")
 
         if section and Section.objects.filter(slug=slugify(section)).exists():
             search_url = f"&section={section}"
             search_name = "section"
             search_value = section
-            potions = False
-            if section == "Pociones":
-                section = "Objetos"
-                potions = True
             section = Section.objects.get(slug=slugify(section))
             sales = self.object.sales.filter(
                 product__category__section=section,
             )
-            if potions:
-                sales = sales.exclude(~Q(product__reference__icontains="P"))
-            else:
-                sales = sales.exclude(product__reference__icontains="P")
+
         pages_url = ""
         paginator = Paginator(sales, per_page=8)
+
         if int(page) > paginator.num_pages:
             page = paginator.num_pages
+
         selected_page = paginator.page(page)
         last_sale = False
+
         if sales.exists():
             last_sale = sales.first()
+
         context.update(
             {
                 "search_url": f"{pages_url}{search_url}",
@@ -121,4 +111,13 @@ class ProfileDetailMixin:
                 "any_product": Product.objects.first(),
             }
         )
+
         return context
+
+
+class ProfileFormMixin:
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        UserAPIService.download_user_data_and_update(self.object)
+
+        return HttpResponseRedirect(self.get_success_url())

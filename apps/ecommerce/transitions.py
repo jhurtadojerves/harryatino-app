@@ -11,7 +11,7 @@ from apps.ecommerce.services import PurchaseService
 from apps.ecommerce.workflows import PurchaseWorkflow
 from apps.payments.service import PaymentService
 from apps.sales.models import Sale
-from apps.utils.services import APIService
+from apps.utils.services import TopicAPIService, UserAPIService
 from apps.workflows.exceptions import WorkflowException
 
 
@@ -33,7 +33,7 @@ class PurchaseTransitions:
     )
     def confirm(self, **kwargs):
         profile = self.get_updated_profile()
-        response, html = APIService.create_post(
+        response, html = TopicAPIService.create_post(
             topic=settings.MAGIC_MALL_TOPIC,
             context={"purchase": self, "profile": profile},
             template="ecommerce/posts/user_post.html",
@@ -83,7 +83,7 @@ class PurchaseTransitions:
                 creatures_points=creatures_points, objects_points=objects_points
             )
             payment.save()
-            response, html = APIService.create_post(
+            response, html = TopicAPIService.create_post(
                 topic=profile.get_boxroom_number,
                 context={
                     "profile": profile,
@@ -118,7 +118,7 @@ class PurchaseTransitions:
         PurchaseService.reject_purchase(self)
 
     def get_updated_profile(self):
-        profile = APIService.download_user_data_and_update(self.user.profile)
+        profile = UserAPIService.download_user_data_and_update(self.user.profile)
 
         if profile.galleons < self.get_number_of_galleons:
             raise WorkflowException(

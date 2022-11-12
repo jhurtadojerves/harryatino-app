@@ -6,14 +6,14 @@
         <div class="col-sm-12 col-md-5">
             <div class="card p-3 m-2 col">
                 <div class="row no-gutters align-items-center">
-                    <div class="col-md-6">
+                    <div class="col-md-4 symbol symbol-50 symbol-lg-120">
                         <img
-                            class="card-img img-fluid "
+                            class="card-img img-fluid img-thumbnail "
                             src="{{ object.avatar }}"
                             alt="Foto de Perfil de {{ object.nick }}"
                         >
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="card-body">
                             <h4 class="card-title">{{ object.name }}</h4>
                             <p class="card-text"><strong>ID del Foro: </strong> <a href="https://www.harrylatino.org/profile/{{ object.forum_user_id }}-a/" target="_blank">{{ object.forum_user_id }}</a> </p>
@@ -21,7 +21,9 @@
                             <p class="card-text"><strong>Rango de Criaturas: </strong>{{ object.range_of_creatures }}
                             </p>
                             <p class="card-text"><strong>Rango de Objetos: </strong>{{ object.range_of_objects }}</p>
-                            <p class="card-text"><strong>Bóveda: </strong>{{ object.vault|default_if_none:"--" }}</p>
+                            <p class="card-text"><strong>Ficha: </strong><a href="https://www.harrylatino.org/index.php?showtopic={{ object.character_sheet }}" target="_blank">{{ object.character_sheet }}</a></p>
+                            <p class="card-text"><strong>Bóveda: </strong><a href="https://www.harrylatino.org/index.php?showtopic={{ object.vault_number }}" target="_blank">{{ object.vault_number }}</a></p>
+                            <p class="card-text"><strong>Bóveda Trastero: </strong><a href="https://www.harrylatino.org/index.php?showtopic={{ object.boxroom_number }}" target="_blank">{{ object.boxroom_number }}</a></p>
                         </div>
                         {% if request.user.is_authenticated and last_sale %}
                             <div class="col mt-3">

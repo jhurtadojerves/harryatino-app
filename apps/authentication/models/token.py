@@ -59,7 +59,7 @@ class AccessToken(models.Model, UserTokenTransitions):
         return f"{base_url}{token_url}"
 
     def send_message(self):
-        from apps.utils.services import APIService
+        from apps.utils.services import UserAPIService
 
         title = "Cuenta en el Magic Mall creada correctamente"
         body = render_to_string(
@@ -70,6 +70,8 @@ class AccessToken(models.Model, UserTokenTransitions):
                 "topic_id": settings.TOPIC_QUESTIONS,
             },
         )
-        to_user_id = f"&to[]={self.profile.forum_user_id}"
 
-        APIService.send_personal_message(to_users_id=to_user_id, title=title, body=body)
+        UserAPIService.send_personal_message(
+            to_users_id=[str(self.profile.forum_user_id)], title=title, body=body
+        )
+        UserAPIService.download_user_data_and_update(self.profile)

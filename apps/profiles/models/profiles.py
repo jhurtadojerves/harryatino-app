@@ -9,6 +9,7 @@ from config.utils import get_encoded_verbose
 class Profile(BaseModel):
     forum_user_id = models.PositiveIntegerField(unique=True, verbose_name="Id del foro")
     nick = models.CharField(max_length=128)
+    formatted_name = models.CharField(max_length=128, null=True)
     magic_level = models.PositiveIntegerField(verbose_name="Nivel Mágico")
     galleons = models.IntegerField(verbose_name="Galeones", default=0)
     range_of_creatures = models.CharField(
@@ -22,7 +23,7 @@ class Profile(BaseModel):
     character_sheet = models.IntegerField(
         verbose_name="Número de Ficha de Personaje", null=True, blank=False
     )
-    avatar = models.URLField(null=True, blank=True)
+    avatar = models.URLField(null=True, max_length=512)
     accumulated_posts = models.IntegerField(
         verbose_name="posteos acumulados", editable=False, default=0
     )

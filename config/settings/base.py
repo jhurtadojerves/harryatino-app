@@ -72,6 +72,7 @@ LOCAL_APPS = [
     "apps.announcements",
     "apps.authentication",
     "apps.boxrooms",
+    "apps.dices",
     "apps.dynamicforms",
     "apps.ecommerce",
     "apps.insoles",

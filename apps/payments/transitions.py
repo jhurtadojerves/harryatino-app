@@ -75,14 +75,14 @@ class PaymentTransitions:
         custom=dict(verbose="Pagar"),
     )
     def to_pay(self, **kwargs):
-        from apps.utils.services import APIService
+        from apps.utils.services import TopicAPIService, UserAPIService
 
         creatures_points = kwargs.get("creatures_points", 0)
         objects_points = kwargs.get("objects_points", 0)
 
         vault = self.wizard.vault_number
         context = self.get_context(self.wizard)
-        response, html = APIService.create_post(
+        response, html = TopicAPIService.create_post(
             topic=vault,
             context=context,
             template=self.get_template(),
@@ -94,7 +94,7 @@ class PaymentTransitions:
             "customFields[34]": f"{context['objects_points'] + objects_points}",
         }
 
-        APIService.update_user_profile(
+        UserAPIService.update_user_profile(
             self.wizard.forum_user_id, raw_data=update_profile_data
         )
         self.html = html
@@ -120,9 +120,9 @@ class PaymentTransitions:
         return int(galleons - self.total_payments())
 
     def get_context(self, wizard):
-        from apps.utils.services import APIService
+        from apps.utils.services import UserAPIService
 
-        data = APIService.get_forum_user_data(wizard)
+        data = UserAPIService.get_forum_user_data(wizard)
         old_galleons = int(data.get("customFields[12]")) or 0
         creatures_points = data.get("customFields[33]", 0)
         objects_points = data.get("customFields[34]", 0)
