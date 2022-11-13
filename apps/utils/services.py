@@ -66,7 +66,7 @@ class UserAPIService(APIService):
 
     @classmethod
     def send_personal_message(
-        cls, to_users_id: list[str], title, body, from_user_id=121976
+        cls, to_users_id: list, title, body, from_user_id=121976
     ):
         cleaned_to = ",".join(to_users_id)
         payload = cls.get_payload(
