@@ -2,6 +2,7 @@
 # Django
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q, Sum
 from django.utils.translation import gettext_lazy as for_humans
 
 # Third party integration
@@ -153,6 +154,27 @@ class MultipleSale(BaseModel, MultipleSateTransitions):
 
     def __str__(self):
         return f"Compras de {self.profile.__str__()} #{self.id}"
+
+    @property
+    def get_creatures_points_sales(self):
+        return (
+            self.sales.filter(product__category__name__startswith="X")
+            .distinct()
+            .aggregate(sum=Sum("product__points"))
+            .get("sum", 0)
+        )
+
+    @property
+    def get_objects_points_sales(self):
+        return (
+            self.sales.filter(
+                Q(product__category__name__startswith="A")
+                | Q(product__category__name__startswith="P")
+            )
+            .distinct()
+            .aggregate(sum=Sum("product__points"))
+            .get("sum", 0)
+        )
 
 
 class SaleMultipleSale(models.Model):

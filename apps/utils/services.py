@@ -65,9 +65,7 @@ class UserAPIService(APIService):
     USER_API_URL = "https://www.harrylatino.org/api/core/members/"
 
     @classmethod
-    def send_personal_message(
-        cls, to_users_id: list, title, body, from_user_id=121976
-    ):
+    def send_personal_message(cls, to_users_id: list, title, body, from_user_id=121976):
         cleaned_to = ",".join(to_users_id)
         payload = cls.get_payload(
             {"from": from_user_id, "title": title, "body": body, "to[]": cleaned_to}

@@ -1,7 +1,6 @@
 """Mixin for products"""
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
@@ -144,31 +143,15 @@ class MultipleSaleDetailMixin:
 
         sales = self.object.sales.all()
 
-        creatures_points = (
-            sales.filter(product__category__name__startswith="X")
-            .distinct()
-            .aggregate(sum=Sum("product__points"))
-            .get("sum", 0)
-        )
-        objects_points = (
-            sales.filter(
-                Q(product__category__name__startswith="A")
-                | Q(product__category__name__startswith="P")
-            )
-            .distinct()
-            .aggregate(sum=Sum("product__points"))
-            .get("sum", 0)
-        )
-
         html_context = {
             "profile": self.object.profile,
-            "sales": self.object.sales.all(),
+            "sales": sales,
             "base_url": settings.SITE_URL.geturl(),
-            "sale": self.object.sales.first(),
+            "sale": sales.first(),
             "legend": legend,
             "points": {
-                "creatures": creatures_points,
-                "objects": objects_points,
+                "creatures": self.object.get_creatures_points_sales,
+                "objects": self.object.get_objects_points_sales,
             },
         }
         context.update(
