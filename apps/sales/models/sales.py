@@ -11,7 +11,7 @@ from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
 from apps.profiles.models import Profile
-from apps.sales.transitions import SaleTransitions
+from apps.sales.transitions import MultipleSateTransitions, SaleTransitions
 
 
 class Sale(BaseModel, SaleTransitions):
@@ -65,6 +65,7 @@ class Sale(BaseModel, SaleTransitions):
         null=True,
         editable=False,
     )
+
     # This field is used to mark a purchase of spell books or consumables.
     # Spell books. True = Can Use
     # Consumables. True = Consumable Used
@@ -76,10 +77,7 @@ class Sale(BaseModel, SaleTransitions):
     def clean(self):
         if not self.pk:
             if self.product.stock <= 0:
-                if self.vip_sale or self.is_award:
-                    self.product.stock = self.product.stock + 1
-                    self.product.save()
-                else:
+                if not (self.vip_sale or self.is_award):
                     raise ValidationError(
                         for_humans(
                             f"No se puede vender {self.product.name} "
@@ -87,7 +85,7 @@ class Sale(BaseModel, SaleTransitions):
                         )
                     )
             else:
-                self.product.stock = self.product.stock - 1
+                self.product.stock = max(self.product.stock - 1, 0)
                 self.product.save()
         elif self.pk:
             # TODO: Define logic for change stock
@@ -122,3 +120,62 @@ class Sale(BaseModel, SaleTransitions):
         permissions = [
             ("can_send_to_payment", "Puede enviar la compra para pago"),
         ]
+
+
+class MultipleSale(BaseModel, MultipleSateTransitions):
+    workflow = MultipleSateTransitions.workflow
+
+    date = models.DateField(verbose_name="Fecha")
+    vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
+    is_award = models.BooleanField(
+        verbose_name="Premio de Gala (sin importar stock)", default=False
+    )
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.DRAFT,
+        protected=True,
+        verbose_name="estado",
+    )
+
+    # Relations
+    buyer = models.ForeignKey(
+        "authentication.User", verbose_name="vendedor", on_delete=models.PROTECT
+    )
+    products = models.ManyToManyField(
+        "products.Product", through="SaleMultipleSale", verbose_name="productos"
+    )
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.PROTECT,
+        verbose_name="Comprador",
+    )
+    sales = models.ManyToManyField(to=Sale, verbose_name="ventas")
+
+    def __str__(self):
+        return f"Compras de {self.profile.__str__()} #{self.id}"
+
+
+class SaleMultipleSale(models.Model):
+    product = models.ForeignKey(
+        "products.Product", on_delete=models.CASCADE, verbose_name="Producto"
+    )
+    sale = models.ForeignKey(
+        MultipleSale,
+        on_delete=models.CASCADE,
+        verbose_name="Venta",
+        related_name="multiple_sales",
+    )
+    available = models.BooleanField(
+        default=True,
+        verbose_name="Disponible?",
+        help_text="Este campo se utiliza para marcar una compra de libros de hechizos "
+        "o consumibles. <br>"
+        "Libros de Hechizos. Marcado = Se puede usar<br>"
+        "Consumibles. Desmarcado = Consumible utilizado<br>"
+        "Criaturas (Premios y/o Régimen Transitorio). "
+        "Desmarcado = La criatura se encuentra en la reserva de animales<br>",
+    )
+    quantity = models.PositiveIntegerField(verbose_name="Cantidad")
+
+    class Meta:
+        unique_together = ("product", "sale")

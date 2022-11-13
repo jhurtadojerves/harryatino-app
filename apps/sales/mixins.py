@@ -1,5 +1,12 @@
 """Mixin for products"""
+from django.conf import settings
+from django.contrib import messages
+from django.db.models import Q, Sum
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+
+from apps.menu.templatetags.get_site_url import get_site_url
 
 
 class SaleListMixin:
@@ -86,3 +93,90 @@ class SaleFormMixin:
             self.object.buyer = self.request.user
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class MultipleSaleFormMixin:
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object_or_none()
+
+        if self.object and not self.object.state == 1:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                f"No se puede editar solicitudes solicitudes con estado "
+                f"{self.object.get_state_display()}",
+            )
+            return redirect(get_site_url(self.object, "detail"))
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save(commit=False)
+        if self.action == "create":
+            self.object.buyer = self.request.user
+
+        self.object.save()
+
+        for inline in form.inlines:
+            inline.instance = self.object
+            inline.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_object_or_none(self):
+        try:
+            return self.get_object()
+        except Exception:
+            return None
+
+
+class MultipleSaleDetailMixin:
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        context = super().get_context_data()
+        legend = "las Compras realizadas en el Magic Mall"
+
+        if self.object.vip_sale:
+            legend = "el intercambio de llaves solicitado"
+        elif self.object.is_award:
+            legend = "los premios de ***cambiar por nombre de la gala***"
+
+        sales = self.object.sales.all()
+
+        creatures_points = (
+            sales.filter(product__category__name__startswith="X")
+            .distinct()
+            .aggregate(sum=Sum("product__points"))
+            .get("sum", 0)
+        )
+        objects_points = (
+            sales.filter(
+                Q(product__category__name__startswith="A")
+                | Q(product__category__name__startswith="P")
+            )
+            .distinct()
+            .aggregate(sum=Sum("product__points"))
+            .get("sum", 0)
+        )
+
+        html_context = {
+            "profile": self.object.profile,
+            "sales": self.object.sales.all(),
+            "base_url": settings.SITE_URL.geturl(),
+            "sale": self.object.sales.first(),
+            "legend": legend,
+            "points": {
+                "creatures": creatures_points,
+                "objects": objects_points,
+            },
+        }
+        context.update(
+            {
+                "html": render_to_string(
+                    context=html_context, template_name="sales/posts/user_vault.html"
+                )
+            }
+        )
+
+        return context

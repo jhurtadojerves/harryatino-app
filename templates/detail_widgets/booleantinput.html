@@ -1,0 +1,7 @@
+<!--<p class="form-control-static">{{ value|yesno:"Sí,No" }}</p>-->
+<div class="custom-control custom-switch" style="margin-top: 7%;">
+  <input type="checkbox" class="custom-control-input" {% if value %}
+  checked
+  {% endif %} >
+  <label class="custom-control-label" for="">{{ label|capfirst }}</label>
+</div>

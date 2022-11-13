@@ -1,0 +1,10 @@
+<label>{{ label|capfirst }}</label>
+
+<!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->
+<div class="input-group has-validation">
+  <div class="input-group-prepend">
+    <span class="input-group-text">📅</span>
+  </div>
+  <input class="form-control" type="text" value="{{ value|default_if_none:'' }}"
+       readonly>
+</div>
