@@ -39,7 +39,7 @@ def get_short_url(long_url):
 
 
 def get_encoded_verbose(string):
-    a, b = "áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN"
+    a, b = "\"'", "  "
     trans = str.maketrans(a, b)
     translate = string.translate(trans)
-    return str(translate)
+    return str(translate).strip()
