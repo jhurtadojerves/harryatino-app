@@ -204,7 +204,7 @@ class SaleMultipleSale(models.Model):
         "Criaturas (Premios y/o Régimen Transitorio). "
         "Desmarcado = La criatura se encuentra en la reserva de animales<br>",
     )
-    quantity = models.PositiveIntegerField(verbose_name="Cantidad")
+    quantity = models.PositiveIntegerField(verbose_name="Cantidad", default=1)
 
     class Meta:
         unique_together = ("product", "sale")
