@@ -152,6 +152,13 @@ class MultipleSale(BaseModel, MultipleSateTransitions):
     )
     sales = models.ManyToManyField(to=Sale, verbose_name="ventas")
 
+    def ordered_sales(self):
+        return self.sales.order_by(
+            "product__category__section__order",
+            "product__category__name",
+            "product__name",
+        )
+
     def __str__(self):
         return f"Compras de {self.profile.__str__()} #{self.id}"
 

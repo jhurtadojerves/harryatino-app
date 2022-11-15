@@ -62,9 +62,13 @@
 
     </div>
     <div class="form-group">
-    <label for="exampleFormControlTextarea1">HTML para trastero</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">{{ html }}</textarea>
-  </div>
+      {% if render %}
+        {{ html }}
+      {% else %}
+        <label for="exampleFormControlTextarea1">HTML para trastero</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">{{ html }}</textarea>
+      {% endif %}
+    </div>
 
   {% endif %}
 {% endblock %}

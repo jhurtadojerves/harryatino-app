@@ -131,8 +131,9 @@ class MultipleSaleFormMixin:
 
 
 class MultipleSaleDetailMixin:
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         self.object = self.get_object()
+        render = self.request.GET.get("render", False)
         context = super().get_context_data()
         legend = "las Compras realizadas en el Magic Mall"
 
@@ -141,7 +142,7 @@ class MultipleSaleDetailMixin:
         elif self.object.is_award:
             legend = "los premios de ***cambiar por nombre de la gala***"
 
-        sales = self.object.sales.all()
+        sales = self.object.ordered_sales()
 
         html_context = {
             "profile": self.object.profile,
@@ -158,7 +159,8 @@ class MultipleSaleDetailMixin:
             {
                 "html": render_to_string(
                     context=html_context, template_name="sales/posts/user_vault.html"
-                )
+                ),
+                "render": render,
             }
         )
 
