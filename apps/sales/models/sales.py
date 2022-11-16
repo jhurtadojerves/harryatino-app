@@ -164,16 +164,17 @@ class MultipleSale(BaseModel, MultipleSateTransitions):
 
     @property
     def get_creatures_points_sales(self):
-        return (
+        product__points = (
             self.sales.filter(product__category__name__startswith="X")
             .distinct()
             .aggregate(sum=Sum("product__points"))
             .get("sum", 0)
         )
+        return product__points if product__points else 0
 
     @property
     def get_objects_points_sales(self):
-        return (
+        product__points = (
             self.sales.filter(
                 Q(product__category__name__startswith="A")
                 | Q(product__category__name__startswith="P")
@@ -182,6 +183,7 @@ class MultipleSale(BaseModel, MultipleSateTransitions):
             .aggregate(sum=Sum("product__points"))
             .get("sum", 0)
         )
+        return product__points if product__points else 0
 
 
 class SaleMultipleSale(models.Model):
