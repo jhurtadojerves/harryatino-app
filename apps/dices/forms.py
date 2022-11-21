@@ -75,7 +75,7 @@ class TopicForm(ModelForm):
             "category": ModelSelect2Widget(
                 model="dices.Category",
                 search_fields=[
-                    "name__icontains",
+                    "name__unaccent__icontains",
                 ],
                 max_results=20,
                 attrs={

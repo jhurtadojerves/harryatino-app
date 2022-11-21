@@ -19,7 +19,7 @@ class BoxroomForm(ModelForm):
             "profile": ModelSelect2Widget(
                 model="profiles.Profile",
                 search_fields=[
-                    "nick__icontains",
+                    "nick__unaccent__icontains",
                     "forum_user_id__contains",
                 ],
                 max_results=20,

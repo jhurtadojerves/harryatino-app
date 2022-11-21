@@ -1,5 +1,4 @@
 const renderFormset = (prefix, addText = "Añadir Nuevo Item", additionalFunction = () => {}) => {
-  console.log(prefix)
   $(`.inline.${prefix}`).formset({
     prefix: prefix,
     addText: `<i class="fas fa-plus icon-sm"></i> ${addText}`,
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initSelect2(row);
       }
       catch (e) {
-      
+
       }
       //init_inputmask(row);
     })

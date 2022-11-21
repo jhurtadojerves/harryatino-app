@@ -24,6 +24,6 @@ class PropertyForm(ModelForm):
             "content": CKEditorWidget(),
             "owner": s2forms.ModelSelect2MultipleWidget(
                 model=Profile,
-                search_fields=["forum_user_id__icontains", "nick__icontains"],
+                search_fields=["forum_user_id__icontains", "nick__unaccent__icontains"],
             ),
         }

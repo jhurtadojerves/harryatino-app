@@ -22,7 +22,7 @@ class AccessTokenForm(ModelForm):
         widget=s2forms.ModelSelect2Widget(
             model=Profile,
             search_fields=[
-                "nick__icontains",
+                "nick__unaccent__icontains",
                 "forum_user_id__icontains",
             ],
             max_results=100,

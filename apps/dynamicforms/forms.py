@@ -75,7 +75,10 @@ class FieldForm(ModelForm):
         widgets = {
             "form": ModelSelect2Widget(
                 model=Form,
-                search_fields=["name__icontains", "description__icontains"],
+                search_fields=[
+                    "name__unaccent__icontains",
+                    "description__unaccent__icontains",
+                ],
                 attrs={
                     "data-minimum-input-length": 0,
                     "data-app": "dynamicforms",
@@ -84,7 +87,7 @@ class FieldForm(ModelForm):
             ),
             "fieldset": ModelSelect2Widget(
                 model=Fieldset,
-                search_fields=["name__icontains"],
+                search_fields=["name__unaccent__icontains"],
                 attrs={
                     "data-minimum-input-length": 0,
                     "data-app": "dynamicforms",

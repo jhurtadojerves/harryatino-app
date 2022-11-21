@@ -73,7 +73,7 @@ class ProductListMixin:
         search_name = dict()
 
         if name:
-            search_name.update({"name__icontains": name})
+            search_name.update({"name__unaccent__icontains": name})
 
         if category and Category.objects.filter(name=category.upper()).exists():
             category = Category.objects.get(name=category.upper())

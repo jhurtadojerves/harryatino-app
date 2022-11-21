@@ -16,7 +16,7 @@ class WorkMonthForm(ModelForm):
         widgets = {
             "wizard": ModelSelect2Widget(
                 model="profiles.Profile",
-                search_fields=["nick__icontains", "forum_user_id__icontains"],
+                search_fields=["nick__unaccent__icontains", "forum_user_id__icontains"],
                 attrs={
                     "data-minimum-input-length": 0,
                 },
@@ -31,7 +31,7 @@ class PaymentForm(ModelForm):
         widgets = {
             "wizard": ModelSelect2Widget(
                 model="profiles.Profile",
-                search_fields=["nick__icontains", "forum_user_id__icontains"],
+                search_fields=["nick__unaccent__icontains", "forum_user_id__icontains"],
                 attrs={
                     "data-minimum-input-length": 0,
                 },

@@ -7,7 +7,7 @@ from apps.sales.forms import MultipleSaleForm, MultipleSaleFormset, SaleForm
 from config.base import BaseSite
 
 # Utils
-from config.mixins import NotPermissionRequiredMixin
+from config.mixins import GenericFiltering, NotPermissionRequiredMixin
 
 # Mixins
 from .mixins import (
@@ -38,6 +38,8 @@ class MultipleSaleSite(BaseSite):
     form_class = MultipleSaleForm
     form_mixins = (MultipleSaleFormMixin,)
     detail_mixins = (MultipleSaleDetailMixin,)
+    list_mixins = (GenericFiltering,)
+    search_param = "profile__nick"
     inlines = {"lines": MultipleSaleFormset}
 
     detail_fields = [["buyer", "profile"], ["date", "vip_sale", "is_award"]]

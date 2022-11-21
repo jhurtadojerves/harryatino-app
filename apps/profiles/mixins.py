@@ -45,7 +45,7 @@ class ProfileListMixin:
         buyer = self.request.GET.get("buyer", False)
         search_params = dict()
         if nick:
-            search_params.update({"nick__icontains": nick})
+            search_params.update({"nick__unaccent__icontains": nick})
         elif forum_id:
             search_params.update({"forum_user_id__startswith": forum_id})
         elif buyer:

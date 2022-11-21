@@ -71,7 +71,7 @@ class SaleListMixin:
         to_date = request.GET.get("to_date", False)
         page = request.GET.get("page", 1)
         if product:
-            search_params.update({"product__name__icontains": product})
+            search_params.update({"product__name__unaccent__icontains": product})
         if forum_id:
             search_params.update({"profile__forum_user_id__startswith": forum_id})
         if buyer:

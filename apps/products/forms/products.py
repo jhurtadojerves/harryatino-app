@@ -19,7 +19,7 @@ class ProductForm(ModelForm):
         widget=ModelSelect2Widget(
             model="product.Section",
             search_fields=[
-                "name__icontains",
+                "name__unaccent__icontains",
             ],
             max_results=100,
             attrs={
@@ -47,7 +47,7 @@ class ProductForm(ModelForm):
         widgets = {
             "category": ModelSelect2Widget(
                 model="products.Category",
-                search_fields=["name__icontains"],
+                search_fields=["name__unaccent__icontains"],
                 dependent_fields={"section": "section"},
                 attrs={
                     "data-minimum-input-length": 0,
@@ -97,7 +97,7 @@ StockFormset = inlineformset_factory(
         "product": ModelSelect2Widget(
             model=Product,
             search_fields=[
-                "name__icontains",
+                "name__unaccent__icontains",
             ],
             max_results=10,
             attrs={

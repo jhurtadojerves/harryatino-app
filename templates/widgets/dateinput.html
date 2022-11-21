@@ -2,9 +2,15 @@
 
 <div class="input-group">
     <div class="input-group-prepend">
-        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+        <button class="btn btn-primary btn-today" type="button">
+            <i class="far fa-calendar-alt"></i>
+        </button>
     </div>
+    {% if field.errors %}
+    {{ field|add_class:"input-mask is-invalid"|data:"inputmask:'alias': 'datetime'"|data:"inputmask-inputformat:dd/mm/yyyy" }}
+    {% else %}
     {{ field|add_class:"input-mask"|data:"inputmask:'alias': 'datetime'"|data:"inputmask-inputformat:dd/mm/yyyy" }}
+    {% endif %}
 </div>
 <div class="invalid-feedback">
     <ul>

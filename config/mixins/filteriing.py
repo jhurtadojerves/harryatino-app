@@ -19,7 +19,9 @@ class GenericFiltering:
                 and hasattr(model_site, "search_param")
                 and isinstance(model_site.search_param, str)
             ):
-                params.update({f"{model_site.search_param}__icontains": search})
+                params.update(
+                    {f"{model_site.search_param}__unaccent__icontains": search}
+                )
             queryset = queryset.filter(**params)
         return queryset
 

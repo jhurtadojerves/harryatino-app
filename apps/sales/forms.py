@@ -24,7 +24,7 @@ class SaleForm(ModelForm):
         widgets = {
             "product": ModelSelect2Widget(
                 model=Product,
-                search_fields=["name__icontains"],
+                search_fields=["name__unaccent__icontains"],
                 max_results=10,
                 queryset=Product.objects.exclude(name__iendswith="VA"),
                 attrs={
@@ -35,7 +35,10 @@ class SaleForm(ModelForm):
             ),
             "profile": ModelSelect2Widget(
                 model=Profile,
-                search_fields=["forum_user_id__istartswith", "nick__icontains"],
+                search_fields=[
+                    "forum_user_id__istartswith",
+                    "nick__unaccent__icontains",
+                ],
                 max_results=10,
                 attrs={
                     "class": "form-control form-control-sm",
@@ -56,7 +59,10 @@ class MultipleSaleForm(ModelForm):
         widgets = {
             "profile": ModelSelect2Widget(
                 model=Profile,
-                search_fields=["forum_user_id__istartswith", "nick__icontains"],
+                search_fields=[
+                    "forum_user_id__istartswith",
+                    "nick__unaccent__icontains",
+                ],
                 max_results=10,
                 attrs={
                     "class": "form-control form-control-sm",
@@ -85,7 +91,7 @@ MultipleSaleFormset = inlineformset_factory(
         "product": ModelSelect2Widget(
             model=Product,
             search_fields=[
-                "name__icontains",
+                "name__unaccent__icontains",
             ],
             max_results=10,
             attrs={
