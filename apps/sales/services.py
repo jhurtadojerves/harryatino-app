@@ -64,7 +64,7 @@ class SaleService:
                 },
             },
             template="sales/posts/user_vault.html",
-            author=multiple.profile.forum_user_id,
+            author=multiple.buyer.profile.forum_user_id,
         )
         multiple.url = response.get("url")
         multiple.html = html
