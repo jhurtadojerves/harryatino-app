@@ -1,0 +1,21 @@
+{% load superadmin_forms superadmin_utils %}
+
+<div class="inline-group" data-label="{{ label }}" data-errors="{{ formset.errors|json }}"
+     id="{{ formset.prefix }}-group" data-prefix="{{ formset.prefix }}">
+  {{ formset.management_form }}
+  {% for form in formset %}
+    <div id="{{ formset.prefix }}-{{ forloop.counter0 }}"
+         class="card card-custom card-border inline {{ formset.prefix }} mb-5">
+      <div class="card-toolbar">
+        {% if formset.can_delete %}
+          {% render_field form.DELETE class="form-control" %}
+        {% endif %}
+      </div>
+      <hr>
+
+      <div class="card-body">
+        {% include "forms/form.html" with form=form not_help=True %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

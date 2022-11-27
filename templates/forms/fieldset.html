@@ -9,7 +9,7 @@
             {% for field in row.fields %}
                 {% if not field.is_hidden %}
                     <div class="col-md-{{ row.bs_cols }}">
-                        {% include "forms/formgroup.html" with field=field %}
+                        {% include "forms/formgroup.html" with field=field not_help=not_help %}
                     </div>
                 {% endif %}
             {% endfor %}

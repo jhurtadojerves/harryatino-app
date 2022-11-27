@@ -99,6 +99,13 @@ class Boxroom(BaseModel):
             .distinct()
         )
 
+    def get_especial_consumables_list(self):
+        return (
+            self.profile.sales.filter(product__category__name="LLAVES", available=True)
+            .order_by("date")
+            .distinct()
+        )
+
     def get_absolute_url(self):
         return reverse("boxroom:boxroom_detail", args=[str(self.slug)])
 

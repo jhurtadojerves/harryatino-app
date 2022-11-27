@@ -33,7 +33,8 @@
         if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
         if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
         if (elem.attr('data-select2-formset')) elem.attr('data-select2-formset', elem.attr('data-select2-formset').replace(idRegex, replacement));
-      },
+        if (elem.attr('data-select2-dependent-fields')) elem.attr('data-select2-dependent-fields', elem.attr('data-select2-dependent-fields').replace(idRegex, replacement));
+        },
       
       hasChildElements = function (row) {
         return row.find(childElementSelector).length > 0;
@@ -56,10 +57,11 @@
         var delCssSelector = $.trim(options.deleteCssClass).replace(/\s+/g, '.'),
           addCssSelector = $.trim(options.addCssClass).replace(/\s+/g, '.');
         var id = row.find('#id_' + row.attr('id') + '-id').val()
+        console.log(row.data("add"))
         if (row.is('TR')) {
           // If the forms are laid out in table rows, insert
           // the remove button into the last table cell:
-          row.children(':last').append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a>');
+          row.children(':last').parent().append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)" style="margin-top: 12.5px;">' + options.deleteText + '</a>');
         } else if (row.is('UL') || row.is('OL')) {
           // If they're laid out as an ordered/unordered list,
           // insert an <li> after the last list item:
@@ -67,7 +69,7 @@
         } else if (row.is('DIV')) {
           // If they're laid out as an ordered/unordered list,
           // insert an <li> after the last list item:
-          row.append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a>');
+          row.find(".card-toolbar").append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a>');
         } else {
           // Otherwise, just insert the remove button as the
           // last child element of the form's container:
@@ -77,7 +79,6 @@
         if (id || !showDeleteLinks()) {
           row.find('a.' + delCssSelector).hide();
         }
-        
         
         row.find('a.' + delCssSelector).click(function () {
           var row = $(this).parents('.' + options.formCssClass),
@@ -167,7 +168,7 @@
       } else {
         // Otherwise, use the last form in the formset; this works much better if you've got
         // extra (>= 1) forms (thnaks to justhamade for pointing this out):
-        template = $('.' + options.formCssClass + ':last').clone(true).removeAttr('id');
+        template = $('.' + options.prefix + '.' + options.formCssClass + ':last').clone(true).removeAttr('id');
         template.find('input:hidden[id $= "-DELETE"]').remove();
         // Clear all cloned fields, except those the user wants to keep (thanks to brunogola for the suggestion):
         template.find(childElementSelector).not(options.keepFieldValues).each(function () {
@@ -204,7 +205,6 @@
           row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
           buttonRow = $($(this).parents('tr.' + options.formCssClass + '-add').get(0) || this),
           delCssSelector = $.trim(options.deleteCssClass).replace(/\s+/g, '.');
-        console.log(row)
         applyExtraClasses(row, formCount);
         row.insertBefore(buttonRow).show();
         row.find(childElementSelector).each(function () {

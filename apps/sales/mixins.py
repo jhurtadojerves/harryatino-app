@@ -1,9 +1,7 @@
 """Mixin for products"""
-from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.template.loader import render_to_string
 
 from apps.menu.templatetags.get_site_url import get_site_url
 
@@ -135,31 +133,8 @@ class MultipleSaleDetailMixin:
         self.object = self.get_object()
         render = self.request.GET.get("render", False)
         context = super().get_context_data()
-        legend = "las Compras realizadas en el Magic Mall"
-
-        if self.object.vip_sale:
-            legend = "el intercambio de llaves solicitado"
-        elif self.object.is_award:
-            legend = "los premios de ***cambiar por nombre de la gala***"
-
-        sales = self.object.ordered_sales()
-
-        html_context = {
-            "profile": self.object.profile,
-            "sales": sales,
-            "base_url": settings.SITE_URL.geturl(),
-            "sale": sales.first(),
-            "legend": legend,
-            "points": {
-                "creatures": self.object.get_creatures_points_sales,
-                "objects": self.object.get_objects_points_sales,
-            },
-        }
         context.update(
             {
-                "html": render_to_string(
-                    context=html_context, template_name="sales/posts/user_vault.html"
-                ),
                 "render": render,
             }
         )

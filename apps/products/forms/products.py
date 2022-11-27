@@ -35,7 +35,7 @@ class ProductForm(ModelForm):
                 "name",
                 "reference",
             ),
-            ("points", "cost"),
+            ("points", "cost", "keys_cost"),
             ("image", "uploaded_image"),
             (
                 "section",

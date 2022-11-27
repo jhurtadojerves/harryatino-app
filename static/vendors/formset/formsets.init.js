@@ -1,4 +1,6 @@
-const renderFormset = (prefix, addText = "Añadir Nuevo Item", additionalFunction = () => {}) => {
+const renderFormset = (prefix, addText = "Añadir Nuevo Item", additionalFunction = () => {
+}) => {
+  //let formsets = container.querySelectorAll(`.inline.${prefix}`)
   $(`.inline.${prefix}`).formset({
     prefix: prefix,
     addText: `<i class="fas fa-plus icon-sm"></i> ${addText}`,
@@ -11,20 +13,31 @@ const renderFormset = (prefix, addText = "Añadir Nuevo Item", additionalFunctio
   })
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  const formsets = document.querySelectorAll('.inline-group');
-  for (let i=0;i<formsets.length;i++){
+const discoverInlines = elem => {
+  let selector = elem || document
+  const formsets = selector.querySelectorAll('.inline-group');
+  for (let i = 0; i < formsets.length; i++) {
     const prefix = formsets[i].dataset.prefix
-    renderFormset(prefix, 'Agregar elemento', function(row) {
-      try{
+    renderFormset(prefix, 'Agregar elemento', initSelect2)
+  }
+}
+
+let initFormset = () => {
+  const formsets = document.querySelectorAll('.inline-group');
+  for (let i = 0; i < formsets.length; i++) {
+    const prefix = formsets[i].dataset.prefix
+    renderFormset(prefix, 'Agregar elemento', function (row) {
+      try {
         initSelect2(row);
-      }
-      catch (e) {
+        init_inputmask(row);
+      } catch (e) {
 
       }
-      //init_inputmask(row);
     })
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initFormset()
 });
 

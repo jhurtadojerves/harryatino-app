@@ -40,7 +40,7 @@ class Topic(BaseModel):
 
     class Meta:
         verbose_name = "topic"
-        verbose_name_plural = "topics"
+        verbose_name_plural = "topics para dados"
 
     def __str__(self):
         return self.data.get("title")

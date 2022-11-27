@@ -5,5 +5,5 @@
     {{ block.super }}
     <div class="separator separator-dashed my-10"></div>
     <h3 class="text-dark font-weight-bold mb-5">Productos:</h3>
-    {% include 'forms/formset.html' with formset=lines headers=lines_headers label="Lineas" %}
+    {% include 'forms/tabular_formset_without_legend.html' with formset=lines headers=lines_headers label="Lineas" %}
 {% endblock %}

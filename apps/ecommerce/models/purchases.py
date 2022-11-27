@@ -49,7 +49,7 @@ class Purchase(BaseModel, PurchaseTransitions):
 
     def __str__(self):
         return (
-            f"{self.user.profile.__str__()} - {self.get_created_date} "
+            f"Compra de {self.user.profile.__str__()} - {self.get_created_date} "
             f"({self.get_state_display()})"
         )
 

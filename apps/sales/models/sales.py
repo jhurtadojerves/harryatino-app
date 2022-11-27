@@ -1,4 +1,6 @@
 """Model to Sales"""
+import datetime
+
 # Django
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -13,6 +15,7 @@ from tracing.models import BaseModel
 
 from apps.profiles.models import Profile
 from apps.sales.transitions import MultipleSateTransitions, SaleTransitions
+from config.fields import CustomURLField
 
 
 class Sale(BaseModel, SaleTransitions):
@@ -126,17 +129,23 @@ class Sale(BaseModel, SaleTransitions):
 class MultipleSale(BaseModel, MultipleSateTransitions):
     workflow = MultipleSateTransitions.workflow
 
-    date = models.DateField(verbose_name="Fecha")
-    vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
-    is_award = models.BooleanField(
-        verbose_name="Premio de Gala (sin importar stock)", default=False
-    )
+    date = models.DateField(verbose_name="Fecha", default=datetime.datetime.now)
     state = FSMIntegerField(
         choices=workflow.choices,
         default=workflow.DRAFT,
         protected=True,
         verbose_name="estado",
     )
+    legend = models.CharField(
+        max_length=128,
+        null=True,
+        blank=False,
+        default="las Compras realizadas en el Magic Mall",
+        help_text="Se le informa que {{ legend }} el {{ fecha }}",
+    )
+
+    html = models.TextField(null=True)
+    url = CustomURLField(null=True, verbose_name="Link de la bóveda")
 
     # Relations
     buyer = models.ForeignKey(
@@ -187,15 +196,6 @@ class MultipleSale(BaseModel, MultipleSateTransitions):
 
 
 class SaleMultipleSale(models.Model):
-    product = models.ForeignKey(
-        "products.Product", on_delete=models.CASCADE, verbose_name="Producto"
-    )
-    sale = models.ForeignKey(
-        MultipleSale,
-        on_delete=models.CASCADE,
-        verbose_name="Venta",
-        related_name="multiple_sales",
-    )
     available = models.BooleanField(
         default=True,
         verbose_name="Disponible?",
@@ -206,7 +206,22 @@ class SaleMultipleSale(models.Model):
         "Criaturas (Premios y/o Régimen Transitorio). "
         "Desmarcado = La criatura se encuentra en la reserva de animales<br>",
     )
+    is_award = models.BooleanField(
+        verbose_name="Premio de Gala (sin importar stock)", default=False
+    )
     quantity = models.PositiveIntegerField(verbose_name="Cantidad", default=1)
+    vip_sale = models.BooleanField(verbose_name="Compra con llaves HL", default=False)
+
+    # Relationships
+    product = models.ForeignKey(
+        "products.Product", on_delete=models.CASCADE, verbose_name="Producto"
+    )
+    sale = models.ForeignKey(
+        MultipleSale,
+        on_delete=models.CASCADE,
+        verbose_name="Venta",
+        related_name="multiple_sales",
+    )
 
     class Meta:
         unique_together = ("product", "sale")

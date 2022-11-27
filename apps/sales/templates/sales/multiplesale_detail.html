@@ -14,6 +14,8 @@
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Disponibilidad</th>
+                <th>Venta con llaves</th>
+                <th>Premio sin importar stock</th>
                 <th>Stock Actual</th>
               </tr>
               </thead>
@@ -23,6 +25,8 @@
                   <td>{{ sale.product }}</td>
                   <td>{{ sale.quantity }}</td>
                   <td>{{ sale.available|yesno:"✅,❌" }}</td>
+                  <td>{{ sale.vip_sale|yesno:"✅,❌" }}</td>
+                  <td>{{ sale.is_award|yesno:"✅,❌" }}</td>
                   <td>{{ sale.product.stock }}</td>
                 </tr>
               {% endfor %}
@@ -61,14 +65,13 @@
       </div>
 
     </div>
-    <div class="form-group">
+  {% endif %}
+  <div class="form-group">
       {% if render %}
-        {{ html }}
+        {{ object.html }}
       {% else %}
         <label for="exampleFormControlTextarea1">HTML para trastero</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">{{ html }}</textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">{{ object.html }}</textarea>
       {% endif %}
     </div>
-
-  {% endif %}
 {% endblock %}

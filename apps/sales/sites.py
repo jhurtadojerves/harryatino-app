@@ -42,7 +42,7 @@ class MultipleSaleSite(BaseSite):
     search_param = "profile__nick"
     inlines = {"lines": MultipleSaleFormset}
 
-    detail_fields = [["buyer", "profile"], ["date", "vip_sale", "is_award"]]
+    detail_fields = ["buyer", "profile"], ["date", "url"]
 
     detail_template_name = None
     form_template_name = None

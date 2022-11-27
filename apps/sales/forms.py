@@ -53,8 +53,7 @@ class MultipleSaleForm(ModelForm):
     class Meta:
         model = MultipleSale
         fieldsets = {
-            "Información de la Venta": ("date", "profile"),
-            "Información Adicional": ("vip_sale", "is_award"),
+            "Información de la Venta": ("date", "profile", "legend"),
         }
         widgets = {
             "profile": ModelSelect2Widget(
@@ -79,26 +78,32 @@ class SaleConsumableUsedForm(ModelForm):
         fields = ("consumable_comment", "consumable_url")
 
 
+class SaleMultipleSaleForm(ModelForm):
+    class Meta:
+        model = SaleMultipleSale
+        fieldsets = [("product", "quantity"), ("available", "is_award", "vip_sale")]
+        widgets = {
+            "product": ModelSelect2Widget(
+                model=Product,
+                search_fields=[
+                    "name__unaccent__icontains",
+                ],
+                max_results=10,
+                attrs={
+                    "class": "form-control form-control-sm",
+                    "data-placeholder": "Buscar Producto",
+                    "data-minimum-input-length": 0,
+                },
+            )
+        }
+
+
 MultipleSaleFormset = inlineformset_factory(
     MultipleSale,
     SaleMultipleSale,
-    fields=("product", "available", "quantity"),
-    extra=0,
+    form=SaleMultipleSaleForm,
+    extra=1,
     min_num=1,
     validate_min=1,
     can_delete=True,
-    widgets={
-        "product": ModelSelect2Widget(
-            model=Product,
-            search_fields=[
-                "name__unaccent__icontains",
-            ],
-            max_results=10,
-            attrs={
-                "class": "form-control form-control-sm",
-                "data-placeholder": "Buscar Producto",
-                "data-minimum-input-length": 2,
-            },
-        )
-    },
 )

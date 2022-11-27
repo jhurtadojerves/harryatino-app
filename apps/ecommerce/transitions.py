@@ -33,6 +33,7 @@ class PurchaseTransitions:
     )
     def confirm(self, **kwargs):
         profile = self.get_updated_profile()
+        return
         response, html = TopicAPIService.create_post(
             topic=settings.MAGIC_MALL_TOPIC,
             context={"purchase": self, "profile": profile},
@@ -158,7 +159,10 @@ class PurchaseTransitions:
                 )
 
         if self.get_number_of_consumables and profile.number_of_consumables >= 5:
-            raise WorkflowException("Has superado el límite de objetos consumibles")
+            raise WorkflowException(
+                f"Has superado el límite de objetos consumibles "
+                f"{profile.number_of_consumables}"
+            )
 
         book_sales = profile.books
 

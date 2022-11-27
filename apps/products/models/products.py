@@ -18,6 +18,9 @@ class Product(BaseModel):
 
     can_be_sold = models.BooleanField(default=False, verbose_name="¿Puede ser vendido?")
     cost = models.PositiveIntegerField(verbose_name="Precio")
+    keys_cost = models.PositiveIntegerField(
+        verbose_name="Precio en llaves HL", default=0
+    )
     description = models.TextField(verbose_name="Descripción")
     image = models.URLField(verbose_name="Imagen")
     initial_stock = models.PositiveIntegerField(verbose_name="Stock inicial", default=1)

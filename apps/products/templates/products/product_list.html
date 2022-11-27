@@ -1,6 +1,9 @@
 {% extends 'base/base_list.html' %}
 {% load static %}
 
+{% block title %}
+    Lista de Productos || {{ block.super }}
+{% endblock %}
 
 {% block list %}
     <div class="row mb-3">
