@@ -2,6 +2,7 @@
 
 # Third party integration
 import requests
+from django.conf import settings
 from django.template.loader import render_to_string
 from environs import Env
 from superadmin.templatetags.superadmin_utils import site_url
@@ -36,7 +37,7 @@ class LinkService:
     def get_resolved_short_url(cls, link):
         instance = cls.get_short_url(link)
         url = site_url(instance, "detail")
-        return f"https://magicmall.rol-hl.com{url}"
+        return f"{settings.SITE_URL.geturl()}{url}"
 
 
 class APIService:

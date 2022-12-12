@@ -15,3 +15,12 @@ class PaymentWorkflow(Workflow):
         CANCELED = 0, "Cancelado", dict(visible=False)
         CREATED = 1, "Creado"
         PAY = 2, "Pagado"
+
+
+class MonthlyPaymentWorkflow(Workflow):
+    class Choices(WorkflowChoices):
+        CANCELED = 0, "Cancelado", dict(visible=False)
+        CREATED = 1, "Creado"
+        CALCULATED = 2, "Calculado"
+        PAY = 3, "Pagado"
+        WITHOUT_PAY = 4, "Sin pago"

@@ -22,7 +22,7 @@ class ChangeStateView(View):
                 return self.error(message)
             transition = getattr(object, transition_name)
             if not has_transition_perm(transition, request.user):
-                return self.error("No tiene los permisos para realizar esta acción.")
+                return self.error("No tienes los permisos para realizar esta acción.")
             transition(**self.get_kwargs())
             object.save()
             return self.success("La acción ha sido realizada con éxito.")
@@ -51,9 +51,9 @@ class ChangeStateView(View):
         return object
 
     def success(self, message):
-        response = {"message": message}
+        response = {"message": message, "status_code": 200}
         return JsonResponse(response, status=200)
 
     def error(self, message):
-        response = {"error": message}
+        response = {"error": message, "status_code": 400}
         return JsonResponse(response, status=400)

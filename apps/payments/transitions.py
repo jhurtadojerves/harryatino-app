@@ -2,16 +2,17 @@
 
 from datetime import datetime
 
-from django_fsm import transition
+from django_fsm import RETURN_VALUE, transition
 from environs import Env
 
 # Services
-from apps.payments.service import BaseService
+from apps.payments.service import BaseService, MonthlyPaymentService
 
 # Local
 from apps.workflows.exceptions import WorkflowException
 
-from .workflows import PaymentWorkflow, PostWorkflow
+from ..utils.services import TopicAPIService
+from .workflows import MonthlyPaymentWorkflow, PaymentWorkflow, PostWorkflow
 
 env = Env()
 API_KEY = env("API_KEY")
@@ -156,3 +157,49 @@ class PaymentTransitions:
             100: "payments/posts/other_minus.html",
         }
         return templates.get(self.payment_type)
+
+
+class MonthlyPaymentTransitions:
+    workflow = MonthlyPaymentWorkflow()
+
+
+class MonthlyLineTransitions:
+    workflow = MonthlyPaymentWorkflow()
+
+    @transition(
+        field="state",
+        source=[workflow.CREATED],
+        target=RETURN_VALUE(workflow.PAY, workflow.WITHOUT_PAY),
+        permission="payments.create_payment_post",
+        custom=dict(verbose="Calcular", icon="fas fa-calculator"),
+    )
+    def to_pay(self, **kwargs):
+
+        if not self.month.post_url:
+            raise WorkflowException("Debes configurar la url de petición del descuento")
+
+        total, monthly, galleons = MonthlyPaymentService.calculate_member_posts(
+            self.month, self.work
+        )
+        MonthlyPaymentService.calculate_salary_scale(line=self, posts=total)
+        calculated_value = MonthlyPaymentService.calculate_payment(
+            line=self, posts=monthly, galleons=galleons
+        )
+
+        if calculated_value > 0:
+            response, html = TopicAPIService.create_post(
+                topic=self.work.wizard.vault_number,
+                context={
+                    "previous_galleons": galleons,
+                    "url": self.month.post_url,
+                    "reason": f"CMI {self.month.__str__()}",
+                    "galleons": calculated_value,
+                    "total_galleons": galleons + calculated_value,
+                },
+                template="payments/cmi.html",
+            )
+            self.paid_url = response["url"]
+
+            return self.workflow.PAY
+        else:
+            return self.workflow.WITHOUT_PAY

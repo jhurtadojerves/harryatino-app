@@ -11,6 +11,8 @@ from environs import Env
 # Third party integration
 from superadmin.templatetags.superadmin_utils import site_url
 
+from apps.utils.services import UserAPIService
+
 env = Env()
 API_KEY = env("API_KEY")
 API_KEY_GET = env("API_KEY")
@@ -27,8 +29,10 @@ class BaseService:
         results = json["results"]
         total_pages = int(json["totalPages"])
         print(f"{page} de {total_pages}")
-        if total_pages != page:
+
+        if total_pages != page and total_pages > 0:
             return results + cls.get_posts(authors, per_page, page=page + 1)
+
         return results
 
     @classmethod
@@ -53,7 +57,7 @@ class BaseService:
         return author_posts
 
 
-class ProfileService(BaseService):
+class MonthlyPaymentService(BaseService):
     @staticmethod
     def get_profiles_id(works):
         authors = list(works.values_list("wizard__forum_user_id", flat=True))
@@ -62,14 +66,17 @@ class ProfileService(BaseService):
         return authors
 
     @classmethod
-    def calculate_member_posts(cls, month, works):
+    def calculate_member_posts(cls, month, work):
 
-        authors = cls.get_profiles_id(works)
-        monthly_posts = get_profiles(authors)
-        total_posts = get_profiles(authors)
+        authors = f"{work.wizard.forum_user_id}"
+        monthly_posts = cls.get_profiles(authors)
+        total_posts = cls.get_profiles(authors)
         first_day = time.strptime(month.first_day(), "%Y-%m-%dT%H:%M:%SZ")
         last_day = time.strptime(month.last_day(), "%Y-%m-%dT%H:%M:%SZ")
         posts = BaseService.get_posts(authors=authors, per_page=1000)
+
+        author = {}
+
         for post in posts:
             author = post["author"]  # Get author object
             author_id = author["id"]  # Get author id
@@ -80,11 +87,63 @@ class ProfileService(BaseService):
             total_value = total_posts.get(f"{author_id}", list())
             total_value.append(post["date"])
             total_posts.update({f"{author_id}": total_value})
+
             if first_day <= python_post_date <= last_day:
                 monthly_value = monthly_posts.get(f"{author_id}", list())
                 monthly_value.append(post["date"])
                 monthly_posts.update({f"{author_id}": monthly_value})
-        return total_posts, monthly_posts
+
+        custom_fields = author.get("customFields", {})
+        data_raw = custom_fields.get("3", {}).get("fields", {})
+        galleons = data_raw.get("12", {}).get("value", 0)
+        galleons = int(galleons) if galleons else 0
+
+        return total_posts.get(authors, []), monthly_posts.get(authors, []), galleons
+
+    @classmethod
+    def calculate_payment(cls, line, posts, galleons):
+        work = line.work
+        profile = work.wizard
+        number_of_posts = len(posts)
+        profile.refresh_from_db()
+
+        calculated_value = 0
+
+        if number_of_posts >= 5:
+            calculated_value = profile.calculate_payment_value()
+            line.number_of_posts = number_of_posts
+            line.calculated_value = calculated_value
+
+        salary_scale = profile.salary_scale
+        accumulated_posts = profile.accumulated_posts
+        data = {
+            "customFields[74]": f"{salary_scale}",
+            "customFields[73]": f"{accumulated_posts}",
+            "customFields[31]": f"{number_of_posts}",
+            "customFields[12]": f"{galleons}",
+        }
+        UserAPIService.update_user_profile(profile.forum_user_id, data)
+
+        return calculated_value
+
+    @classmethod
+    def get_profiles(cls, authors):
+        authors = authors.split(",")
+        author_dictionary = {}
+
+        for author in authors:
+            author_dictionary.update({author: list()})
+
+        return author_dictionary
+
+    @classmethod
+    def calculate_salary_scale(cls, line, posts):
+        profile = line.work.wizard
+
+        if profile.accumulated_posts != len(posts):
+            profile.accumulated_posts = len(posts)
+            profile.salary_scale = profile.calculate_salary_scale()
+            profile.save(update_fields=["accumulated_posts", "salary_scale"])
 
 
 class PropertyService(BaseService):
@@ -142,14 +201,6 @@ class PropertyService(BaseService):
         if total_pages != page:
             return results + cls.get_posts(authors, per_page, page=page + 1)
         return results
-
-
-def get_profiles(authors):
-    authors = authors.split(",")
-    author_dictionary = {}
-    for author in authors:
-        author_dictionary.update({author: list()})
-    return author_dictionary
 
 
 class PaymentService:

@@ -4,7 +4,6 @@ from django.urls import path
 # Views
 from .views import (
     CalculatePaymentPropertyView,
-    CalculatePaymentView,
     CreatePaymentPropertyView,
     CreatePaymentView,
 )
@@ -12,11 +11,6 @@ from .views import (
 app_name = "payments"
 
 urlpatterns = [
-    path(
-        route="pagos/pagos-cmi/<int:pk>/calcular/",
-        view=CalculatePaymentView.as_view(),
-        name="calculate_cmi",
-    ),
     path(
         route="pagos/pagos-cmi/<int:pk>/pagar/",
         view=CreatePaymentView.as_view(),

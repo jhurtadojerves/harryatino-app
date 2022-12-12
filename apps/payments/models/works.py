@@ -7,6 +7,7 @@ from datetime import datetime
 
 # Django
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils import timezone
 
 # Third party integration
@@ -15,8 +16,16 @@ from django_fsm import FSMIntegerField
 # Models
 from tracing.models import BaseModel
 
+from config.fields import CustomURLField
+
+from ..signals import create_monthly_payment_lines
+
 # Transitions
-from ..transitions import PostTransitions
+from ..transitions import (
+    MonthlyLineTransitions,
+    MonthlyPaymentTransitions,
+    PostTransitions,
+)
 
 
 class Work(BaseModel):
@@ -44,12 +53,21 @@ class Work(BaseModel):
         ordering = ("wizard__forum_user_id",)
 
 
-class MonthPayment(BaseModel):
+class MonthPayment(BaseModel, MonthlyPaymentTransitions):
     """Model to define monthly payment"""
 
+    workflow = MonthlyPaymentTransitions.workflow
+
     month = models.DateField(verbose_name="Mes y año", default=timezone.now)
-    post_url = models.URLField(
+    post_url = CustomURLField(
         verbose_name="Link del pedido de pago", blank=True, null=True
+    )
+
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
     )
 
     def __str__(self):
@@ -72,9 +90,12 @@ class MonthPayment(BaseModel):
 
         verbose_name = "Pago CMI"
         verbose_name_plural = "Pagos CMI"
+        ordering = ("-pk",)
 
 
-class MonthPaymentLine(BaseModel):
+class MonthPaymentLine(BaseModel, MonthlyLineTransitions):
+    workflow = MonthlyPaymentTransitions.workflow
+
     work = models.ForeignKey(
         "payments.Work",
         verbose_name="Usuario",
@@ -93,9 +114,16 @@ class MonthPaymentLine(BaseModel):
     paid_url = models.URLField(
         verbose_name="Link del pago", editable=False, null=True, blank=True
     )
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
+    )
 
     class Meta:
         unique_together = ("work", "month")
+        ordering = ("state", "work__wizard__nick")
 
 
 class Post(BaseModel, PostTransitions):
@@ -126,3 +154,6 @@ class Post(BaseModel, PostTransitions):
     def __str__(self):
         locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
         return self.month.strftime("%B del %Y")
+
+
+post_save.connect(create_monthly_payment_lines, sender=MonthPayment)

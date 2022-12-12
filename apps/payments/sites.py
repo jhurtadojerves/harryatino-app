@@ -25,6 +25,7 @@ class WorkSite(BaseSite):
 class MonthPaymentSite(BaseSite):
     detail_fields = ("month",)
     detail_template_name = None
+    fields = ("month", "post_url")
 
 
 @register("payments.Post")

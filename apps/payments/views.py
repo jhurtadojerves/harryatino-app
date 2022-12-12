@@ -13,17 +13,15 @@ from superadmin.templatetags.superadmin_utils import site_url
 
 from apps.dynamicforms.views import API_KEY, UpdateProfileForm
 from apps.payments.models import (
-    MonthPayment,
     MonthPaymentLine,
     Post,
     PropertyPayment,
     PropertyPaymentLine,
-    Work,
 )
 from apps.properties.models import Property
 
 # Local
-from .service import BaseService, ProfileService, PropertyService
+from .service import BaseService, PropertyService
 
 
 class CalculatePaymentPropertyView(DetailView):
@@ -69,68 +67,6 @@ class GetPostPaymentView(DetailView):
         self.object.posts = BaseService.get_posts()
         self.object.save()
         return redirect(site_url(self.object, "detail"))
-
-
-class CalculatePaymentView(DetailView):
-    model = MonthPayment
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        works = Work.objects.filter(is_active=True)
-        total, monthly = ProfileService.calculate_member_posts(self.object, works)
-        for key, value in total.items():
-            work = works.filter(wizard__forum_user_id=key).get()
-            if work.wizard.accumulated_posts != len(value):
-                work.wizard.accumulated_posts = len(value)
-                work.wizard.salary_scale = work.wizard.calculate_salary_scale()
-                work.wizard.save()
-
-        for key, value in monthly.items():
-            work = works.filter(wizard__forum_user_id=key).get()
-            number_of_posts = len(value)
-            if number_of_posts >= 5:
-                calculated_value = work.wizard.calculate_payment_value()
-                MonthPaymentLine.objects.update_or_create(
-                    work=work,
-                    month=self.object,
-                    defaults={
-                        "number_of_posts": number_of_posts,
-                        "calculated_value": calculated_value,
-                    },
-                )
-            profile = work.wizard
-            salary_scale = profile.salary_scale
-            accumulated_posts = profile.accumulated_posts
-            data = self.get_payload(
-                {
-                    "customFields[74]": f"{salary_scale}",
-                    "customFields[73]": f"{accumulated_posts}",
-                    "customFields[31]": f"{number_of_posts}",
-                }
-            )
-            self.update_galleons_in_profile(
-                data,
-                profile.forum_user_id,
-                UpdateProfileForm.URL,
-            )
-        return redirect(site_url(self.object, "detail"))
-
-    @staticmethod
-    def update_galleons_in_profile(data, user_id, url):
-        url = f"{url}{user_id}?key={API_KEY}"
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded",
-        }
-        response = requests.request("POST", url, headers=headers, data=data)
-        return response.json()
-
-    @staticmethod
-    def get_payload(data):
-        payload = ""
-        for key, value in data.items():
-            payload += f"{key}={value}&"
-        payload = payload.encode("utf-8")
-        return payload
 
 
 class CreatePaymentView(DetailView):

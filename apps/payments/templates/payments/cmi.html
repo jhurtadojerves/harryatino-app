@@ -1,9 +1,11 @@
+{% load links %}
+
 <ul>
     <li>
         Saldo Anterior: {{ previous_galleons }} G
     </li>
     <li>
-        Pago por <strong><a href="{{ url }}">{{ reason }}</a>: {{ galleons }} G</strong>
+        Pago por <strong><a href="{% get_shortcut_url url %}">{{ reason }}</a>: {{ galleons }} G</strong>
     </li>
     <li>
         Saldo: {{ total_galleons }} G
