@@ -33,7 +33,7 @@ class PurchaseTransitions:
     )
     def confirm(self, **kwargs):
         profile = self.get_updated_profile()
-        return
+
         response, html = TopicAPIService.create_post(
             topic=settings.MAGIC_MALL_TOPIC,
             context={"purchase": self, "profile": profile},
