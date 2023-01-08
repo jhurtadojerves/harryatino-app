@@ -63,7 +63,7 @@
                 id="">
                 <h1 style="text-align: center;">Pagos de {{ object }}</h1>
                 <ul>
-        {% for line in object.lines.all %}
+        {% for line in object.lines_for_html %}
           <li>
           {{ line.work.wizard.nick }} | Bóveda <a
           href="https://harrylatino.org/index.php?showtopic={{ line.work.wizard.vault_number }}">#

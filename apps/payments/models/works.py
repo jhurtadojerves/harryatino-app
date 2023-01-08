@@ -85,6 +85,10 @@ class MonthPayment(BaseModel, MonthlyPaymentTransitions):
         first_day_date = datetime(self.month.year, self.month.month, 1)
         return first_day_date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    @property
+    def lines_for_html(self):
+        return self.lines.filter(state__in=[1, 3])
+
     class Meta(BaseModel.Meta):
         """Class Meta"""
 
