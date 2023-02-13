@@ -120,7 +120,7 @@ class MonthlyPaymentService(BaseService):
             "customFields[74]": f"{salary_scale}",
             "customFields[73]": f"{accumulated_posts}",
             "customFields[31]": f"{number_of_posts}",
-            "customFields[12]": f"{galleons}",
+            "customFields[12]": f"{galleons + calculated_value}",
         }
         UserAPIService.update_user_profile(profile.forum_user_id, data)
 
