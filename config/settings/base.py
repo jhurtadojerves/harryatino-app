@@ -1,5 +1,6 @@
 """Base settings to build other settings files upon."""
 
+import os
 from pathlib import Path
 
 from environs import Env
@@ -25,12 +26,12 @@ USE_TZ = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("PG_DB"),
-        "USER": env("PG_USER"),
-        "PASSWORD": env("PG_PASSWORD"),
-        "HOST": env("PG_HOST"),
-        "PORT": env("PG_PORT"),
-    },
+        "NAME": os.getenv("DATABASE_NAME", "app"),
+        "HOST": os.getenv("DATABASE_HOST", "db"),
+        "PORT": os.getenv("DATABASE_PORT", "5432"),
+        "USER": os.getenv("DATABASE_USER", "root"),
+        "PASSWORD": os.getenv("DATABASE_PASS", "root"),
+    }
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
