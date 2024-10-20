@@ -64,12 +64,14 @@
               {{ roll.result|safe }}
             </div>
           </div>
+          <hr class="my-5">
           {% empty %}
           <div class="text-center text-black-50 p-5">No se ha lanzado ningún dado</div>
         {% endfor %}
       </div>
       <div class="w-100"></div>
-      {% if request.user.is_authenticated %}
+
+      {% if request.user.is_authenticated and object.state == 1 %}
         <button type="button" class="btn btn-primary" id="diceDetailBtn">
           Lanzar dado predefinido
         </button>
@@ -150,7 +152,6 @@
   <script>
     let launcherCustom = document.getElementById("diceDetailCustomBtn")
     let launcher = document.getElementById("diceDetailBtn")
-
 
     launcherCustom.addEventListener("click", ev => {
       $('#customDice').modal('show')

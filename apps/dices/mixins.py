@@ -81,8 +81,11 @@ class TopicDetailMixin(FormView):
         modifier = request.POST.get("modifier", False)
         modifier_value = request.POST.get("modifier_value", 0)
         result_operation = request.POST.get("result_operation", False)
-
         default_dice = request.POST.get("dice", False)
+
+        if self.object.state != 1:
+            messages.error(request, "El topic no está habilitado para lanzar dados")
+            return redirect(site_url(self.object, "detail"))
 
         if default_dice:
             form = self.get_form(self.second_form_class)

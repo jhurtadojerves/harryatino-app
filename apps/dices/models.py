@@ -1,7 +1,10 @@
 from django.conf import settings
 from django.db import models
+from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
+from apps.dices.transitions import TopicTransitions
+from apps.dices.workflows import TopicWorkflow
 from apps.menu.utils import get_site_url
 from config.fields import CustomURLField
 
@@ -18,7 +21,8 @@ class Category(BaseModel):
         return self.name
 
 
-class Topic(BaseModel):
+class Topic(BaseModel, TopicTransitions):
+    workflow = TopicWorkflow()
     data = models.JSONField(default=dict)
     topic_id = models.PositiveIntegerField(unique=True)
 
@@ -38,9 +42,17 @@ class Topic(BaseModel):
         related_name="topics",
     )
 
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.OPEN,
+        protected=True,
+        verbose_name="estado",
+    )
+
     class Meta:
         verbose_name = "topic"
         verbose_name_plural = "topics para dados"
+        permissions = (("can_manage", "Can manage dices"),)
 
     def __str__(self):
         return self.data.get("title")

@@ -74,7 +74,7 @@ class ProductFormStaff(ProductForm):
     class Meta(ProductForm.Meta):
         fieldsets = (
             ("name", "reference", "stock"),
-            ("points", "cost"),
+            ("points", "cost", "keys_cost"),
             ("image", "uploaded_image"),
             (
                 "section",
