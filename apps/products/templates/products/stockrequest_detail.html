@@ -1,90 +1,34 @@
-{% extends "base/base_detail.html" %}
-{% load static %}
+{% extends "base/base_detail.html" %} {% load static %} 
 
-{% block detail %}
-    <div class="row" style="justify-content: center;">
-        <div class="col-sm-12">
-            <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
-                <div class="card-body">
-                    <p class="card-text text-justify">{{ object.name|safe }}</p>
-                    <p class="card-text text-justify"> Estado: {{ object.get_status_request_display }}
-                    </p>
-                    <p class="card-text text-justify">
-                        Solicitud:
-                        <a
-                                href="{{ object.forum_url }}"
-                                target="_blank"
-                        > Ver en el foro </a>
-                    </p>
-                    <p class="card-text text-justify">Solicitado por: {{ object.created_user }} a
-                        las {{ object.created_date }}</p>
-                    <p class="card-text text-justify">Última edición por: {{ object.modified_user }} a
-                        las {{ object.modified_date }}</p>
-                    {% if perms.products.can_approve and object.status_request == 0 %}
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong><i class="mdi mdi-alert-outline mr-2"></i> Instrucciones</strong>
-                            <p>
-                                Puedes aprobar o rechazar la solicitud, ninguna de las acciones se pueden revertir.
-                            </p>
-                            <p>
-                                Antes de aprobar la solicitud puedes editarla para quitar o añadir productos, o
-                                modificar el stock que se va a aumentar
-                            </p>
-                            <p>
-                                <a href="?status=approve"
-                                   type="button"
-                                   class="btn btn-success waves-light waves-effect">
-                                    <i class="bx bx-check-double font-size-16 align-middle mr-2"></i> Aprobar
-                                </a>
-                                <a href="?status=deny"
-                                   type="button"
-                                   class="btn btn-danger waves-light waves-effect">
-                                    <i class="bx bx-block font-size-16 align-middle mr-2"></i> Rechazar
-                                </a>
-                            </p>
-                        </div>
-                        <p class="card-text text-justify">
+{% block detail %} 
+{{ block.super }}
 
-                        </p>
-                    {% endif %}
-                    {% if request.user.is_superuser and object.status_request == 1 %}
-                        <a href="?status=cancel"
-                           type="button"
-                           class="btn btn-danger waves-light waves-effect">
-                            <i class="bx bx-block font-size-16 align-middle mr-2"></i> Cancelar
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="card p3 m-2 col">
-                <div class="card-body table-responsive">
-                    <table class="table mb-0">
-                        <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Categoría</th>
-                            <th>Stock Incial</th>
-                            <th>Stock Actual</th>
-                            <th>Stock a Aumentar</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for stock in object.product_requests.all %}
-                            <tr>
-                                <td>{{ stock.product }}</td>
-                                <td>{{ stock.product.category }}</td>
-                                <td>{{ stock.product.initial_stock }}</td>
-                                <td>{{ stock.product.check_stock }}</td>
-                                <td>{{ stock.requested_amount }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
+<div class="row" style="justify-content: center">
+  <div class="col-sm-12">
+    <div class="card p3 m-2 col">
+      <div class="card-body table-responsive">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Stock</th>
+              <th>Stock a Aumentar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in object.product_requests.all %}
+            <tr>
+              <td>{{ stock.product }}</td>
+              <td>{{ stock.product.category }}</td>
+              <td>{{ stock.current_stock }}</td>
+              <td>{{ stock.requested_amount }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}

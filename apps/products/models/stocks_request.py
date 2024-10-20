@@ -6,11 +6,22 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 # Models
+from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
+from apps.products.transitions import StockRequestTransitions
+from config.fields import CustomURLField
 
-class StockRequest(BaseModel):
+
+class StockRequest(BaseModel, StockRequestTransitions):
     """Stock request model."""
+    workflow = StockRequestTransitions.workflow
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
+    )
 
     class StatusRequest(models.IntegerChoices):
         CREATED = 0, "Creado"
@@ -18,7 +29,7 @@ class StockRequest(BaseModel):
         REJECTED = 2, "Rechazado"
 
     name = models.CharField(max_length=256, verbose_name="explicación corta del pedido")
-    forum_url = models.URLField(verbose_name="URL del post del foro")
+    forum_url = CustomURLField(verbose_name="URL del post del foro")
     products = models.ManyToManyField(
         "products.Product", through="StockProduct", verbose_name="productos"
     )
@@ -37,7 +48,6 @@ class StockRequest(BaseModel):
 
 class StockProduct(models.Model):
     """Custom model to stock request"""
-
     stock_request = models.ForeignKey(
         "products.StockRequest",
         on_delete=models.CASCADE,
@@ -55,4 +65,4 @@ class StockProduct(models.Model):
 
 @receiver(pre_save, sender=StockProduct)
 def update_current_stock(sender, instance: StockProduct, *args, **kwargs):
-    instance.current_stock = instance.product.stock
+    instance.current_stock = instance.product.available_stock

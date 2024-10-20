@@ -13,7 +13,6 @@ from .mixins import (
     ProductDetailMixin,
     ProductEditMixin,
     ProductListMixin,
-    StockRequestDetail,
     StockRequestFormMixin,
 )
 
@@ -48,11 +47,11 @@ class CategorySite(BaseSite):
 
 @register("products.StockRequest")
 class StockRequestSite(BaseSite):
-    detail_mixins = (StockRequestDetail,)
     form_mixins = (StockRequestFormMixin,)
     form_class = StockRequestForm
     inlines = {"lines": StockFormset}
 
+    detail_fields = ("forum_url",)
     list_fields = ("name", "status_request")
 
     detail_template_name = None

@@ -207,83 +207,18 @@ class ProductEditMixin:
             return self.staff_form
         return self.form_class
 
-
-class StockRequestDetail:
-    """Stock request Detail View"""
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        status = request.GET.get("status", False)
-        if not status:
-            return super().get(request, *args, **kwargs)
-        if (
-            status
-            and status == "cancel"
-            and request.user.is_superuser
-            and self.object.status_request == 1
-        ):
-            lines = self.object.product_requests.all()
-            updated_products = []
-
-            for line in lines:
-                line.product.stock -= line.requested_amount
-                updated_products.append(line.product)
-                self.object.status_request = 2
-                self.object.save()
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    "La operación fue cancelada",
-                )
-                status = False
-
-            Product.objects.bulk_update(updated_products, fields=("stock",))
-
-        if status and not request.user.has_perm("products.can_approve"):
-            messages.add_message(
-                request, messages.ERROR, "No tienes permisos para realizar esta acción"
-            )
-        elif not self.object.status_request == 0 and status:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                f"No se puede realizara acciones sobre solicitudes con estado "
-                f"{self.object.get_status_request_display()}",
-            )
-        elif status and status == "approve":
-            products = self.object.product_requests.all()
-            for product in products:
-                product.product.initial_stock += product.requested_amount
-                product.product.save()
-                self.object.status_request = 1
-                self.object.save()
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    "El stock de los productos fue actualizado",
-                )
-        elif status and status == "deny":
-            self.object.status_request = 2
-            self.object.save()
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                "Solicitud rechazada, no se modificó el stock",
-            )
-        return redirect(get_site_url(self.object, "detail"))
-
-
 class StockRequestFormMixin:
     """Stock request form view"""
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object_or_none()
-        if self.object and not self.object.status_request == 0:
+
+        if self.object and self.object.state != 1:
             messages.add_message(
                 request,
                 messages.ERROR,
-                f"No se puede editar solicitudes solicitudes con estado "
-                f"{self.object.get_status_request_display()}",
+                f"No se puede editar solicitudes con estado "
+                f"{self.object.get_state_display()}",
             )
             return redirect(get_site_url(self.object, "detail"))
         return super().get(request, *args, **kwargs)
