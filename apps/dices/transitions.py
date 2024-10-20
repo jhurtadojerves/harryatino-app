@@ -19,7 +19,6 @@ class TopicTransitions:
         permission="dices.can_manage",
         conditions=[
             PurchaseConditions.is_moderator,
-            PurchaseConditions.is_admin,
         ],
         custom=dict(verbose="Cerrar Topic"),
     )
@@ -35,7 +34,6 @@ class TopicTransitions:
         permission="dices.can_manage",
         conditions=[
             PurchaseConditions.is_moderator,
-            PurchaseConditions.is_admin,
         ],
         custom=dict(verbose="Abrir Topic"),
     )
