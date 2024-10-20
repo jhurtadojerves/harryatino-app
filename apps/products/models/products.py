@@ -68,7 +68,7 @@ class Product(BaseModel):
             return 0
 
         if category.startswith("X"):
-            categories = {"X": 0, "XX": 6, "XXX": 11, "XXXX": 21, "XXXXX": 41}
+            categories = {"X": 0, "XX": 5, "XXX": 10, "XXXX": 20, "XXXXX": 40}
             return categories.get(category, 0)
         else:
             level_book = self.level_book()
