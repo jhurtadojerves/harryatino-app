@@ -119,6 +119,25 @@ class DiceForm(ModelForm):
             "result_operation",
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        initial = kwargs.get("initial", {})
+        configuration = initial.get("configuration", {})
+
+        if self.instance and self.instance.pk:
+            configuration = self.instance.configuration
+
+        if configuration:
+            self.fields["sides"].initial = configuration.get("sides", 6)
+            self.fields["number"].initial = configuration.get("number", 1)
+            self.fields["modifier"].initial = configuration.get("modifier", "none")
+            self.fields["modifier_value"].initial = configuration.get(
+                "modifier_value", 1
+            )
+            self.fields["result_operation"].initial = configuration.get(
+                "result_operation", False
+            )
+
 
 class CustomDiceForm(ModelForm):
     dice = forms.ModelChoiceField(
