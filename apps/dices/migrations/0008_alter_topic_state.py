@@ -8,13 +8,18 @@ import django_fsm
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dices', '0007_alter_topic_options'),
+        ("dices", "0007_alter_topic_options"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='topic',
-            name='state',
-            field=django_fsm.FSMIntegerField(choices=[(0, 'Cerrado'), (1, 'Abierto')], default=apps.dices.workflows.TopicWorkflow.Choices['OPEN'], protected=True, verbose_name='estado'),
+            model_name="topic",
+            name="state",
+            field=django_fsm.FSMIntegerField(
+                choices=[(0, "Cerrado"), (1, "Abierto")],
+                default=apps.dices.workflows.TopicWorkflow.Choices["OPEN"],
+                protected=True,
+                verbose_name="estado",
+            ),
         ),
     ]

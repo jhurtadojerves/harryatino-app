@@ -28,13 +28,3 @@ class PurchaseConditions:
             return False
 
         return True
-
-    @classmethod
-    def is_admin(cls, instance):
-        information = TracingMiddleware.get_info()
-        user = information.get("user", False)
-
-        if not user:
-            return False
-
-        return user.is_superuser
