@@ -14,11 +14,8 @@ class TopicSite(BaseSite):
     list_mixins = (NotPermissionRequiredMixin,)
     detail_mixins = (NotPermissionRequiredMixin, TopicDetailMixin)
     form_mixins = (TopicFormMixin,)
-
     form_class = TopicForm
-
     detail_template_name = None
-
     menu_is_public = True
 
 

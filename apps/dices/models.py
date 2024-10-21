@@ -7,6 +7,7 @@ from apps.dices.transitions import TopicTransitions
 from apps.dices.workflows import TopicWorkflow
 from apps.menu.utils import get_site_url
 from config.fields import CustomURLField
+from config.middleware import GlobalRequestMiddleware
 
 
 class Category(BaseModel):
@@ -25,6 +26,12 @@ class Topic(BaseModel, TopicTransitions):
     workflow = TopicWorkflow()
     data = models.JSONField(default=dict)
     topic_id = models.PositiveIntegerField(unique=True)
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.OPEN,
+        protected=True,
+        verbose_name="estado",
+    )
 
     # Relations
     user = models.ForeignKey(
@@ -33,7 +40,6 @@ class Topic(BaseModel, TopicTransitions):
         on_delete=models.PROTECT,
         related_name="topics",
     )
-
     category = models.ForeignKey(
         to=Category,
         on_delete=models.SET_NULL,
@@ -41,13 +47,30 @@ class Topic(BaseModel, TopicTransitions):
         verbose_name="categoría",
         related_name="topics",
     )
-
-    state = FSMIntegerField(
-        choices=workflow.choices,
-        default=workflow.OPEN,
-        protected=True,
-        verbose_name="estado",
+    permissions = models.ManyToManyField(
+        to="authentication.User",
+        verbose_name="Usuarios habilitados",
+        null=True,
+        blank=True,
+        help_text="Si no seleccionas ningún usuarios, todos podrán lanzar dados",
     )
+
+    @property
+    def dice_is_available(self):
+        if self.state != self.workflow.OPEN.value:
+            return False
+
+        request = GlobalRequestMiddleware.get_global_request()
+
+        if not request.user.is_authenticated:
+            return False
+
+        permissions = self.permissions.all()
+
+        if permissions and not self.permissions.filter(id=request.user.id):
+            return False
+
+        return True
 
     class Meta:
         verbose_name = "topic"

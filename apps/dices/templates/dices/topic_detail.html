@@ -42,6 +42,7 @@
                   <div class="font-weight-bold text-muted">
                     <span class="label label-success label-dot mr-2"></span>
                     {{ roll.created_date|naturaltime }}
+                    <a href="{{roll.post_url}}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
                   </div>
                 </div>
                 <div class="d-flex flex-column">
@@ -71,7 +72,7 @@
       </div>
       <div class="w-100"></div>
 
-      {% if request.user.is_authenticated and object.state == 1 %}
+      {% if object.dice_is_available %}
         <button type="button" class="btn btn-primary" id="diceDetailBtn">
           Lanzar dado predefinido
         </button>

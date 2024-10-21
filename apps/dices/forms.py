@@ -1,7 +1,7 @@
 # Third party integration
 from django import forms
 from django_select2 import forms as s2forms
-from django_select2.forms import ModelSelect2Widget
+from django_select2.forms import ModelSelect2MultipleWidget, ModelSelect2Widget
 from superadmin.forms import ModelForm
 
 from apps.dices.models import Dice, Roll, Topic
@@ -68,14 +68,27 @@ class TopicForm(ModelForm):
     class Meta:
         model = Topic
         fieldsets = (
-            "topic_id",
-            "category",
+            (
+                "topic_id",
+                "category",
+            ),
+            "permissions",
         )
         widgets = {
             "category": ModelSelect2Widget(
                 model="dices.Category",
                 search_fields=[
                     "name__unaccent__icontains",
+                ],
+                max_results=20,
+                attrs={
+                    "data-minimum-input-length": 0,
+                },
+            ),
+            "permissions": ModelSelect2MultipleWidget(
+                model="authentication.User",
+                search_fields=[
+                    "profile__nick__unaccent__icontains",
                 ],
                 max_results=20,
                 attrs={
