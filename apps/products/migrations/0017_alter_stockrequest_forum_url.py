@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0016_stockrequest_state'),
+        ("products", "0016_stockrequest_state"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='stockrequest',
-            name='forum_url',
-            field=config.fields.CustomURLField(verbose_name='URL del post del foro'),
+            model_name="stockrequest",
+            name="forum_url",
+            field=config.fields.CustomURLField(verbose_name="URL del post del foro"),
         ),
     ]

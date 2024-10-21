@@ -15,6 +15,7 @@ from config.fields import CustomURLField
 
 class StockRequest(BaseModel, StockRequestTransitions):
     """Stock request model."""
+
     workflow = StockRequestTransitions.workflow
     state = FSMIntegerField(
         choices=workflow.choices,
@@ -44,10 +45,12 @@ class StockRequest(BaseModel, StockRequestTransitions):
         verbose_name = "Solicitud de Stock"
         verbose_name_plural = "Solicitudes de Stock"
         permissions = (("can_approve", "Can approve requests"),)
+        ordering = ("state", "-pk")
 
 
 class StockProduct(models.Model):
     """Custom model to stock request"""
+
     stock_request = models.ForeignKey(
         "products.StockRequest",
         on_delete=models.CASCADE,

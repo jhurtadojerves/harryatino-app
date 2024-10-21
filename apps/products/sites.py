@@ -52,7 +52,7 @@ class StockRequestSite(BaseSite):
     inlines = {"lines": StockFormset}
 
     detail_fields = ("forum_url",)
-    list_fields = ("name", "status_request")
+    list_fields = ("name", "state", "created_date", "created_user")
 
     detail_template_name = None
     form_template_name = None

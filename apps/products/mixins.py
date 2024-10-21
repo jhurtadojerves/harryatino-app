@@ -207,6 +207,7 @@ class ProductEditMixin:
             return self.staff_form
         return self.form_class
 
+
 class StockRequestFormMixin:
     """Stock request form view"""
 
