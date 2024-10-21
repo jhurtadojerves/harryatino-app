@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import FormView
 from superadmin.templatetags.superadmin_utils import site_url
@@ -21,7 +20,7 @@ class TopicFormMixin:
 
         self.object.save()
 
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
 
 class TopicDetailMixin(FormView):
@@ -76,16 +75,17 @@ class TopicDetailMixin(FormView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+
+        if not self.object.dice_is_available:
+            messages.error(request, "No tienes permisos para realizar esta acción 🥲")
+            return redirect(site_url(self.object, "detail"))
+
         sides = int(request.POST.get("sides", 0))
         number = int(request.POST.get("number", 0))
         modifier = request.POST.get("modifier", False)
         modifier_value = request.POST.get("modifier_value", 0)
         result_operation = request.POST.get("result_operation", False)
         default_dice = request.POST.get("dice", False)
-
-        if self.object.state != 1:
-            messages.error(request, "El topic no está habilitado para lanzar dados")
-            return redirect(site_url(self.object, "detail"))
 
         if default_dice:
             form = self.get_form(self.second_form_class)
@@ -103,10 +103,6 @@ class TopicDetailMixin(FormView):
         if not form.is_valid():
             messages.error(request, "No se pudo lanzar el dado, intentalo nuevamente")
             return self.form_invalid(form)
-
-        if not request.user.is_authenticated:
-            messages.error(request, "Para realizar esta acción debes iniciar sesión")
-            return redirect(site_url(self.object, "detail"))
 
         result = RollService.roll_dice(
             sides=sides,

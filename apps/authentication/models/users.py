@@ -28,6 +28,10 @@ class User(AbstractUser):
 
     def __str__(self):
         """Return username."""
+
+        if hasattr(self, "profile"):
+            return self.profile.nick
+
         return self.username
 
     def purchase(self):
