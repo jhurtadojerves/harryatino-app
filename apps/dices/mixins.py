@@ -44,7 +44,7 @@ class TopicDetailMixin(FormView):
                 "current_page": current_page,
                 "is_paginated": True,
                 "page": page,
-                "default_form": self.second_form_class,
+                "default_form": self.second_form_class(topic_id=self.object.id),
             }
         )
 

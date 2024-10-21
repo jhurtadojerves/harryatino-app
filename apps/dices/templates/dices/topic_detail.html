@@ -153,6 +153,8 @@
 {% block js %}
   {{ block.super }}
   <script>
+    document.getElementById("id_topic").value = "{{ object.id }}"
+
     try {
         let launcherCustom = document.getElementById("diceDetailCustomBtn")
         launcherCustom.addEventListener("click", ev => {

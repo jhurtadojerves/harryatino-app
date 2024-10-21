@@ -183,7 +183,21 @@ class CustomDiceForm(ModelForm):
         ),
         label="Dado",
     )
+    topic = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
         model = Roll
         fields = ["dice"]
+
+    def __init__(self, *args, **kwargs):
+        topic_id = kwargs.pop("topic_id", None)
+        super().__init__(*args, **kwargs)
+
+        if topic_id:
+            topic = Topic.objects.get(id=topic_id)
+            category = topic.category
+            self.fields["dice"].queryset = (
+                Dice.objects.filter(is_active=True, categories__id=category.id)
+                .order_by("name")
+                .distinct()
+            )
