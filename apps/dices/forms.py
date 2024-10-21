@@ -73,6 +73,7 @@ class TopicForm(ModelForm):
                 "category",
             ),
             "permissions",
+            "allow_custom",
         )
         widgets = {
             "category": ModelSelect2Widget(
@@ -120,7 +121,10 @@ class DiceForm(ModelForm):
     class Meta:
         model = Dice
         fieldsets = (
-            "name",
+            (
+                "name",
+                "categories",
+            ),
             (
                 "number",
                 "sides",
@@ -131,6 +135,18 @@ class DiceForm(ModelForm):
             ),
             "result_operation",
         )
+        widgets = {
+            "categories": ModelSelect2MultipleWidget(
+                model="dices.Category",
+                search_fields=[
+                    "name__unaccent__icontains",
+                ],
+                max_results=20,
+                attrs={
+                    "data-minimum-input-length": 0,
+                },
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

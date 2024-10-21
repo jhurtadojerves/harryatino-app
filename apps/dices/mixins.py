@@ -87,6 +87,12 @@ class TopicDetailMixin(FormView):
         result_operation = request.POST.get("result_operation", False)
         default_dice = request.POST.get("dice", False)
 
+        if not self.object.allow_custom and not default_dice:
+            messages.error(
+                request, "No se permite enviar dados personalizados en este topic"
+            )
+            return redirect(site_url(self.object, "detail"))
+
         if default_dice:
             form = self.get_form(self.second_form_class)
             dice = Dice.objects.get(id=default_dice)
@@ -144,4 +150,5 @@ class DiceMixin:
         configuration.pop("csrfmiddlewaretoken")
         self.object.configuration = configuration
         self.object.save()
-        return redirect(site_url(self.object, "detail"))
+
+        return super().form_valid(form)
