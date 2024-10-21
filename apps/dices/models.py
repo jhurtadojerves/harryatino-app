@@ -32,6 +32,9 @@ class Topic(BaseModel, TopicTransitions):
         protected=True,
         verbose_name="estado",
     )
+    allow_custom = models.BooleanField(
+        verbose_name="Permitir dados personalizados", default=True
+    )
 
     # Relations
     user = models.ForeignKey(
@@ -88,8 +91,13 @@ class Topic(BaseModel, TopicTransitions):
 
 
 class Dice(BaseModel):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, verbose_name="Nombre del dado")
     configuration = models.JSONField(default=dict, verbose_name="Configuración")
+    categories = models.ManyToManyField(
+        to=Category,
+        verbose_name="Categorias",
+        help_text="Selecciona una o más categorías para este dado",
+    )
 
     class Meta:
         verbose_name = "Dado predefinido"
@@ -109,6 +117,34 @@ class Dice(BaseModel):
         modifier_value = None if modifier_value == "" else int(modifier_value)
 
         return int(sides), int(number), modifier, result_operation, modifier_value
+
+    @property
+    def format_values(self):
+        configuration = self.configuration
+        modifier = (
+            "Ninguno"
+            if configuration.get("modifier", "Ninguno") == "none"
+            else configuration.get("modifier", "Ninguno")
+        )
+        return {
+            "Caras": self.configuration.get("sides", 0),
+            "Cantidad de datos": configuration.get("number", 0),
+            "Modificador": modifier,
+            "Valor a Modificar": self.configuration.get("modifier_value", 0),
+            "¿Sumar los resultados?": configuration.get("result_operation", "No"),
+        }
+
+    @property
+    def categories_string(self):
+        categories = self.categories.all()
+
+        if not categories:
+            return ""
+
+        categories_str = [category.name for category in categories]
+        print(categories_str)
+
+        return ", ".join(categories_str)
 
 
 class Roll(BaseModel):

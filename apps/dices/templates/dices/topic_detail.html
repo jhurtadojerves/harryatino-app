@@ -74,11 +74,13 @@
 
       {% if object.dice_is_available %}
         <button type="button" class="btn btn-primary" id="diceDetailBtn">
-          Lanzar dado predefinido
+          Lanzar dado
         </button>
-        <button type="button" class="btn btn-primary" id="diceDetailCustomBtn">
-          Lanzar dado personalizado
-        </button>
+            {% if object.allow_custom%}
+                <button type="button" class="btn btn-primary" id="diceDetailCustomBtn">
+                    Lanzar dado personalizado
+                </button>
+            {% endif %}
       {% endif %}
       <div class="w-100"></div>
       {% include "base/paginator.html" with page_obj=current_page %}
@@ -151,13 +153,15 @@
 {% block js %}
   {{ block.super }}
   <script>
-    let launcherCustom = document.getElementById("diceDetailCustomBtn")
+    try {
+        let launcherCustom = document.getElementById("diceDetailCustomBtn")
+        launcherCustom.addEventListener("click", ev => {
+            $('#customDice').modal('show')
+        })
+    }
+    catch{}
+
     let launcher = document.getElementById("diceDetailBtn")
-
-    launcherCustom.addEventListener("click", ev => {
-      $('#customDice').modal('show')
-    })
-
     launcher.addEventListener("click", ev => {
       $('#defaultDice').modal('show')
     })

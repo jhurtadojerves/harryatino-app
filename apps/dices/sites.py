@@ -29,3 +29,4 @@ class DiceSite(BaseSite):
     form_class = DiceForm
     form_mixins = [DiceMixin]
     detail_fields = ("name", "configuration")
+    detail_template_name = None

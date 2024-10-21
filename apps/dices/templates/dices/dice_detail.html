@@ -1,0 +1,25 @@
+{% extends 'base/base_detail.html' %} {% block detail %}
+{% load superadmin_utils static %}
+
+<fieldset>
+    <legend class="font-weight-bold">Configuración del Dado</legend>
+    <div class="separator separator-solid separator-border-2 separator-primary mb-10"></div>
+    <div class="row">
+        {% for key, value in object.format_values.items %}
+            <div class="col-md-6">
+                <div class="form-group">
+                    {% detail_widget key value widget as template %}
+                    {% include template with label=key value=value widget=widget %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Categorías</label>
+                <input class="form-control" type="text" value="{{object.categories_string}}" readonly>
+                <!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->
+            </div>
+        </div>
+    </div>
+  </fieldset>
+{% endblock %}
