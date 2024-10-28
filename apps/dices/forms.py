@@ -4,7 +4,7 @@ from django_select2 import forms as s2forms
 from django_select2.forms import ModelSelect2MultipleWidget, ModelSelect2Widget
 from superadmin.forms import ModelForm
 
-from apps.dices.models import Dice, Roll, Topic
+from apps.dices.models import Dice, Road, Roll, Topic
 
 
 class BaseRollDiceForm:
@@ -201,3 +201,17 @@ class CustomDiceForm(ModelForm):
                 .order_by("name")
                 .distinct()
             )
+
+
+class RoadForm(ModelForm):
+    class Meta:
+        model = Road
+        fields = ("message", "result")
+
+
+RoadsDiceFormset = forms.inlineformset_factory(
+    Dice,
+    Road,
+    form=RoadForm,
+    min_num=0,
+)

@@ -74,6 +74,7 @@ class TopicDetailMixin(FormView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        dice = None
         self.object = self.get_object()
 
         if not self.object.dice_is_available:
@@ -110,7 +111,7 @@ class TopicDetailMixin(FormView):
             messages.error(request, "No se pudo lanzar el dado, intentalo nuevamente")
             return self.form_invalid(form)
 
-        result = RollService.roll_dice(
+        result, numeric_result = RollService.roll_dice(
             sides=sides,
             number=number,
             modifier=modifier,
@@ -122,7 +123,18 @@ class TopicDetailMixin(FormView):
         roll.topic = self.object
         roll.user = request.user
         roll.result = result
+        roll.numeric_result = numeric_result
+
+        if dice:
+            roll.road_message = dice.get_road_message(
+                roll.numeric_result, roll.user.profile.clean_nick()
+            )
+
         roll.save()
+
+        message = ""
+        if roll.numeric_result is not None:
+            message = roll.road_message
 
         response, html = TopicAPIService.create_post(
             topic=self.object.topic_id,
@@ -130,6 +142,7 @@ class TopicDetailMixin(FormView):
                 "nick": roll.user.profile.clean_nick(),
                 "result": roll.result,
                 "url": f"{self.object.detail_url}?roll={roll.id}",
+                "message": message,
             },
             template="dices/posts/dice.html",
         )
