@@ -20,7 +20,7 @@ class RollService:
             "/": "/",
         }
         result = f"Lanzar {number} dados de {sides} caras"
-
+        inst_result = None
         dices = []
 
         for dice in range(0, number):
@@ -57,7 +57,10 @@ class RollService:
             )
             result += join_results
 
-        return result
+            if len(modifier_dices) == 1:
+                inst_result = int(modifier_dices[0])
+
+        return result, inst_result
 
     @classmethod
     def add(cls, first_number, second_number):

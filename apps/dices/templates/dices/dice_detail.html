@@ -1,6 +1,7 @@
-{% extends 'base/base_detail.html' %} {% block detail %}
+{% extends 'base/base_detail.html' %}
 {% load superadmin_utils static %}
 
+{% block detail %}
 <fieldset>
     <legend class="font-weight-bold">Configuración del Dado</legend>
     <div class="separator separator-solid separator-border-2 separator-primary mb-10"></div>
@@ -21,5 +22,30 @@
             </div>
         </div>
     </div>
+    <div class="row" style="justify-content: center">
+        <div class="col-sm-12">
+            <div class="card p3 m-2 col">
+            <div class="card-body table-responsive">
+                <table class="table mb-0">
+                <thead>
+                    <tr>
+                    <th>Resultado</th>
+                    <th>Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for road in object.roads.all %}
+                    <tr>
+                    <td>{{ road.result }}</td>
+                    <td>{{ road.message }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+    
   </fieldset>
 {% endblock %}

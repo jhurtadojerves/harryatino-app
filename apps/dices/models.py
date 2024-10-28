@@ -146,6 +146,19 @@ class Dice(BaseModel):
 
         return ", ".join(categories_str)
 
+    def get_road_message(self, numeric_result, username=""):
+        road = self.roads.filter(result=numeric_result)
+
+        if not road.exists():
+            return
+
+        message = road.first().message
+        message = message.replace("{{username}}", username).replace(
+            "{{result}}", str(numeric_result)
+        )
+
+        return message
+
 
 class Roll(BaseModel):
     result = models.TextField(verbose_name="resultado")
@@ -153,6 +166,7 @@ class Roll(BaseModel):
         to=Topic, verbose_name="topic", on_delete=models.CASCADE, related_name="rolls"
     )
     post_url = CustomURLField(verbose_name="Posteo en el foro", null=True)
+    numeric_result = models.IntegerField(null=True)
 
     # Relations
     user = models.ForeignKey(
@@ -161,6 +175,25 @@ class Roll(BaseModel):
         on_delete=models.PROTECT,
         related_name="rolls",
     )
+    road_message = models.TextField(null=True)
 
     class Meta:
         ordering = ["created_date"]
+
+
+class Road(models.Model):
+    message = models.CharField(
+        max_length=128,
+        help_text="Puedes utilizar las siguientes variables: {{result}}, {{username}}",
+        verbose_name="Mensaje",
+    )
+
+    dice = models.ForeignKey(
+        Dice, verbose_name="dado", on_delete=models.CASCADE, related_name="roads"
+    )
+
+    result = models.IntegerField(verbose_name="Resultado")
+
+    class Meta:
+        ordering = ["result"]
+        unique_together = ["dice", "result"]

@@ -3,4 +3,8 @@
   <br /><br />
   <b>{{ nick }}</b> realizó la siguiente acción: <br /><br />
   {{ result|safe }}
+
+  <br /> <br />
+  {{ message|default_if_none:""}}
+
 </p>

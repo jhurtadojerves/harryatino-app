@@ -9,7 +9,12 @@ from config.base import BaseSite
 from .forms import AccessTokenForm, UserForm
 
 # Local
-from .mixins import AccessTokenCreateMixin, UserListMixin, UserProfileMixin
+from .mixins import (
+    AccessTokenCreateMixin,
+    AccessTokenListMixin,
+    UserListMixin,
+    UserProfileMixin,
+)
 
 
 @register("authentication.User")
@@ -39,5 +44,6 @@ class UserProfileSite(UserSite):
 class AccessTokenSite(BaseSite):
     form_class = AccessTokenForm
     form_mixins = (AccessTokenCreateMixin,)
+    list_mixins = (AccessTokenListMixin,)
     detail_fields = ("user:Usuario",)
     allow_views = ("create", "list", "detail", "delete")

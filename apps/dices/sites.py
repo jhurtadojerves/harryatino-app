@@ -1,7 +1,7 @@
 # Third party integration
 from superadmin.decorators import register
 
-from apps.dices.forms import DiceForm, TopicForm
+from apps.dices.forms import DiceForm, RoadsDiceFormset, TopicForm
 from apps.dices.mixins import DiceMixin, TopicDetailMixin, TopicFormMixin
 
 # Base
@@ -30,3 +30,9 @@ class DiceSite(BaseSite):
     form_mixins = [DiceMixin]
     detail_fields = ("name", "configuration")
     detail_template_name = None
+    inlines = (RoadsDiceFormset,)
+
+
+@register("dices.Road")
+class RoadSite(BaseSite):
+    pass

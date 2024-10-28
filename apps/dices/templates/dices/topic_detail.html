@@ -63,6 +63,8 @@
             </div>
             <div class="card-spacer-x py-7 toggle-off-item text-justify">
               {{ roll.result|safe }}
+              <br><br>
+              {{roll.road_message|default_if_none:"" }}
             </div>
           </div>
           <hr class="my-5">
