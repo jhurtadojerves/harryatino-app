@@ -29,3 +29,5 @@ CACHES = {
 TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG  # NOQA
 
 INSTALLED_APPS += ["django_extensions"]  # noqa F405
+
+MOCK_CREATE_POST = True

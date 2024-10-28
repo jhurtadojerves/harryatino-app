@@ -156,7 +156,13 @@ class TopicAPIService(APIService):
     def create_post(cls, topic, context, template, author=121976):
         html = render_to_string(context=context, template_name=template)
         payload = cls.get_payload({"topic": topic, "author": author, "post": html})
-        data = cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
+
+        if settings.MOCK_CREATE_POST:
+            data = {
+                "url": "https://www.harrylatino.org/forums/topic/119285-pruebas-generales/?do=findComment&comment=5517357"
+            }
+        else:
+            data = cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
 
         return data, html
 
