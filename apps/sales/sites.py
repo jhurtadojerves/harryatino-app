@@ -1,4 +1,5 @@
 """Sales sites"""
+
 # Third party integration
 from superadmin.decorators import register
 

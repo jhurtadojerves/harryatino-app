@@ -1,4 +1,5 @@
 """Base model to properties"""
+
 # Django
 # Third Party Integration Models
 from ckeditor.fields import RichTextField

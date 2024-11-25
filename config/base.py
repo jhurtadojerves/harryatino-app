@@ -1,4 +1,5 @@
 """Base site for site models """
+
 from superadmin import ModelSite
 
 

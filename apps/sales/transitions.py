@@ -1,6 +1,5 @@
 """Transitions for Sales"""
 
-
 from django_fsm import transition
 
 from apps.sales.workflows import MultipleSaleWorkflow, SaleWorkflow

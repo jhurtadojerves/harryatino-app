@@ -1,4 +1,5 @@
 """Mixins for work site"""
+
 # Django
 from django.db.models import Q
 
@@ -26,6 +27,6 @@ class PaymentListMixin(FilterByChoice):
         choice_param = self.request.GET.get("choice_param", None)
         if choice_param:
             search_choice = self.get_search_selected_choice(choice_param)
-            if type(search_choice) == int:
+            if type(search_choice) == int:  # noqa: E721
                 queryset = queryset.filter(payment_type=search_choice)
         return queryset

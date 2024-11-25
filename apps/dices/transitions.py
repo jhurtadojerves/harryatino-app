@@ -1,6 +1,5 @@
 """Transitions for Sales"""
 
-
 from django_fsm import transition
 
 from apps.dices.workflows import TopicWorkflow

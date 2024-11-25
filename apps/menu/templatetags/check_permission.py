@@ -1,4 +1,5 @@
 """Sim templatetags"""
+
 # Django
 from django import template
 from django.db.models import Sum

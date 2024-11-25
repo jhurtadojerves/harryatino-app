@@ -1,4 +1,5 @@
 """Model to Sales"""
+
 import datetime
 
 # Django

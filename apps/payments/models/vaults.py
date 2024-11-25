@@ -1,4 +1,5 @@
 """Model to vaults"""
+
 # Django
 from django.db import models
 

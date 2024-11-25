@@ -18,7 +18,7 @@ class PurchaseListMixin(FilterByChoice):
 
         if choice_param:
             search_choice = self.get_search_selected_choice(choice_param)
-            if type(search_choice) == int:
+            if type(search_choice) == int:  # noqa: E721
                 queryset = queryset.filter(state=search_choice)
 
         return queryset

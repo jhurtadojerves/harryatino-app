@@ -1,4 +1,5 @@
 """Model to schools payments"""
+
 # Django
 from django.db import models
 

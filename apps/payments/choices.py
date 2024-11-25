@@ -1,4 +1,5 @@
 """Choices for payments model"""
+
 from django.db import models
 
 
