@@ -77,6 +77,7 @@ LOCAL_APPS = [
     "apps.dynamicforms",
     "apps.ecommerce",
     "apps.insoles",
+    "apps.management",
     "apps.members",
     "apps.menu",
     "apps.pages",

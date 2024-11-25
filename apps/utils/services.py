@@ -13,6 +13,7 @@ from apps.utils.models import Link
 env = Env()
 API_KEY = env("API_KEY")
 API_KEY_MP = env("API_KEY_MP")
+API_KEY_GET = env("API_KEY")
 PERSONAL_MESSAGE_API_URL = "https://www.harrylatino.org/api/core/messages"
 # params:
 """
@@ -146,6 +147,18 @@ class UserAPIService(APIService):
     @classmethod
     def get_for_key(cls, data, key):
         return data.get(f"customFields[{key}]", "")
+
+    @classmethod
+    def get_multiple_users(cls, timestamp, per_page=1000):
+        url = (
+            f"{cls.USER_API_URL}?key={API_KEY_GET}&perPage={per_page}"
+            f"&activity_after={timestamp}"
+        )
+        # &group=126 this key can be used to filter by id group
+        response = requests.request("GET", url, headers={}, data={})
+        json = response.json()
+
+        return json["results"]
 
 
 class TopicAPIService(APIService):
