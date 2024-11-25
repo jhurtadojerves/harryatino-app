@@ -1,4 +1,5 @@
 """Transitions for Sales"""
+
 # Third party integration
 from django_fsm import transition
 

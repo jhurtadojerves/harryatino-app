@@ -1,6 +1,5 @@
 """Define mixins to profile"""
 
-
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify

@@ -1,4 +1,5 @@
 """Profile admin."""
+
 from django.contrib import admin
 
 # Third party integration

@@ -1,4 +1,5 @@
 """Mixin for products"""
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect

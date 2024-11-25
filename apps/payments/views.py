@@ -1,6 +1,5 @@
 """Define views urls"""
 
-
 # Third party integration
 import requests
 from django.http import JsonResponse
