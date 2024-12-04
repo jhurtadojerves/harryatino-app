@@ -7,7 +7,7 @@ class PurchaseConditions:
         information = TracingMiddleware.get_info()
         user = information.get("user", False)
 
-        if not user:
+        if not user or not user.is_authenticated:
             return False
 
         return instance.user == user
@@ -21,7 +21,7 @@ class PurchaseConditions:
         information = TracingMiddleware.get_info()
         user = information.get("user", False)
 
-        if not user:
+        if not user or not user.is_authenticated:
             return False
 
         if not user.is_moderator and not user.is_superuser:
