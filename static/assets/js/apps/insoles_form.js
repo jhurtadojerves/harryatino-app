@@ -124,6 +124,21 @@ let handleSubmitForm = async (ev, saveForm) => {
 let insoles_form = () => {
   let saveForm = document.getElementById("insoles-instance-form")
   saveForm.addEventListener("submit", async (ev) => {
+    try{
+        let submitButton = document.getElementById("preventSubmit");
+        if (submitButton.disabled) {
+            ev.preventDefault();
+            return;
+        }
+        submitButton.disabled = true;
+        setTimeout(() => {
+            submitButton.disabled = false;
+        }, 5000);
+    }
+    catch (error) {
+        console.log(error)
+    }
+
     ev.preventDefault()
     await handleSubmitForm(ev, saveForm)
   })
