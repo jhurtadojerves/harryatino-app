@@ -105,7 +105,7 @@ class TopicDetailMixin(FormView):
                 modifier_value,
             ) = dice.get_values()
 
-            if not dice.categories.filter(id=self.object.category).exists():
+            if not dice.categories.filter(id=self.object.category.id).exists():
                 messages.error(
                     request,
                     "Por favor actualiza la página y vuelve a lanzar",
