@@ -1,5 +1,9 @@
+import operator
+from functools import reduce
+
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.views.generic import FormView
 from superadmin.templatetags.superadmin_utils import site_url
@@ -174,3 +178,36 @@ class DiceMixin:
         self.object.save()
 
         return super().form_valid(form)
+
+
+class TopicListMixin:
+    def get_queryset(self):
+        search_params_config = (
+            "data__title__icontains",
+            "data__author__name__icontains",
+            "topic_id__icontains",
+        )
+        queryset = super().get_queryset().order_by("-state", "created_date")
+        search_params = self.request.GET
+
+        if search_params:
+            params = search_params.dict()
+            search = params.pop("search", None)
+            params.pop("page", None)
+            params.pop("paginate_by", None)
+            search = (
+                (search.replace("+", ",").replace(";", ",")).split(",")
+                if search
+                else None
+            )
+
+            if search:
+                for search_value in search:
+                    filters = {
+                        key: search_value.strip() for key in search_params_config
+                    }
+                    params.update(**filters)
+                    args = [Q(**{key: value}) for key, value in filters.items()]
+                    queryset = queryset.filter(reduce(operator.__or__, args))
+
+        return queryset
