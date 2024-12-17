@@ -3,7 +3,7 @@
 # Django
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import F, Q
+from django.db.models import Exists, F, OuterRef, Q
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.text import slugify
@@ -12,6 +12,7 @@ from apps.menu.utils import get_site_url
 
 # Local
 from apps.products.models import Category, Product, Section
+from apps.sales.models.sales import Sale
 
 from .forms import ProductFormStaff
 
@@ -115,12 +116,25 @@ class ProductListMixin:
                 stock_available__gte=to_stock, stock_available__lte=from_stock
             )
 
-        return queryset.order_by(
+        queryset = queryset.order_by(
             "-can_be_sold",
             "category__id",
             "-stock_available",
             "name",
         )
+
+        user = self.request.user
+
+        try:
+            if user.is_authenticated:
+                sale_exists = Sale.objects.filter(
+                    profile=user.profile, product=OuterRef("pk")
+                )
+                queryset = queryset.annotate(user_has_product=Exists(sale_exists))
+        except Exception:
+            pass
+
+        return queryset
 
 
 class ProductDetailMixin:
@@ -143,6 +157,16 @@ class ProductDetailMixin:
         queryset = self.get_queryset()
         slug = self.kwargs.get(self.slug_url_kwarg)
         queryset = queryset.filter(reference=slug.upper())
+        user = self.request.user
+
+        try:
+            if user.is_authenticated:
+                sale_exists = Sale.objects.filter(
+                    profile=user.profile, product=OuterRef("pk")
+                )
+                queryset = queryset.annotate(user_has_product=Exists(sale_exists))
+        except Exception:
+            pass
         try:
             obj = queryset.get()
         except queryset.model.DoesNotExist:
@@ -193,6 +217,7 @@ class ProductEditMixin:
         queryset = self.get_queryset()
         slug = self.kwargs.get(self.slug_url_kwarg)
         queryset = queryset.filter(reference=slug.upper())
+
         try:
             obj = queryset.get()
         except queryset.model.DoesNotExist:
