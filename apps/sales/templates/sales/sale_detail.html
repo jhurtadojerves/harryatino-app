@@ -39,13 +39,20 @@
       <div class="card col p-3 m-2" style="max-height: 500px; overflow-y:scroll;">
         <div class="card-body">
           <p class="card-text text-justify">{{ sale.product.description|safe }}</p>
-          {% if request.user.is_authenticated and sale.state == 2 %}
+          {% if sale.state == 2 %}
             <p class="mt-5">
               {% if sale.payment %}
-                <a class="btn btn-primary" type="button"
-                   href="{% site_url sale.payment 'detail' %}">
-                  Ver Pago
-                </a>
+                {% if perms.payments.view_payment %}
+                    <a class="btn btn-primary" type="button"
+                    href="{% site_url sale.payment 'detail' %}">
+                    Ver Pago
+                    </a>
+                {% else %}
+                    <a class="btn btn-primary" type="button"
+                    href="{{sale.payment.url}}">
+                    Ver Pago
+                    </a>
+                {% endif %}
               {% else %}
                 <span style="font-weight: bold;">Pago realizado sin utilizar el sistema de Pagos Automáticos</span>
               {% endif %}

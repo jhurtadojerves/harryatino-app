@@ -92,6 +92,13 @@ class Boxroom(BaseModel):
     def get_books_index(self):
         return self.profile.sales.filter(product__category__name="LH").order_by("date")
 
+    def get_consumables_index(self):
+        return (
+            self.profile.sales.filter(product__category__name="CS", available=True)
+            .order_by("date")
+            .distinct()
+        )
+
     def get_consumables_list(self):
         return (
             self.profile.sales.filter(product__category__name="CS", available=True)
