@@ -1,4 +1,5 @@
 {% load superadmin_utils checkout %}
+
 {% if object_list %}
     <div class="row row-cards" style="margin: auto auto;align-items: center; justify-content: center;">
         {% for object in object_list %}
@@ -19,6 +20,7 @@
                             <small class="d-block text-muted">Sección: {{ object.category.section }}</small>
                             <small class="d-block text-muted">Categoría: {{ object.category.name }}</small>
                             <small class="d-block text-muted" id="stock-{{ object.reference }}">Stock Disponible: {{ object.available_stock }}</small>
+                            <small class="d-block text-muted">{% if object.user_has_product %}Tienes este producto {% else %} No tienes este producto {% endif %}</small>
                             {% if not object.can_be_sold %}
                                 <small class="d-block text-muted" style="color: red !important; font-weight: bold;">EL
                                     PRODUCTO NO

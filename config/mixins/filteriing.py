@@ -57,12 +57,15 @@ class FilterByChoice:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         choice_param = self.request.GET.get("choice_param", None)
+        search = self.request.GET.get("search", "")
+
         random_labels = ["info", "warning"]
         context.update(
             {
                 "search_choices": self.get_search_choices(),
                 "choice_param": choice_param,
                 "random_labels": random_labels,
+                "search": search,
             }
         )
 

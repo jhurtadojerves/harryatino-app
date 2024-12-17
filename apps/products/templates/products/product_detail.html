@@ -34,6 +34,7 @@
                             <p class="card-text"><strong>Referencia: </strong>{{ object.reference }}</p>
                             <p class="card-text"><strong>Stock: </strong>{{ object.available_stock }}</p>
                             <p class="card-text"><strong>Ventas: </strong>{{ object.number_of_sales }}</p>
+                            <p class="card-text">{% if object.user_has_product %}Tienes este producto {% else %} No tienes este producto {% endif %}</p>
                             {% if object.category.name == "LH" %}
                                 <p class="card-text"><strong>Nivel del Libro: </strong>{{ object.level_book }}</p>
                             {% endif %}
