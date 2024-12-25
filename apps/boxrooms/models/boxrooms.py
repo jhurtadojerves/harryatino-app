@@ -2,6 +2,8 @@
 
 # Django
 # Third Party Integration Models
+from collections import Counter
+
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.urls import reverse
@@ -93,11 +95,13 @@ class Boxroom(BaseModel):
         return self.profile.sales.filter(product__category__name="LH").order_by("date")
 
     def get_consumables_index(self):
-        return (
+        sales = (
             self.profile.sales.filter(product__category__name="CS", available=True)
             .order_by("date")
             .distinct()
         )
+
+        return Counter([sale.product for sale in sales]).items()
 
     def get_consumables_list(self):
         return (
