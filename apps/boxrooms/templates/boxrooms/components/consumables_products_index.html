@@ -1,7 +1,6 @@
-{% regroup products_list by product as regroup_products %}
 <div class="col-12 mb-4">
 
-{% for group in regroup_products %}
-        <li>{{ group.grouper }} ({{ group.list|length }})</li>
+{% for product, count in products_list %}
+        <li>{{ product }} ({{ count }})</li>
 {% endfor %}
 </div>
