@@ -11,9 +11,7 @@ class TopicTransitions:
 
     @transition(
         field="state",
-        source=[
-            workflow.OPEN,
-        ],
+        source=[workflow.OPEN, workflow.HIDDEN],
         target=workflow.CLOSED,
         permission="dices.can_manage",
         conditions=[
@@ -27,8 +25,21 @@ class TopicTransitions:
     @transition(
         field="state",
         source=[
-            workflow.CLOSED,
+            workflow.OPEN,
         ],
+        target=workflow.HIDDEN,
+        permission="dices.can_manage",
+        conditions=[
+            PurchaseConditions.is_moderator,
+        ],
+        custom=dict(verbose="Ocultar Topic"),
+    )
+    def hide(self, **kwargs):
+        pass
+
+    @transition(
+        field="state",
+        source=[workflow.CLOSED],
         target=workflow.OPEN,
         permission="dices.can_manage",
         conditions=[
@@ -37,4 +48,17 @@ class TopicTransitions:
         custom=dict(verbose="Abrir Topic"),
     )
     def open(self, **kwargs):
+        pass
+
+    @transition(
+        field="state",
+        source=[workflow.HIDDEN],
+        target=workflow.OPEN,
+        permission="dices.can_manage",
+        conditions=[
+            PurchaseConditions.is_moderator,
+        ],
+        custom=dict(verbose="Mostrar Topic"),
+    )
+    def show(self, **kwargs):
         pass

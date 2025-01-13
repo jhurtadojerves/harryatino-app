@@ -2,6 +2,7 @@ import operator
 from functools import reduce
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -11,6 +12,7 @@ from superadmin.templatetags.superadmin_utils import site_url
 from apps.dices.forms import CustomDiceForm, RollForm
 from apps.dices.models import Dice
 from apps.dices.services import RollService
+from apps.dices.workflows import TopicWorkflow
 from apps.utils.services import TopicAPIService
 
 
@@ -168,6 +170,19 @@ class TopicDetailMixin(FormView):
 
         return redirect(full_url)
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = request.user
+
+        if (
+            not user
+            or not user.is_authenticated
+            or not self.request.user.has_perm("dices.can_show_hidden")
+        ):
+            raise PermissionDenied("No tienes permiso para ver este topics ocultos")
+
+        return super().dispatch(request, *args, **kwargs)
+
 
 class DiceMixin:
     def form_valid(self, form):
@@ -182,6 +197,7 @@ class DiceMixin:
 
 class TopicListMixin:
     def get_queryset(self):
+        user = self.request.user
         search_params_config = (
             "data__title__icontains",
             "data__author__name__icontains",
@@ -209,5 +225,12 @@ class TopicListMixin:
                     params.update(**filters)
                     args = [Q(**{key: value}) for key, value in filters.items()]
                     queryset = queryset.filter(reduce(operator.__or__, args))
+
+        if (
+            not user
+            or not user.is_authenticated
+            or not self.request.user.has_perm("dices.can_show_hidden")
+        ):
+            queryset = queryset.exclude(state=TopicWorkflow.Choices.HIDDEN)
 
         return queryset
