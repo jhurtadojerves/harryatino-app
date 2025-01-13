@@ -178,7 +178,7 @@ class TopicDetailMixin(FormView):
             not user
             or not user.is_authenticated
             or not self.request.user.has_perm("dices.can_show_hidden")
-        ) and self.state == self.workflow.HIDDEN.value:
+        ) and self.object.state == self.object.workflow.HIDDEN.value:
             raise PermissionDenied("No tienes permiso para ver este topics ocultos")
 
         return super().dispatch(request, *args, **kwargs)
