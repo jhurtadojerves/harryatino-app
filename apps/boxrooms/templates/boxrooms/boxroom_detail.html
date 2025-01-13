@@ -109,6 +109,10 @@
                     {% include "boxrooms/components/old_format/books_index.html" with products_list=object.get_consumables_index %}
                 {% endif %}
             </div>
+            <h2><strong>Especiales</strong></h2>
+            <div class="row mb-0">
+                {% include "boxrooms/components/consumables_products_index.html" with products_list=object.get_especial_consumables_index %}
+            </div>
 
           </div>
           <div class="tab-pane" id="objetos" role="tabpanel">

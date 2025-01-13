@@ -103,6 +103,15 @@ class Boxroom(BaseModel):
 
         return Counter([sale.product for sale in sales]).items()
 
+    def get_especial_consumables_index(self):
+        sales = (
+            self.profile.sales.filter(product__category__name="LLAVES", available=True)
+            .order_by("date")
+            .distinct()
+        )
+
+        return Counter([sale.product for sale in sales]).items()
+
     def get_consumables_list(self):
         return (
             self.profile.sales.filter(product__category__name="CS", available=True)
