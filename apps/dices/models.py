@@ -60,7 +60,7 @@ class Topic(BaseModel, TopicTransitions):
 
     @property
     def dice_is_available(self):
-        if self.state != self.workflow.OPEN.value:
+        if self.state not in (self.workflow.OPEN.value, self.workflow.HIDDEN.value):
             return False
 
         request = GlobalRequestMiddleware.get_global_request()
@@ -78,7 +78,10 @@ class Topic(BaseModel, TopicTransitions):
     class Meta:
         verbose_name = "topic"
         verbose_name_plural = "topics para dados"
-        permissions = (("can_manage", "Can manage dices"),)
+        permissions = (
+            ("can_manage", "Can manage dices"),
+            ("can_show_hidden", "Can show hidden"),
+        )
 
     def __str__(self):
         return self.data.get("title")
