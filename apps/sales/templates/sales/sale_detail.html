@@ -60,12 +60,13 @@
           {% endif %}
         </div>
       </div>
-      {% if request.user.is_authenticated and sale.product.category.name == "CS" and sale.available %}
+      {% if request.user.is_authenticated and sale.available and sale.is_consumable %}
         <div class="w-100">
           <a href="#"
              type="button"
              class="btn btn-light-primary font-weight-bolder mr-2 mb-2 form-instance-insoles"
              data-url="{% url 'sales_sale_consumable_form' object.pk %}"
+             data-title="Marcar como utilizado"
           >
             <i class="fa fa-tag"></i> Marcar como utilizado
           </a>
