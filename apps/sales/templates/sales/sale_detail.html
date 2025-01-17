@@ -10,7 +10,7 @@
                 class="card-img img-fluid"
                 src="{{ sale.product.get_image }}"
                 alt="{{ sale.product.name }}"
-                style="width: 240px; {% if sale.product.category.name == "CS" and not sale.available %} filter: grayscale(1);{% endif %}"
+                style="width: 240px; {% if sale.is_consumable and not sale.available %} filter: grayscale(1);{% endif %}"
             >
           </div>
           <div class="col-md-6">
@@ -28,7 +28,7 @@
               {% if sale.object.category.name == "LH" %}
                 <p class="card-text"><strong>Nivel del Libro: </strong>{{ sale.object.level_book }}</p>
               {% endif %}
-              {% if sale.product.category.name == "CS" and not sale.available %}
+              {% if sale.is_consumable and not sale.available %}
                 <p class="card-text" style="color: darkred;"><strong>CONSUMIBLE UTILIZADO</strong></p>
               {% endif %}
             </div>
@@ -96,7 +96,7 @@
       </div>
     </div>
   </div>
-  {% if sale.product.category.name == "CS" and not sale.available %}
+  {% if sale.is_consumable and not sale.available %}
     <div class="row" style="justify-content: center;">
       <div class="col-12">
         <b>Link de uso: </b> <a href="{{ sale.consumable_url }}" target="_blank">Ver en el Foro</a> <br>
