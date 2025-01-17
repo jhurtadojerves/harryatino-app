@@ -120,7 +120,7 @@ class Sale(BaseModel, SaleTransitions):
     def is_consumable(self):
         category_name = self.product.category.name
 
-        return category_name in ["CS", "LLAVE"]
+        return category_name in ["CS", "LLAVES"]
 
     class Meta(BaseModel.Meta):
         """Class Meta"""
