@@ -7,14 +7,11 @@ class ManagementConditions:
         return not instance.is_done
 
     @classmethod
-    def is_admin(cls, instance):
+    def can_update_levels(cls, instance):
         information = TracingMiddleware.get_info()
         user = information.get("user", False)
 
         if not user or not user.is_authenticated:
             return False
 
-        if not user.is_superuser:
-            return False
-
-        return True
+        return user.is_superuser or user.has_perm("management.can_update_levels")
