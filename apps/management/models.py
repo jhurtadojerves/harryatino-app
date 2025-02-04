@@ -33,6 +33,7 @@ class LevelUpdate(BaseModel, LevelUpdateTransitions):
     class Meta(BaseModel.Meta):
         verbose_name = "Actualización de Niveles"
         verbose_name_plural = "Actualizaciones de Niveles"
+        permissions = (("can_update_levels", "Can update levels"),)
         ordering = ["-id"]
 
 

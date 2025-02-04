@@ -13,7 +13,7 @@ class LevelUpdateTransitions:
         source=[workflow.DRAFT],
         target=workflow.DONE,
         conditions=[
-            ManagementConditions.is_admin,
+            ManagementConditions.can_update_levels,
         ],
         custom=dict(verbose="Cerrar"),
     )
@@ -28,7 +28,7 @@ class LevelUpdateTransitions:
         source=[workflow.DRAFT],
         target=workflow.DONE,
         conditions=[
-            ManagementConditions.is_admin,
+            ManagementConditions.can_update_levels,
         ],
         custom=dict(verbose="Completar"),
     )
@@ -55,7 +55,7 @@ class LevelUpdateLineTransitions:
         ],
         target=workflow.DONE,
         conditions=[
-            ManagementConditions.is_admin,
+            ManagementConditions.can_update_levels,
             ManagementConditions.not_done,
         ],
         custom=dict(verbose="Cerrar", hide=True),
@@ -70,7 +70,7 @@ class LevelUpdateLineTransitions:
         ],
         target=workflow.DONE,
         conditions=[
-            ManagementConditions.is_admin,
+            ManagementConditions.can_update_levels,
             ManagementConditions.not_done,
         ],
         custom=dict(verbose="Actualizar"),

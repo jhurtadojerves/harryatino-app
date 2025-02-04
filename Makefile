@@ -11,3 +11,15 @@ lint-check: ## lint check
 	black . --check
 	isort . --check-only --profile black
 	flake8 .
+
+
+## Dev Commands
+
+runserver:
+	docker-compose run --rm -p 8080:8080 app python manage.py runserver 0.0.0.0:8080
+
+migrate:
+	docker-compose run --rm app python manage.py migrate
+
+migrations:
+	docker-compose run --rm app python manage.py makemigrations
