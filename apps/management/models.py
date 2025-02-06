@@ -47,7 +47,7 @@ class LevelUpdate(BaseModel, LevelUpdateTransitions):
 
 
 class LevelUpdateLine(BaseModel, LevelUpdateLineTransitions):
-    workflow = LevelUpdateTransitions.workflow
+    workflow = LevelUpdateLineTransitions.workflow
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="update_lines"
     )

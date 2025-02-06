@@ -33,7 +33,11 @@
                    {% endif %}
                 {% endfor %}
               {% else %}
-                <button disabled class="btn btn-light-info font-weight-bolder mr-2"><i class="fas fa-check icon-sm"></i>Perfil actualizado</button>
+                {% if line.state == 2 %}
+                    <button disabled class="btn btn-light-info font-weight-bolder mr-2"><i class="fas fa-check icon-sm"></i>Perfil actualizado</button>
+                {% else %}
+                    <button disabled class="btn btn-light-danger font-weight-bolder mr-2"><i class="fas fa-check icon-sm"></i>Perfil no actualizado</button>
+                {% endif %}
               {% endif %}
             </td>
             <td>

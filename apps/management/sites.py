@@ -13,3 +13,4 @@ class LevelUpdateSite(BaseSite):
         "detail",
     )
     detail_template_name = None
+    list_fields = ("id", "created_date", "state")
