@@ -5,3 +5,4 @@ class ProductsConfig(AppConfig):
     name = "apps.products"
     verbose_name = "Producto"
     plural_verbose_name = "Productos"
+    menu_sequence = 7

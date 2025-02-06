@@ -23,3 +23,7 @@ migrate:
 
 migrations:
 	docker-compose run --rm app python manage.py makemigrations
+
+menu:
+	docker-compose run --rm app python manage.py createpublicmenus
+

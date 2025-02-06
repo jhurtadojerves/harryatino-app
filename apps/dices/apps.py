@@ -5,3 +5,4 @@ class DicesConfig(AppConfig):
     name = "apps.dices"
     verbose_name = "Dado"
     plural_verbose_name = "Dados"
+    menu_sequence = 8
