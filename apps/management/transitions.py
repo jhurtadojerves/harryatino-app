@@ -1,7 +1,7 @@
 from django_fsm import can_proceed, transition
 
 from apps.management.conditions import ManagementConditions
-from apps.management.workflows import UpdateLevelWorkflow
+from apps.management.workflows import UpdateLevelLineWorkflow, UpdateLevelWorkflow
 from apps.profiles.services import ProfileService
 
 
@@ -46,14 +46,14 @@ class LevelUpdateTransitions:
 
 
 class LevelUpdateLineTransitions:
-    workflow = UpdateLevelWorkflow()
+    workflow = UpdateLevelLineWorkflow()
 
     @transition(
         field="state",
         source=[
             workflow.DRAFT,
         ],
-        target=workflow.DONE,
+        target=workflow.CANCELED,
         conditions=[
             ManagementConditions.can_update_levels,
             ManagementConditions.not_done,
