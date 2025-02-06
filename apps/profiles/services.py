@@ -1,6 +1,5 @@
-from typing import Tuple
-
 from apps.profiles.models.profiles import Profile
+from apps.profiles.schemas import CalculateLevelAndSocialRank
 from apps.utils.services import UserAPIService
 
 
@@ -56,7 +55,7 @@ class ProfileService:
             return "Rango desconocido"
 
     @classmethod
-    def get_level_and_social_rank(cls, user_data: dict) -> Tuple[int, str, int, str]:
+    def get_level_and_social_rank(cls, user_data: dict) -> CalculateLevelAndSocialRank:
         custom_fields = user_data["customFields"]
         fields = {}
 
@@ -68,10 +67,10 @@ class ProfileService:
         for key, value in fields.items():
             clean_fields.update({key: value["value"]})
 
-        old_level = (
+        current_level = (
             int(clean_fields.get("43", 0)) if clean_fields.get("43", 0) != "" else 0
         )
-        old_social_rank = clean_fields.get("61", "")
+        current_social_rank = clean_fields.get("61", "")
         old_posts = (
             int(clean_fields.get("39", 0)) if clean_fields.get("39", 0) != "" else 0
         )
@@ -142,7 +141,12 @@ class ProfileService:
         graduation_status = clean_fields.get("40", "")
         social_rank = cls.get_social_rank(level, graduation_status)
 
-        return level, social_rank, old_level, old_social_rank
+        return CalculateLevelAndSocialRank(
+            current_level=current_level,
+            calculated_level=level,
+            current_rank=current_social_rank,
+            calculated_rank=social_rank,
+        )
 
     @classmethod
     def update_level_and_social_rank(

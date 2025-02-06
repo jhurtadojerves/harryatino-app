@@ -10,13 +10,14 @@
           <th scope="col">Perfil</th>
           <th scope="col">Acciones/Información</th>
           <th scope="col">Actualizado por</th>
+          <th scope="col">Nivel anterior</th>
           <th scope="col">Nivel calculado</th>
           <th scope="col">Rango social calculado</th>
           <th scope="col">Hora de Actualización</th>
         </tr>
       </thead>
       <tbody>
-        {% for line in object.lines.all %}
+        {% for line in object.ordered_lines %}
           <tr>
             <th scope="row">{{ line.profile }}</th>
             <td>
@@ -37,6 +38,9 @@
             </td>
             <td>
                 {{line.modified_user|default_if_none:"Sin actualizar" }}
+            </td>
+            <td>
+                {{line.old_level}}
             </td>
             <td>
                 {{line.calculated_level}}

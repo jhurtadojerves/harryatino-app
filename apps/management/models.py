@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db import models
+from django.db.models.functions import Lower
 from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
@@ -30,6 +31,14 @@ class LevelUpdate(BaseModel, LevelUpdateTransitions):
     def is_done(self):
         return self.state == self.workflow.DONE
 
+    @property
+    def ordered_lines(self):
+        return (
+            self.lines.select_related("profile")
+            .all()
+            .order_by("state", Lower("profile__nick"))
+        )
+
     class Meta(BaseModel.Meta):
         verbose_name = "Actualización de Niveles"
         verbose_name_plural = "Actualizaciones de Niveles"
@@ -53,6 +62,7 @@ class LevelUpdateLine(BaseModel, LevelUpdateLineTransitions):
     )
     calculated_level = models.IntegerField(default=0)
     calculated_social_rank = models.CharField(max_length=128, default="")
+    old_level = models.IntegerField(default=0)
     content = models.JSONField()
 
     @property

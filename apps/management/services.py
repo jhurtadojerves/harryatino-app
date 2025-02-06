@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Tuple
 
 from apps.management.models import LevelUpdateLine
 from apps.profiles.models.profiles import Profile
+from apps.profiles.schemas import CalculateLevelAndSocialRank
 from apps.profiles.services import ProfileService
 from apps.utils.services import UserAPIService
 
@@ -19,17 +19,15 @@ class LevelUpdateService:
             profile = profiles.filter(forum_user_id=user["id"])
 
             if profile:
-                (
-                    calculated_level,
-                    calculated_social_rank,
-                ) = cls.get_level_and_social_rank_data(user)
+                data = cls.get_level_and_social_rank_data(user)
                 lines.append(
                     LevelUpdateLine(
                         profile=profile.first(),
                         level_update=level_update,
                         content=user,
-                        calculated_level=calculated_level,
-                        calculated_social_rank=calculated_social_rank,
+                        calculated_level=data.calculated_level,
+                        calculated_social_rank=data.calculated_rank,
+                        old_level=data.current_level,
                     )
                 )
 
@@ -53,7 +51,7 @@ class LevelUpdateService:
         return datetime.timestamp(previous_date)
 
     @classmethod
-    def get_level_and_social_rank_data(cls, user_data: dict) -> Tuple[int, str]:
-        level, social_rank, _, _ = ProfileService.get_level_and_social_rank(user_data)
-
-        return level, social_rank
+    def get_level_and_social_rank_data(
+        cls, user_data: dict
+    ) -> CalculateLevelAndSocialRank:
+        return ProfileService.get_level_and_social_rank(user_data)
