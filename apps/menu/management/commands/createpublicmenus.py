@@ -26,15 +26,15 @@ class Command(BaseCommand):
                 apps[model._meta.app_config].append(model)
             else:
                 apps[model._meta.app_config] = [model]
-        sequence = 1
+
         for app in apps:
+            sequence = app.menu_sequence
             menu = Menu.objects.create(
                 name=app.verbose_name.capitalize(),
                 action=default_action,
                 is_group=True,
                 sequence=sequence,
             )
-            sequence += 1
 
             index = 1
             for model in apps[app]:
