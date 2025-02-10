@@ -77,5 +77,8 @@ class LevelUpdateLineTransitions:
     )
     def update(self, **kwargs):
         ProfileService.update_level_and_social_rank(
-            self.profile, self.calculated_level, self.calculated_social_rank
+            self.profile,
+            self.calculated_level,
+            self.calculated_social_rank,
+            self.old_level,
         )
