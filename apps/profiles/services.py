@@ -150,13 +150,14 @@ class ProfileService:
 
     @classmethod
     def update_level_and_social_rank(
-        cls, profile: Profile, level: int, social_rank: str
+        cls, profile: Profile, level: int, social_rank: str, old_level: int
     ):
         data = {
             "customFields[43]": f"{level}",
             "customFields[61]": f"{social_rank}",
         }
 
-        UserAPIService.update_user_profile(profile.forum_user_id, raw_data=data)
-        profile.magic_level = level
-        profile.save()
+        if level != old_level:
+            UserAPIService.update_user_profile(profile.forum_user_id, raw_data=data)
+            profile.magic_level = level
+            profile.save()
