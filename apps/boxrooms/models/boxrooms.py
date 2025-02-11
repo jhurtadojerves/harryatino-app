@@ -32,7 +32,6 @@ class Boxroom(BaseModel):
         return f"Bóveda trastero de {self.profile.nick}"
 
     def get_objects_creatures_or_potions_for_index(self, term):
-
         sales_dict = dict()
         sales_list = list()
         sales = self.profile.sales.filter(
