@@ -8,10 +8,10 @@
             {% for line in payment.get_lines %}
                 <li>
                     {% if line.link %}
-                        <a href="{{ line.get_shorturl }}" target="_blank">{{ line.get_encoded_verbose }}</a>:
+                        <a href="{{ line.get_shorturl }}" target="_blank">{{ line.get_encoded_verbose|safe }}</a>:
                         <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
                     {% else %}
-                        {{ line.get_encoded_verbose }}:
+                        {{ line.get_encoded_verbose|safe }}:
                         <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
                     {% endif %}
                 </li>
