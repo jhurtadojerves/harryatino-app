@@ -7,7 +7,7 @@
     <ul>
       {% for line in payment.get_lines %}
         <li>
-          {{ line.get_encoded_verbose }}: <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
+          {{ line.get_encoded_verbose|safe }}: <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
         </li>
       {% endfor %}
     </ul>
