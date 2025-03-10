@@ -1,13 +1,17 @@
 """Services from utils module"""
 
 # Third party integration
+from typing import Optional
+
 import requests
 from django.conf import settings
 from django.template.loader import render_to_string
 from environs import Env
+from pydantic import BaseModel, ValidationError
 from superadmin.templatetags.superadmin_utils import site_url
 
 # Models
+from apps.utils.classes.profile import ForumProfile
 from apps.utils.models import Link
 
 env = Env()
@@ -91,7 +95,7 @@ class UserAPIService(APIService):
         wizard.magic_level = int(profile_data.get("customFields[43]", "") or 0)
         wizard.nick = nick
         wizard.formatted_name = profile_data.get("formatted_name")
-        boxroom_number = profile_data.get("customFields[66]", None)
+        boxroom_number = profile_data.get("customFields[66]", 75080)
         vault_number = profile_data.get("customFields[64]", None)
         character_sheet = profile_data.get("customFields[65]", None)
 
@@ -136,6 +140,7 @@ class UserAPIService(APIService):
             {
                 "avatar": data.get("photoUrl", ""),
                 "formatted_name": data.get("formattedName", ""),
+                "nick": data.get("name"),
             }
         )
 
@@ -159,7 +164,52 @@ class UserAPIService(APIService):
         json = response.json()
 
         return json["results"]
-        
+
+    @classmethod
+    def download_user_data(cls, wizard) -> ForumProfile:
+        data = cls.get_forum_user_data(wizard)
+
+        return ForumProfile(**data)
+
+    @classmethod
+    def update_user_profile_v2(cls, wizard) -> Optional[str]:
+        try:
+            profile = cls.download_user_data(wizard)
+        except Exception as error:
+            return cls.format_pydantic_errors(error, ForumProfile)
+
+        wizard.range_of_creatures = profile.creatures
+        wizard.range_of_objects = profile.objects
+        wizard.galleons = profile.galleons
+        wizard.magic_level = profile.level
+        wizard.nick = profile.nick
+        wizard.formatted_name = profile.formatted_name
+        wizard.boxroom_number = profile.boxroom_number
+        wizard.vault_number = profile.vault
+        wizard.character_sheet = profile.character
+        wizard.save()
+
+    @classmethod
+    def format_pydantic_errors(cls, error: ValidationError, model: BaseModel):
+        field_map = {field.alias: name for name, field in model.model_fields.items()}
+        messages = []
+
+        for err in error.errors():
+            field_alias = err["loc"][0]
+            field_name = field_map.get(field_alias, field_alias)
+            message = err["msg"]
+            messages.append(cls.translate(f"Error en {field_name}: {message}"))
+
+        return "\n".join(messages)
+
+    @classmethod
+    def translate(cls, message):
+        MESSAGES = {
+            "Error en vault: Input should be a valid integer, unable to parse string as an integer": "La bóveda es obligatoria"
+        }
+
+        return MESSAGES.get(message, message)
+
 
 class TopicAPIService(APIService):
     CREATE_POST_API_URL = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
