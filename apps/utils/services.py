@@ -87,8 +87,8 @@ class UserAPIService(APIService):
         profile_data, nick = cls.get_forum_user_data(wizard=wizard, get_nick_name=True)
         wizard.range_of_creatures = profile_data.get("customFields[35]", "")
         wizard.range_of_objects = profile_data.get("customFields[36]", "")
-        wizard.galleons = int(profile_data.get("customFields[12]", 0))
-        wizard.magic_level = int(profile_data.get("customFields[43]", 0))
+        wizard.galleons = int(profile_data.get("customFields[12]", "") or 0)
+        wizard.magic_level = int(profile_data.get("customFields[43]", "") or 0)
         wizard.nick = nick
         wizard.formatted_name = profile_data.get("formatted_name")
         boxroom_number = profile_data.get("customFields[66]", None)
@@ -159,7 +159,7 @@ class UserAPIService(APIService):
         json = response.json()
 
         return json["results"]
-
+        
 
 class TopicAPIService(APIService):
     CREATE_POST_API_URL = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
