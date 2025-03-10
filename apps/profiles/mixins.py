@@ -1,5 +1,6 @@
 """Define mixins to profile"""
 
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
@@ -115,8 +116,13 @@ class ProfileDetailMixin:
 
 
 class ProfileFormMixin:
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         self.object = form.save(commit=False)
-        UserAPIService.download_user_data_and_update(self.object)
+        errors = UserAPIService.update_user_profile_v2(self.object)
+
+        if errors:
+            messages.error(self.request, errors)
+            return super().form_invalid(form)
 
         return HttpResponseRedirect(self.get_success_url())
