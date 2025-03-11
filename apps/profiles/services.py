@@ -67,9 +67,8 @@ class ProfileService:
         for key, value in fields.items():
             clean_fields.update({key: value["value"]})
 
-        current_level = (
-            int(clean_fields.get("43", 0)) if clean_fields.get("43", 0) != "" else 0
-        )
+        current_level = clean_fields.get("43", 0) or 0
+        current_level = int(current_level)
         current_social_rank = clean_fields.get("61", "")
         old_posts = (
             int(clean_fields.get("39", 0)) if clean_fields.get("39", 0) != "" else 0
