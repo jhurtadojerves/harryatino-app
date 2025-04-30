@@ -1,0 +1,2 @@
+class InsolesException(Exception):
+    pass

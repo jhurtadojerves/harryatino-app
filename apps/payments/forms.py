@@ -1,12 +1,9 @@
-# Django
-from django.forms import inlineformset_factory
-
-# Third party integration
+from django.forms import HiddenInput, inlineformset_factory
 from django_select2.forms import ModelSelect2Widget
 from superadmin.forms import ModelForm
 
-# Local
 from apps.payments.models import Payment, PaymentLine, Work
+from apps.payments.models.donations import Donation, DonationLine
 
 
 class WorkMonthForm(ModelForm):
@@ -49,10 +46,61 @@ class PaymentLineForm(ModelForm):
         )
 
 
+class DonationForm(ModelForm):
+    class Meta:
+        model = Donation
+        fields = ("user",)
+        widgets = {"user": HiddenInput()}
+
+    def __init__(self, *args, **kwargs):
+        super(DonationForm, self).__init__(*args, **kwargs)
+        self.fields["user"].required = False
+
+
+class DonationLineForm(ModelForm):
+    class Meta:
+        model = DonationLine
+        fields = ("beneficiary", "quantity", "reason")
+        widgets = {
+            "beneficiary": ModelSelect2Widget(
+                model="profiles.Profile",
+                search_fields=["nick__unaccent__icontains", "forum_user_id__icontains"],
+                attrs={
+                    "data-minimum-input-length": 0,
+                },
+            ),
+        }
+
+
+class DonationLineEdit(ModelForm):
+    class Meta:
+        model = DonationLine
+        fields = ("quantity", "reason")
+        widgets = {
+            "beneficiary": ModelSelect2Widget(
+                model="profiles.Profile",
+                search_fields=["nick__unaccent__icontains", "forum_user_id__icontains"],
+                attrs={
+                    "data-minimum-input-length": 0,
+                },
+            ),
+        }
+
+
 PaymentLineFormset = inlineformset_factory(
     Payment,
     PaymentLine,
     form=PaymentLineForm,
     min_num=1,
     validate_min=True,
+)
+
+DonationLineFormset = inlineformset_factory(
+    Donation,
+    DonationLine,
+    form=DonationLineForm,
+    min_num=1,
+    validate_min=True,
+    max_num=2,
+    can_delete=False,
 )

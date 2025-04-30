@@ -1,26 +1,26 @@
 """Define views urls"""
 
-# Third party integration
 import requests
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-
-# Django
 from django.views.generic import DetailView
 from superadmin.templatetags.superadmin_utils import site_url
 
 from apps.dynamicforms.views import API_KEY, UpdateProfileForm
+from apps.insoles.views import InstanceBaseFormView
+from apps.payments.forms import DonationLineEdit, DonationLineForm
 from apps.payments.models import (
     MonthPaymentLine,
     Post,
     PropertyPayment,
     PropertyPaymentLine,
 )
+from apps.payments.models.donations import Donation, DonationLine
 from apps.properties.models import Property
+from apps.workflows.exceptions import WorkflowException
 
-# Local
-from .service import BaseService, PropertyService
+from .service import BaseService, DonationService, PropertyService
 
 
 class CalculatePaymentPropertyView(DetailView):
@@ -232,3 +232,70 @@ class CreatePaymentPropertyView(CreatePaymentView):
         url = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
         response = self.post_request(url, payload)
         return response.json()
+
+
+class AddBeneficiaryToDonation(InstanceBaseFormView):
+    model = Donation
+    form_class = DonationLineForm
+    create_url_name = "payments:donations_form"
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            form = self.get_form()
+
+            if not form.is_valid():
+                return self.form_invalid(form)
+
+            line_form = form.save(commit=False)
+            DonationService.validate_line(line_form)
+            DonationService.not_is_full(self.object)
+
+            DonationLine.objects.create(
+                quantity=line_form.quantity,
+                beneficiary=line_form.beneficiary,
+                reason=line_form.reason,
+                donation=self.object,
+            )
+
+            return self.success("Formulario guardado éxito.")
+        except WorkflowException as err:
+            return self.error(str(err))
+
+    def get_kwargs(self):
+        kwargs = {}
+        if self.request.POST or self.request.FILES:
+            kwargs.update({"data": self.request.POST, "files": self.request.FILES})
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            DonationService.not_is_full(self.object)
+        except WorkflowException as err:
+            return self.error(str(err))
+
+        return super().get(request, *args, **kwargs)
+
+
+class DonationBeneficiaty(InstanceBaseFormView):
+    model = DonationLine
+    form_class = DonationLineEdit
+    create_url_name = "payments:donation_line_edit"
+    # validate_edit_line
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            form = self.get_form()
+
+            if not form.is_valid():
+                return self.form_invalid(form)
+
+            line_form = form.save(commit=False)
+            DonationService.validate_edit_line(line_form)
+            line_form.save()
+
+            return self.success("Formulario guardado éxito.")
+        except WorkflowException as err:
+            return self.error(str(err))

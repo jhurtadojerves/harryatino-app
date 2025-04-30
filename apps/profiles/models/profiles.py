@@ -38,6 +38,7 @@ class Profile(BaseModel):
         related_name="profile",
         on_delete=models.SET_NULL,
     )
+    profile_url = models.URLField(null=True, max_length=512)
 
     def __str__(self):
         return self.nick

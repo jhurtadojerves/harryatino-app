@@ -11,7 +11,10 @@ from pydantic import BaseModel, ValidationError
 from superadmin.templatetags.superadmin_utils import site_url
 
 # Models
+from apps.profiles.models.profiles import Profile
+from apps.utils.cache import CacheService
 from apps.utils.classes.profile import ForumProfile
+from apps.utils.decorators import cache_decorator
 from apps.utils.models import Link
 
 env = Env()
@@ -87,7 +90,7 @@ class UserAPIService(APIService):
         return cls.post(url, payload)
 
     @classmethod
-    def download_user_data_and_update(cls, wizard):
+    def download_user_data_and_update(cls, wizard: Profile) -> Profile:
         profile_data, nick = cls.get_forum_user_data(wizard=wizard, get_nick_name=True)
         wizard.range_of_creatures = profile_data.get("customFields[35]", "")
         wizard.range_of_objects = profile_data.get("customFields[36]", "")
@@ -150,6 +153,28 @@ class UserAPIService(APIService):
         return user_data
 
     @classmethod
+    def get_forum_user_data_v2(cls, wizard):
+        url = f"{cls.USER_API_URL}{wizard.forum_user_id}?key={API_KEY}"
+        response = requests.request("GET", url, headers={}, data={})
+        data = response.json()
+        custom_fields = data.get("customFields", False)
+        raw_user_data = dict()
+        user_data = dict()
+
+        for raw in custom_fields.values():
+            raw_user_data.update(raw["fields"])
+
+        for key, value in raw_user_data.items():
+            user_data.update({f"customFields[{key}]": value["value"]})
+
+        data.update(user_data)
+        data.update(
+            {"nick": data.get("name"), "formatted_name": data.get("formattedName")}
+        )
+
+        return data
+
+    @classmethod
     def get_for_key(cls, data, key):
         return data.get(f"customFields[{key}]", "")
 
@@ -167,7 +192,7 @@ class UserAPIService(APIService):
 
     @classmethod
     def download_user_data(cls, wizard) -> ForumProfile:
-        data = cls.get_forum_user_data(wizard)
+        data = cls.get_forum_user_data_v2(wizard)
 
         return ForumProfile(**data)
 
@@ -187,6 +212,7 @@ class UserAPIService(APIService):
         wizard.boxroom_number = profile.boxroom_number
         wizard.vault_number = profile.vault
         wizard.character_sheet = profile.character
+        wizard.profile_url = profile.profile_url
         wizard.save()
 
     @classmethod
@@ -214,6 +240,8 @@ class UserAPIService(APIService):
 class TopicAPIService(APIService):
     CREATE_POST_API_URL = f"https://www.harrylatino.org/api/forums/posts?key={API_KEY}"
     GET_TOPIC_URL = "https://www.harrylatino.org/api/forums/topics/"
+    TOPIC_ID_CACHE_KEY = "topic_id"
+    DEFAULT_AUTHOR = 121976
 
     @classmethod
     def create_post(cls, topic, context, template, author=121976):
@@ -252,3 +280,30 @@ class TopicAPIService(APIService):
         data = cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
 
         return data
+
+    @classmethod
+    def create_post_v2(cls, topic: int, html: str, author: int):
+        payload = cls.get_payload({"topic": topic, "author": author, "post": html})
+        breakpoint()
+        return cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
+
+    @cache_decorator(TOPIC_ID_CACHE_KEY, ["key_id"])
+    @staticmethod
+    def get_topic_id(key_id):
+        from apps.utils.models.api import TopicAPI
+
+        try:
+            topic = TopicAPI.objects.get(key=key_id)
+            return topic.topic_id
+        except TopicAPI.DoesNotExist:
+            return None
+
+    @classmethod
+    def clean_cache(cls, key_id, value):
+        cache_id = CacheService.generate_cache_key(
+            cls.TOPIC_ID_CACHE_KEY, ["key_id"], key_id=key_id
+        )
+        CacheService.set_cache(
+            cache_id,
+            value,
+        )

@@ -6,6 +6,8 @@ lint:  ## lint fix
 	black .
 	isort . --profile black
 	flake8 .
+	
+# npx prettier --write "templates/**/*.html"
 
 lint-check: ## lint check
 	black . --check
@@ -27,3 +29,5 @@ migrations:
 menu:
 	docker-compose run --rm app python manage.py createpublicmenus
 
+shell:
+	docker-compose run --rm app python manage.py shell

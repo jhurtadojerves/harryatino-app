@@ -1,16 +1,25 @@
-<label>{{ label|lower|capfirst }}</label>
+<label>{{ label }}</label>
 <div class="input-group">
-  <input class="form-control" type="text" value="{{ value|default:'--' }}" readonly>
-  <div class="input-group-append">
-    {% if value %}
-      <a href="{{ value }}" target="_blank" class="input-group-text" title="Abrir">
-        <i class="fa fa-link text-success"></i>
-      </a>
-    {% else %}
-      <a href="#" class="input-group-text disabled_url" title="Abrir">
-        <i class="fa fa-unlink text-success"></i>
-      </a>
-    {% endif %}
-  </div>
+    <input
+        class="form-control"
+        type="text"
+        value="{{ value|default:'--' }}"
+        readonly
+    />
+    <div class="input-group-append">
+        {% if value %}
+            <a
+                href="{{ value }}"
+                target="_blank"
+                class="input-group-text"
+                title="Abrir"
+            >
+                <i class="fa fa-link text-success"></i>
+            </a>
+        {% else %}
+            <a href="#" class="input-group-text disabled_url" title="Abrir">
+                <i class="fa fa-unlink text-success"></i>
+            </a>
+        {% endif %}
+    </div>
 </div>
-

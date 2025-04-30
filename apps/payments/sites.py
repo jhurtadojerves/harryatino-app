@@ -1,18 +1,19 @@
-# Third party integration
 from superadmin.decorators import register
 
-# Base
 from config.base import BaseSite
-
-# Filtering
 from config.mixins import GenericFiltering
 
-# Forms
-from .forms import PaymentForm, PaymentLineFormset, WorkMonthForm
-from .mixins import PaymentListMixin, WorkListMixin
+from .forms import DonationForm, PaymentForm, PaymentLineFormset, WorkMonthForm
+from .mixins import (
+    DonationDetailMixin,
+    DonationFormMixin,
+    DonationListMixin,
+    PaymentListMixin,
+    WorkListMixin,
+)
 
 
-@register("payments.Work")
+# @register("payments.Work")
 class WorkSite(BaseSite):
     detail_fields = ("wizard", "work", "work_description")
     list_fields = ("wizard", "work")
@@ -21,21 +22,21 @@ class WorkSite(BaseSite):
     list_mixins = (WorkListMixin,)
 
 
-@register("payments.MonthPayment")
+# @register("payments.MonthPayment")
 class MonthPaymentSite(BaseSite):
     detail_fields = ("month",)
     detail_template_name = None
     fields = ("month", "post_url")
 
 
-@register("payments.Post")
+# @register("payments.Post")
 class PostSite(BaseSite):
     detail_fields = ("month",)
     fields = ("month",)
     detail_template_name = None
 
 
-@register("payments.PropertyPayment")
+# @register("payments.PropertyPayment")
 class PropertyPaymentSite(BaseSite):
     detail_fields = (("month", "payment_type"),)
     list_fields = ("month", "payment_type")
@@ -55,3 +56,23 @@ class PaymentSite(BaseSite):
     detail_template_name = None
     list_template_name = None
     paginate_by = 30
+
+
+@register("payments.Donation")
+class Donationsite(BaseSite):
+    form_class = DonationForm
+    form_mixins = [DonationFormMixin]
+    detail_mixins = [DonationDetailMixin]
+    list_mixins = [DonationListMixin]
+    detail_template_name = None
+    list_template_name = None
+    allow_views = ("create", "list", "detail")
+
+    detail_fields = {
+        "Detalle de Donación": [
+            # ["request_html", "vault_html"],
+            ["request_url", "vault_discount_url"],
+        ],
+    }
+
+    list_fields = ["user", "created_date", "confirm_date", "state"]

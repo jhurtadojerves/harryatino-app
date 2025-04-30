@@ -1,6 +1,4 @@
-"""Simple filtering"""
-
-# third party integration
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.text import slugify
 from superadmin import site
 
@@ -39,6 +37,7 @@ class GenericFiltering:
 
 class FilterByChoice:
     CHOICES = []
+    SEARCH_PARAM = None
 
     def get_search_choices(self, selected_choice=None):
         choices = []
@@ -70,3 +69,24 @@ class FilterByChoice:
         )
 
         return context
+
+    def get_queryset(self):
+        search_param = self.get_search_param()
+        queryset = super().get_queryset()
+        choice_param = self.request.GET.get("choice_param", None)
+
+        if choice_param:
+            search_choice = self.get_search_selected_choice(choice_param)
+
+            if type(search_choice) == int:  # noqa: E721
+                queryset = queryset.filter(**{search_param: search_choice})
+
+        return queryset
+
+    def get_search_param(self):
+        if not self.SEARCH_PARAM:
+            raise ImproperlyConfigured(
+                "The 'SEARCH_PARAM' attribute must be specified."
+            )
+
+        return self.SEARCH_PARAM

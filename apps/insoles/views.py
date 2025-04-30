@@ -12,6 +12,8 @@ from django.views.generic import View
 from superadmin import site
 from superadmin.views.detail import DetailMixin
 
+from apps.insoles.exceptions import InsolesException
+
 
 class RenderDetailMixin(DetailMixin):
     def __init__(self, instance, site_instance, model):
@@ -344,3 +346,43 @@ class InstanceBaseFormsetView(InstanceBaseFormView):
             if field.name in formset.form.Meta.fields
         ]
         return formset
+
+
+class DeleteObjectView(View):
+    def get_object(self, queryset=None, *args, **kwargs):
+        app_name = kwargs.get("app")
+        model_name = kwargs.get("model")
+        slug = kwargs.get("slug")
+        app = apps.get_app_config(app_name)
+        model = app.get_model(model_name)
+
+        instance = model.objects.filter(pk=slug)
+
+        if not instance:
+            InsolesException("No se encontró esa donación")
+
+        return instance.first()
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object(*args, **kwargs)
+            self.check_validate(self.object)
+            self.validate(self.object, request.user)
+            message = self.get_message(self.object)
+            self.object.delete()
+
+            return JsonResponse({"message": message}, status=200)
+        except InsolesException as err:
+            return JsonResponse({"message": str(err)}, status=400)
+
+    def check_validate(self, instance):
+        if not hasattr(instance, "validate_delete"):
+            raise Exception(
+                "La validación de eliminación del objeto no está configurada"
+            )
+
+    def validate(self, instance, user):
+        instance.validate_delete(user)
+
+    def get_message(self, instance):
+        return instance.get_insoles_delete_message()

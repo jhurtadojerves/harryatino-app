@@ -1,0 +1,22 @@
+<p>
+    Saldo Anterior: {{ galleons.old }}
+    <br />
+    Donación
+    <a href="{{ donation.request_url }}" rel="">
+        realizada el día {{ donation.created_date|date:"d/m/Y" }}
+    </a>
+    :
+    <strong><span style="color:#c0392b;">{{ donation.total }} G</span></strong>
+</p>
+
+<ul>
+    {% for line in lines %}
+        <li>
+            <a href="{{ line.vault_deposit_url }}" rel="">
+                {{ line.beneficiary.nick }}
+            </a>
+            : {{ line.quantity }} G
+        </li>
+    {% endfor %}
+</ul>
+<p>Saldo: {{ galleons.new }} G</p>

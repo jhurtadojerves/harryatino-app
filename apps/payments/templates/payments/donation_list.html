@@ -1,0 +1,10 @@
+{% extends "base/base_list.html" %}
+
+{% block choices %}
+    {% include "payments/choices.html" with search_choices=search_choices search=search %}
+    {{ block.super }}
+{% endblock %}
+{% block search_empty %}
+    {{ block.super }}
+    {% include "payments/choices.html" with search_choices=search_choices search=search %}
+{% endblock %}

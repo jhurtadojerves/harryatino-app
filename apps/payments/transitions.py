@@ -1,18 +1,19 @@
-"""Transitions for Project"""
-
 from datetime import datetime
 
 from django_fsm import RETURN_VALUE, transition
 from environs import Env
 
-# Services
+from apps.ecommerce.conditions import PurchaseConditions
 from apps.payments.service import BaseService, MonthlyPaymentService
-
-# Local
 from apps.workflows.exceptions import WorkflowException
 
 from ..utils.services import TopicAPIService
-from .workflows import MonthlyPaymentWorkflow, PaymentWorkflow, PostWorkflow
+from .workflows import (
+    DonationWorkflow,
+    MonthlyPaymentWorkflow,
+    PaymentWorkflow,
+    PostWorkflow,
+)
 
 env = Env()
 API_KEY = env("API_KEY")
@@ -203,3 +204,58 @@ class MonthlyLineTransitions:
             return self.workflow.PAY
         else:
             return self.workflow.WITHOUT_PAY
+
+
+class DonationTransitions:
+    workflow = DonationWorkflow()
+
+    @transition(
+        field="state",
+        source=[workflow.CREATED],
+        target=workflow.CONFIRMED,
+        permission="payments.view_donation",
+        conditions=[
+            PurchaseConditions.is_owner,
+            PurchaseConditions.has_lines,
+        ],
+        custom=dict(verbose="Confirmar", icon="fas fa-check-double"),
+    )
+    def confirm(self, **kwargs):
+        from apps.payments.service import DonationService
+
+        DonationService.confirm(self)
+
+    @transition(
+        field="state",
+        source=[workflow.CREATED],
+        target=workflow.CANCELED,
+        permission="payments.view_donation",
+        conditions=[
+            PurchaseConditions.is_owner,
+        ],
+        custom=dict(verbose="Cancelar", icon="fas fa-ban"),
+    )
+    def cancel(self, **kwargs):
+        pass
+
+    @transition(
+        field="state",
+        source=[workflow.CONFIRMED],
+        target=workflow.APPROVED,
+        permission="payments.can_approve_donation",
+        custom=dict(verbose="Aprobar", icon="fas fa-check-double"),
+    )
+    def approve(self, **kwargs):
+        from apps.payments.service import DonationService
+
+        DonationService.approve(self)
+
+    @transition(
+        field="state",
+        source=[workflow.CONFIRMED],
+        target=workflow.REJECTED,
+        permission="payments.can_reject_donation",
+        custom=dict(verbose="Rechazar", icon="fas fa-ban"),
+    )
+    def reject(self, **kwargs):
+        pass
