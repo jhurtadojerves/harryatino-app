@@ -26,4 +26,3 @@ migrations:
 
 menu:
 	docker-compose run --rm app python manage.py createpublicmenus
-
