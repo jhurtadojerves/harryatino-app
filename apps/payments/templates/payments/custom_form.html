@@ -1,0 +1,27 @@
+{% load superadmin_forms superadmin_utils %}
+
+<div class="table-responsive inline-group" data-label="{{ label }}" data-errors="{{ formset.errors|json }}" id="{{ formset.prefix }}-group" data-prefix="{{ formset.prefix }}">
+    {{ formset.management_form }}
+    <table class="table mb-0">
+        <thead class="thead-light">
+            {% for header in formset.headers %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr id="{{ formset.prefix }}-{{ forloop.counter0 }}" class="inline {{ formset.prefix }}">
+                {% for field in form.hidden_fields %}
+                {{ field }}
+                {% endfor %}
+
+                {% for field in form.visible_fields %}
+                <td style="vertical-align: middle;">
+                    {% render_field field class="form-control" %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

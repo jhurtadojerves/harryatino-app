@@ -1,26 +1,47 @@
 {% extends 'base/base.html' %}
 {% load static superadmin_utils check_permission %}
 {% block title %}
-  {{ site.title|capfirst }} - {{ block.super }}
+    {{ site.title|capfirst }}
+    - {{ block.super }}
 {% endblock %}
 {% block content %}
     <div class="card card-custom card-sticky" id="kt_page_sticky_card">
         <div class="card-header py-3">
             <div class="card-title">
-                    <span class="card-icon">
-                        <span class="svg-icon svg-icon-md svg-icon-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                 width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24"/>
-                                    <rect fill="#000000" opacity="0.3" x="4" y="4" width="4" height="4" rx="1"/>
-                                    <path
-                                            d="M5,10 L7,10 C7.55228475,10 8,10.4477153 8,11 L8,13 C8,13.5522847 7.55228475,14 7,14 L5,14 C4.44771525,14 4,13.5522847 4,13 L4,11 C4,10.4477153 4.44771525,10 5,10 Z M11,4 L13,4 C13.5522847,4 14,4.44771525 14,5 L14,7 C14,7.55228475 13.5522847,8 13,8 L11,8 C10.4477153,8 10,7.55228475 10,7 L10,5 C10,4.44771525 10.4477153,4 11,4 Z M11,10 L13,10 C13.5522847,10 14,10.4477153 14,11 L14,13 C14,13.5522847 13.5522847,14 13,14 L11,14 C10.4477153,14 10,13.5522847 10,13 L10,11 C10,10.4477153 10.4477153,10 11,10 Z M17,4 L19,4 C19.5522847,4 20,4.44771525 20,5 L20,7 C20,7.55228475 19.5522847,8 19,8 L17,8 C16.4477153,8 16,7.55228475 16,7 L16,5 C16,4.44771525 16.4477153,4 17,4 Z M17,10 L19,10 C19.5522847,10 20,10.4477153 20,11 L20,13 C20,13.5522847 19.5522847,14 19,14 L17,14 C16.4477153,14 16,13.5522847 16,13 L16,11 C16,10.4477153 16.4477153,10 17,10 Z M5,16 L7,16 C7.55228475,16 8,16.4477153 8,17 L8,19 C8,19.5522847 7.55228475,20 7,20 L5,20 C4.44771525,20 4,19.5522847 4,19 L4,17 C4,16.4477153 4.44771525,16 5,16 Z M11,16 L13,16 C13.5522847,16 14,16.4477153 14,17 L14,19 C14,19.5522847 13.5522847,20 13,20 L11,20 C10.4477153,20 10,19.5522847 10,19 L10,17 C10,16.4477153 10.4477153,16 11,16 Z M17,16 L19,16 C19.5522847,16 20,16.4477153 20,17 L20,19 C20,19.5522847 19.5522847,20 19,20 L17,20 C16.4477153,20 16,19.5522847 16,19 L16,17 C16,16.4477153 16.4477153,16 17,16 Z"
-                                            fill="#000000"/>
-                                </g>
-                            </svg>
-                        </span>
+                <span class="card-icon">
+                    <span class="svg-icon svg-icon-md svg-icon-primary">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            width="24px"
+                            height="24px"
+                            viewBox="0 0 24 24"
+                            version="1.1"
+                        >
+                            <g
+                                stroke="none"
+                                stroke-width="1"
+                                fill="none"
+                                fill-rule="evenodd"
+                            >
+                                <rect x="0" y="0" width="24" height="24" />
+                                <rect
+                                    fill="#000000"
+                                    opacity="0.3"
+                                    x="4"
+                                    y="4"
+                                    width="4"
+                                    height="4"
+                                    rx="1"
+                                />
+                                <path
+                                    d="M5,10 L7,10 C7.55228475,10 8,10.4477153 8,11 L8,13 C8,13.5522847 7.55228475,14 7,14 L5,14 C4.44771525,14 4,13.5522847 4,13 L4,11 C4,10.4477153 4.44771525,10 5,10 Z M11,4 L13,4 C13.5522847,4 14,4.44771525 14,5 L14,7 C14,7.55228475 13.5522847,8 13,8 L11,8 C10.4477153,8 10,7.55228475 10,7 L10,5 C10,4.44771525 10.4477153,4 11,4 Z M11,10 L13,10 C13.5522847,10 14,10.4477153 14,11 L14,13 C14,13.5522847 13.5522847,14 13,14 L11,14 C10.4477153,14 10,13.5522847 10,13 L10,11 C10,10.4477153 10.4477153,10 11,10 Z M17,4 L19,4 C19.5522847,4 20,4.44771525 20,5 L20,7 C20,7.55228475 19.5522847,8 19,8 L17,8 C16.4477153,8 16,7.55228475 16,7 L16,5 C16,4.44771525 16.4477153,4 17,4 Z M17,10 L19,10 C19.5522847,10 20,10.4477153 20,11 L20,13 C20,13.5522847 19.5522847,14 19,14 L17,14 C16.4477153,14 16,13.5522847 16,13 L16,11 C16,10.4477153 16.4477153,10 17,10 Z M5,16 L7,16 C7.55228475,16 8,16.4477153 8,17 L8,19 C8,19.5522847 7.55228475,20 7,20 L5,20 C4.44771525,20 4,19.5522847 4,19 L4,17 C4,16.4477153 4.44771525,16 5,16 Z M11,16 L13,16 C13.5522847,16 14,16.4477153 14,17 L14,19 C14,19.5522847 13.5522847,20 13,20 L11,20 C10.4477153,20 10,19.5522847 10,19 L10,17 C10,16.4477153 10.4477153,16 11,16 Z M17,16 L19,16 C19.5522847,16 20,16.4477153 20,17 L20,19 C20,19.5522847 19.5522847,20 19,20 L17,20 C16.4477153,20 16,19.5522847 16,19 L16,17 C16,16.4477153 16.4477153,16 17,16 Z"
+                                    fill="#000000"
+                                />
+                            </g>
+                        </svg>
                     </span>
+                </span>
                 <h3 class="card-label text-light">{{ site.title|capfirst }}</h3>
             </div>
             <div class="card-toolbar">
@@ -32,7 +53,10 @@
                 {% check_permission request.user change_perm as change_perm %}
                 {% check_permission request.user delete_perm as delete_perm %}
                 {% if add_perm %}
-                    <a href="{{ site.urls.create }}" class="btn btn-primary font-weight-bolder">
+                    <a
+                        href="{{ site.urls.create }}"
+                        class="btn btn-primary font-weight-bolder"
+                    >
                         <i class="fas fa-plus icon-sm"></i>
                         Crear nuevo
                     </a>
@@ -51,17 +75,25 @@
                                 <!--<input id="id_table_search" type="search" class="form-control form-control"
                                         placeholder="Buscar">-->
                                 <div class="input-group">
-                                    <input id="id_table_search" type="text" class="form-control"
-                                           placeholder="Buscar..." value="{{ search }}">
+                                    <input
+                                        id="id_table_search"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Buscar..."
+                                        value="{{ search }}"
+                                    />
                                     {% if site.filter_fields %}
                                         <div class="input-group-append">
-                                            <button id="kt_quick_cart_toggle" class="btn btn-primary" type="button">
+                                            <button
+                                                id="kt_quick_cart_toggle"
+                                                class="btn btn-primary"
+                                                type="button"
+                                            >
                                                 Avanzado
                                             </button>
                                         </div>
                                     {% endif %}
                                 </div>
-
                             </div>
                         </div>
                     {% endblock %}
@@ -71,47 +103,63 @@
                 {% block list %}
                     <!--begin: Datatable-->
                     {% block choices %}
-
                     {% endblock %}
                     <table class="datatable">
                         <thead>
-                        <tr>
-                            <th>ID</th>
-                            {% for field, name in site.fields %}
-                                <th>{{ name }}</th>
-                            {% endfor %}
-                            <th>Acciones</th>
-                        </tr>
+                            <tr>
+                                <th>ID</th>
+                                {% for field, name in site.fields %}
+                                    <th>{{ name }}</th>
+                                {% endfor %}
+                                <th>Acciones</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for row in site.rows %}
-                            <tr>
-                                <td>{{ row.instance.id }}</td>
-                                {% for value in row.values %}
-                                    <td>{{ value|default:""|truncatechars:"50" }}</td>
-                                {% endfor %}
-                                <td>
-                                    <div>
-                                        <a href="{% site_url row.instance 'detail' %}" class="btn btn-sm btn-clean btn-icon"
-                                           title="Ver detalles">
-                                            <i class="fas fa-eye icon-md"></i>
-                                        </a>
-                                        {% if row.urls.update and change_perm %}
-                                            <a href="{{ row.urls.update }}" class="btn btn-sm btn-clean btn-icon"
-                                               title="Editar detalles">
-                                                <i class="fas fa-pen icon-md"></i>
+                            {% for row in site.rows %}
+                                <tr>
+                                    <td>{{ row.instance.id }}</td>
+                                    {% for value in row.values %}
+                                        <td>
+                                            {{ value|default:""|truncatechars:"50" }}
+                                        </td>
+                                    {% endfor %}
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="{% site_url row.instance 'detail' %}"
+                                                class="btn btn-sm btn-clean btn-icon"
+                                                title="Ver detalles"
+                                            >
+                                                <i
+                                                    class="fas fa-eye icon-md"
+                                                ></i>
                                             </a>
-                                        {% endif %}
-                                        {% if row.urls.delete and delete_perm %}
-                                            <a href="{{ row.urls.delete }}" class="btn btn-sm btn-clean btn-icon"
-                                               title="Eliminar">
-                                                <i class="fas fa-trash-alt icon-md"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
+                                            {% if row.urls.update and change_perm %}
+                                                <a
+                                                    href="{{ row.urls.update }}"
+                                                    class="btn btn-sm btn-clean btn-icon"
+                                                    title="Editar detalles"
+                                                >
+                                                    <i
+                                                        class="fas fa-pen icon-md"
+                                                    ></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if row.urls.delete and delete_perm %}
+                                                <a
+                                                    href="{{ row.urls.delete }}"
+                                                    class="btn btn-sm btn-clean btn-icon"
+                                                    title="Eliminar"
+                                                >
+                                                    <i
+                                                        class="fas fa-trash-alt icon-md"
+                                                    ></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     <!--end: Datatable-->
@@ -120,9 +168,11 @@
                 {% block list_footer %}
                     <div class="row align-items-center">
                         <div class="col-6 col-sm-8 col-md-9 my-2 my-md-0">
-                <span class="text-muted">
-                    Mostrando {{ site.page_start_index }} - {{ site.page_end_index }} de {{ site.total_records }}
-                </span>
+                            <span class="text-muted">
+                                Mostrando {{ site.page_start_index }} -
+                                {{ site.page_end_index }} de
+                                {{ site.total_records }}
+                            </span>
                         </div>
                         <div class="col-12">
                             {% include "base/paginator.html" %}
@@ -132,10 +182,43 @@
                 <!--end::Card-->
             {% else %}
                 {% block empty_list %}
+                    {% block search_empty %}
+                        <div class="d-flex mt-2 mb-7">
+                            <div class="table-search flex-grow-1 p-1">
+                                <!--<input id="id_table_search" type="search" class="form-control form-control"
+                                        placeholder="Buscar">-->
+                                <div class="input-group">
+                                    <input
+                                        id="id_table_search"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Buscar..."
+                                        value="{{ search }}"
+                                    />
+                                    {% if site.filter_fields %}
+                                        <div class="input-group-append">
+                                            <button
+                                                id="kt_quick_cart_toggle"
+                                                class="btn btn-primary"
+                                                type="button"
+                                            >
+                                                Avanzado
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endblock %}
                     <div class="alert alert-success p-5" role="alert">
                         <h4 class="alert-heading">¡Hola!</h4>
-                        <p>Aún no existen registros en esta sección o no tienes permisos para ver el contenido publicado</p>
-                        <div class="border-bottom border-white opacity-20 mb-5"></div>
+                        <p>
+                            Aún no existen registros en esta sección o no tienes
+                            permisos para ver el contenido publicado
+                        </p>
+                        <div
+                            class="border-bottom border-white opacity-20 mb-5"
+                        ></div>
                     </div>
                 {% endblock %}
             {% endif %}
@@ -143,14 +226,26 @@
     </div>
 
     {% block extra %}
-        <div class="modal fade" id="mass-update-modal" data-url="{{ site.urls.mass_update }}"
-             data-app="{{ site.app_name }}" data-model="{{ site.model_name }}" tabindex="-1" role="dialog"
-             aria-hidden="true">
+        <div
+            class="modal fade"
+            id="mass-update-modal"
+            data-url="{{ site.urls.mass_update }}"
+            data-app="{{ site.app_name }}"
+            data-model="{{ site.model_name }}"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
             <div class="modal-dialog modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edición masiva</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
                             <i aria-hidden="true" class="la la-close"></i>
                         </button>
                     </div>
@@ -158,21 +253,38 @@
                         <div class="form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="id_fetch_field">Seleccione el campo</label>
-                                <select class="form-control" id="id_mass_update_field" name="field">
+                                <label for="id_fetch_field">
+                                    Seleccione el campo
+                                </label>
+                                <select
+                                    class="form-control"
+                                    id="id_mass_update_field"
+                                    name="field"
+                                >
                                     <option value="">------------</option>
                                     {% for name, label in site.fields %}
-                                        <option value="{{ name }}">{{ label }}</option>
+                                        <option value="{{ name }}">
+                                            {{ label }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">
+                        <button
+                            type="button"
+                            class="btn btn-light-primary font-weight-bold"
+                            data-dismiss="modal"
+                        >
                             Cerrar
                         </button>
-                        <button type="button" id="id_mass_update_btn" class="btn btn-primary font-weight-bold" disabled>
+                        <button
+                            type="button"
+                            id="id_mass_update_btn"
+                            class="btn btn-primary font-weight-bold"
+                            disabled
+                        >
                             Guardar cambios
                         </button>
                     </div>

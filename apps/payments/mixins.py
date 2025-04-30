@@ -1,9 +1,12 @@
-"""Mixins for work site"""
-
-# Django
-from django.db.models import Q
+from django.db.models import CharField, Q
+from django.db.models.functions import Cast
+from django.shortcuts import redirect
 
 from apps.payments.choices import PaymentType
+from apps.payments.forms import DonationLineForm
+from apps.payments.models.donations import Donation
+from apps.payments.service import DonationService
+from apps.payments.workflows import DonationWorkflow
 from config.mixins.filteriing import FilterByChoice
 
 
@@ -37,6 +40,49 @@ class PaymentListMixin(FilterByChoice):
             queryset = queryset.filter(
                 Q(wizard__nick__unaccent__icontains=search)
                 | Q(wizard__forum_user_id__icontains=search)
+            )
+
+        return queryset
+
+
+class DonationFormMixin:
+    def get(self, request, *args, **kwargs):
+        DonationService.validate_donation(request)
+        exists_redirect = DonationService.get_redirect(request)
+
+        if exists_redirect:
+            return redirect(exists_redirect)
+
+        donation = Donation.objects.create(user=request.user)
+        self.object = donation
+
+        return redirect(self.get_success_url())
+
+
+class DonationDetailMixin:
+    form_class = DonationLineForm
+
+
+class DonationListMixin(FilterByChoice):
+    CHOICES = DonationWorkflow.Choices.choices
+    SEARCH_PARAM = "state"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get("search", False)
+        user = self.request.user
+        perms_list = ["payments.can_approve_donation", "payments.can_reject_donation"]
+        perms = [user.has_perm(perm) for perm in perms_list]
+
+        if not any(perms):
+            queryset = queryset.filter(Q(user=user) | Q(lines__beneficiary__user=user))
+
+        if search:
+            queryset = queryset.annotate(
+                forum_user_id_str=Cast("user__profile__forum_user_id", CharField())
+            ).filter(
+                Q(user__profile__nick__unaccent__icontains=search)
+                | Q(forum_user_id_str__icontains=search)
             )
 
         return queryset

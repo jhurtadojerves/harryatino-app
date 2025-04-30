@@ -1,0 +1,119 @@
+{% extends 'base/base_detail.html' %}
+{% load static insoles superadmin_utils %}
+
+{% block duplicate %}
+{% endblock %}
+{% block detail %}
+    {% if not object.is_full %}
+        <div class="row mb-12">
+            <div class="col">
+                <h3>
+                    Para continuar, selecciona las personas a las que realizarás
+                    la donación
+                </h3>
+            </div>
+        </div>
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead style="text-align: center;">
+                <tr>
+                    <th scope="col">Beneficiario</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Motivo</th>
+                    {% if object.state == 1 and object.user == request.user %}
+                        <th scope="col">Acciones</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in object.cached_lines %}
+                    <tr>
+                        <th scope="row">{{ line.beneficiary }}</th>
+                        <td>{{ line.quantity }}</td>
+                        <td>{{ line.reason }}</td>
+                        {% if object.state == 1 and object.user == request.user %}
+                            <td>
+                                <a
+                                    href="#"
+                                    class="btn btn-info form-instance-insoles"
+                                    data-url="{% url 'payments:donation_line_edit' line.pk %}"
+                                    data-title="Editar donación para {{ line.beneficiary }}"
+                                >
+                                    Editar
+                                </a>
+                                <a
+                                    href="#"
+                                    class="btn btn-danger insoles-delete"
+                                    data-line="{% insoles_delete line %}"
+                                >
+                                    Eliminar
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if not object.is_full %}
+        <div class="w-100 mt-12 ml-2">
+            <a
+                href="#"
+                type="button"
+                class="btn btn-light-primary font-weight-bolder mr-2 mb-2 form-instance-insoles"
+                data-url="{% url 'payments:donations_form' object.pk %}"
+                data-title="Añadir beneficiario"
+            >
+                Añadir beneficiario
+            </a>
+        </div>
+    {% endif %}
+    <br />
+    {{ block.super }}
+{% endblock %}
+
+{% block extra_detail %}
+    {% for line in object.cached_lines %}
+        <div class="col-md-6">
+            <div class="form-group">
+                {% detail_widget '' '' 'URLField' as template %}
+                {% include template with label=line.url_label value=line.vault_deposit_url widget='URLField' %}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if request.user|has_perm:'payments.can_approve_donation' %}
+        {% for line in object.cached_lines %}
+            <div class="col-md-{{ object.columns_detail }}">
+                <div class="form-group">
+                    {% detail_widget '' '' 'TextField' as template %}
+                    {% include template with label=line.html_label value=line.vault_html widget='TextField' %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="col-md-12">
+        <div class="form-group">
+            {% detail_widget '' '' 'TextField' as template %}
+            {% include template with label="HTML Descuento" value=object.vault_html widget='TextField' %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block toolbar_menu %}
+{% endblock %}
+{% block modals %}
+    {{ block.super }}
+    {% include "insoles/modal.html" %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendors/formset/jquery.formset.js' %}"></script>
+    <script src="{% static 'vendors/formset/formsets.init.js' %}"></script>
+    <script src="{% static 'assets/js/forms/inputmask.js' %}"></script>
+    <script src="{% static 'assets/js/apps/insoles_form.js' %}"></script>
+    <script src="{% static 'assets/js/apps/insoles_delete.js' %}"></script>
+{% endblock %}

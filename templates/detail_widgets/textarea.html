@@ -1,3 +1,15 @@
 <label>{{ label|capfirst }}</label>
-<textarea name="" class="form-control" cols="30" rows="10" readonly>{{ value|default_if_none:'' }}</textarea>
-<!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->
+
+{% if value %}
+    <textarea name="" class="form-control" cols="30" rows="10" readonly>
+{{ value|default_if_none:'' }}</textarea
+    >
+    <!--<p class="form-control-static">{{ value|default_if_none:"" }}</p>-->
+{% else %}
+    <input
+        class="form-control"
+        type="text"
+        value="{{ value|default_if_none:'' }}"
+        readonly
+    />
+{% endif %}

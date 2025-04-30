@@ -68,3 +68,11 @@ def has_detail_url(instance):
         return True
     except Exception:
         return False
+
+
+@register.simple_tag()
+def insoles_delete(instance):
+    app_name = instance.__class__._meta.app_label
+    model_name = instance._meta.model.__name__
+
+    return reverse("insoles_delete", args=(app_name, model_name, str(instance.pk)))

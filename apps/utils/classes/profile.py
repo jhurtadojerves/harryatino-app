@@ -16,6 +16,7 @@ class ForumProfile(BaseModel):
     vault: int = Field(..., alias="customFields[64]")
     formatted_name: str = Field(...)
     nick: str = Field(...)
+    profile_url: Optional[str] = Field(None, alias="profileUrl")
 
     @field_validator("avatar", mode="before")
     @classmethod

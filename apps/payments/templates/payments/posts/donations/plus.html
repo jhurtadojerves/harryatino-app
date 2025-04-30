@@ -1,0 +1,14 @@
+<ul>
+    <li>Saldo Anterior: {{ galleons.old }} G</li>
+    <li>
+        Donación recibida el
+        <a href="{{ donation.request_url }}">
+            {{ donation.created_date|date:"d/m/Y" }}
+        </a>
+        por {{ giver.nick }}:
+        <span style="color:#2ecc71;">
+            <strong>{{ line.quantity }} G</strong>
+        </span>
+    </li>
+    <li>Saldo: {{ galleons.new }} G</li>
+</ul>

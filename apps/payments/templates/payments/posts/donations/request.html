@@ -1,0 +1,39 @@
+<p>
+    <strong>Nick y Perfil del donante:</strong>
+    <a href="{{ giver.profile_url }}">{{ giver.nick }}</a>
+    <br />
+    <strong>Bóveda del donante:</strong>
+    <a href="{{ giver.vault_url }}" rel="">{{ giver.vault_number }}</a>
+    <br />
+    <strong>Cantidad a donar:</strong>
+    {{ donation.total }} G
+    <br />
+    <strong>Link de la donación</strong>
+    <a href="{{ donation.detail_url }}" target="_blank">
+        Donación # {{ donation.id }}
+    </a>
+    <br />
+</p>
+<hr />
+{% for line in donation.lines %}
+    <p>
+        <strong>Receptor {{ forloop.counter }}:</strong>
+    </p>
+    <p>
+        Nick y perfil:
+        <a href="{{ line.beneficiary.profile_url }}" rel="">
+            {{ line.beneficiary.nick }}
+        </a>
+        <br />
+        Bóveda:
+        <a href="{{ line.beneficiary.vault_url }}" rel="">
+            {{ line.beneficiary.nick }}
+        </a>
+        <br />
+        Cantidad a recibir: {{ line.quantity }} G
+        <br />
+        Concepto: {{ line.reason|default_if_none:"--" }}
+    </p>
+
+    <hr />
+{% endfor %}

@@ -2,11 +2,21 @@
     <div class="row mb-10">
         <div class="col">
             <h3>Filtrar por tipo de pago</h3>
-            <a href="&search={{ search }}"><span
-                    class="badge badge-{% if choice_param %}secondary{% else %}primary{% endif %}">Ver todos</span></a>
+            <a href="?search={{ search }}">
+                <span
+                    class="badge badge-{% if choice_param %}secondary{% else %}primary{% endif %}"
+                >
+                    Ver todos
+                </span>
+            </a>
             {% for choice in search_choices %}
-                <a href="?choice_param={{ choice.slug }}&search={{ search }}"><span
-                        class="badge badge-{% if choice.slug == choice_param %}primary{% else %}secondary{% endif %} ">{{ choice.display }}</span></a>
+                <a href="?choice_param={{ choice.slug }}&search={{ search }}">
+                    <span
+                        class="badge badge-{% if choice.slug == choice_param %}primary{% else %}secondary{% endif %} "
+                    >
+                        {{ choice.display }}
+                    </span>
+                </a>
             {% endfor %}
         </div>
     </div>
