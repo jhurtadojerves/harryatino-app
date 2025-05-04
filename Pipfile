@@ -25,7 +25,8 @@ requests = "*"
 djangorestframework = "*"
 django-fsm = "*"
 django-filter = "*"
-pydantic =  "==2.10.6"
+pydantic =  "*"
+dataclasses = "*"
 
 [requires]
 python_version = "3.7"
