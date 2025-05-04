@@ -7,21 +7,7 @@ from config.model_site import CustomFieldServiceMixin
 
 class PurchaseListMixin(FilterByChoice):
     CHOICES = PurchaseWorkflowChoices.choices
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        user = self.request.user
-        choice_param = self.request.GET.get("choice_param", None)
-
-        if not user.is_moderator:
-            queryset = queryset.filter(user=user)
-
-        if choice_param:
-            search_choice = self.get_search_selected_choice(choice_param)
-            if type(search_choice) == int:  # noqa: E721
-                queryset = queryset.filter(state=search_choice)
-
-        return queryset
+    SEARCH_PARAM = "state"
 
 
 class PurchaseDetailMixin(CustomFieldServiceMixin):

@@ -27,6 +27,8 @@ django-fsm = "*"
 django-filter = "*"
 pydantic =  "*"
 dataclasses = "*"
+gunicorn = "*"
+django-redis = "*"
 
 [requires]
 python_version = "3.7"
