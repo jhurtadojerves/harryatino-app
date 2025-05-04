@@ -24,6 +24,7 @@ class WorkListMixin:
 
 class PaymentListMixin(FilterByChoice):
     CHOICES = PaymentType.choices
+    SEARCH_PARAM = "payment_type"
 
     def get_queryset(self):
         queryset = super().get_queryset()
