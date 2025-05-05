@@ -10,7 +10,7 @@ isort = "==5.10.1"
 flake8 = "==4.0.1"
 
 [packages]
-django = "==3.2.13"
+django = "==4.2.13"
 django-select2 = "*"
 django-superadmin = "==1.2.6"
 django-tracing = "==1.0.6"
@@ -26,9 +26,8 @@ djangorestframework = "*"
 django-fsm = "*"
 django-filter = "*"
 pydantic =  "*"
-dataclasses = "*"
 gunicorn = "*"
 django-redis = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"

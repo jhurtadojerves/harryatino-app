@@ -53,7 +53,6 @@ class Topic(BaseModel, TopicTransitions):
     permissions = models.ManyToManyField(
         to="authentication.User",
         verbose_name="Usuarios habilitados",
-        null=True,
         blank=True,
         help_text="Si no seleccionas ningún usuarios, todos podrán lanzar dados",
     )
