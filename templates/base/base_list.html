@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load static superadmin_utils check_permission %}
+{% load static superadmin_utils check_permission date_filters %}
 {% block title %}
     {{ site.title|capfirst }}
     - {{ block.super }}
@@ -120,7 +120,7 @@
                                     <td>{{ row.instance.id }}</td>
                                     {% for value in row.values %}
                                         <td>
-                                            {{ value|default:""|truncatechars:"50" }}
+                                            {{ value|format_if_date|default:""|truncatechars:50 }}
                                         </td>
                                     {% endfor %}
                                     <td>

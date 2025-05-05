@@ -26,3 +26,10 @@ class PurchaseSite(DefaultSite):
             ["purchase_url", "certification_url", "discount_url"],
         ],
     }
+    list_fields = [
+        "user",
+        "created_date",
+        "confirm_date",
+        "state",
+        "number_of_lines:Número de productos",
+    ]

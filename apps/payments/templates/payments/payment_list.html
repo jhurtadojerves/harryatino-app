@@ -1,9 +1,9 @@
 {% extends "base/base_list.html" %}
 
 {% block choices %}
-    {% include "payments/choices.html" with search_choices=search_choices search=search %}
+    {% include "base/choices.html" with search_choices=search_choices search=search %}
 {% endblock %}
 {% block empty_list %}
-    {% include "payments/choices.html" with search_choices=search_choices search=search %}
+    {% include "base/choices.html" with search_choices=search_choices search=search %}
     {{ block.super }}
 {% endblock %}
