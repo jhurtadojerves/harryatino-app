@@ -102,6 +102,10 @@ class Purchase(BaseModel, PurchaseTransitions):
         path = get_site_url(self, "detail")
         return f"{base_url}{path}"
 
+    @property
+    def number_of_lines(self):
+        return self.lines.count()
+
     class Meta:
         verbose_name = "Compra"
         verbose_name_plural = "Compras"
