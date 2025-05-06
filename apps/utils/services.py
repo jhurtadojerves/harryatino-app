@@ -284,7 +284,7 @@ class TopicAPIService(APIService):
     @classmethod
     def create_post_v2(cls, topic: int, html: str, author: int):
         payload = cls.get_payload({"topic": topic, "author": author, "post": html})
-        breakpoint()
+
         return cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
 
     @cache_decorator(TOPIC_ID_CACHE_KEY, ["key_id"])
