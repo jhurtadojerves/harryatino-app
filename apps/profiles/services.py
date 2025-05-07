@@ -1,5 +1,6 @@
 from apps.profiles.models.profiles import Profile
 from apps.profiles.schemas import CalculateLevelAndSocialRank
+from apps.utils.classes.profile import ForumProfile
 from apps.utils.services import UserAPIService
 
 
@@ -161,3 +162,19 @@ class ProfileService:
             UserAPIService.update_user_profile(profile.forum_user_id, raw_data=data)
             profile.magic_level = level
             profile.save()
+
+    @classmethod
+    def update_profile(cls, profile: Profile, forum_profile: ForumProfile):
+        profile.range_of_creatures = forum_profile.creatures
+        profile.range_of_objects = forum_profile.objects
+        profile.galleons = forum_profile.galleons
+        profile.magic_level = forum_profile.level
+        profile.nick = forum_profile.nick
+        profile.formatted_name = forum_profile.formatted_name
+        profile.boxroom_number = forum_profile.boxroom_number
+        profile.vault_number = forum_profile.vault
+        profile.character_sheet = forum_profile.character
+        profile.profile_url = forum_profile.profile_url
+        profile.save()
+
+        return profile

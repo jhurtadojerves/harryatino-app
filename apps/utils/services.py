@@ -175,6 +175,28 @@ class UserAPIService(APIService):
         return data
 
     @classmethod
+    def get_forum_user_data_v3(cls, forum_user_id):
+        url = f"{cls.USER_API_URL}{forum_user_id}?key={API_KEY}"
+        response = requests.request("GET", url, headers={}, data={})
+        data = response.json()
+        custom_fields = data.get("customFields", False)
+        raw_user_data = dict()
+        user_data = dict()
+
+        for raw in custom_fields.values():
+            raw_user_data.update(raw["fields"])
+
+        for key, value in raw_user_data.items():
+            user_data.update({f"customFields[{key}]": value["value"]})
+
+        data.update(user_data)
+        data.update(
+            {"nick": data.get("name"), "formatted_name": data.get("formattedName")}
+        )
+
+        return data
+
+    @classmethod
     def get_for_key(cls, data, key):
         return data.get(f"customFields[{key}]", "")
 
@@ -214,6 +236,15 @@ class UserAPIService(APIService):
         wizard.character_sheet = profile.character
         wizard.profile_url = profile.profile_url
         wizard.save()
+
+    @classmethod
+    def get_updated_profile_data(cls, forum_user_id):
+        try:
+            data = cls.get_forum_user_data_v3(forum_user_id)
+
+            return ForumProfile(**data), None
+        except Exception as error:
+            return None, cls.format_pydantic_errors(error, ForumProfile)
 
     @classmethod
     def format_pydantic_errors(cls, error: ValidationError, model: BaseModel):

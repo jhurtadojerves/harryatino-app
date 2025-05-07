@@ -1,23 +1,37 @@
 {% load superadmin_utils %}
 {% if products %}
-    <div class="row row-cards" style="margin: auto auto;align-items: center; justify-content: center;">
+    <div
+        class="row row-cards"
+        style="margin: auto auto;align-items: center; justify-content: center;"
+    >
         {% for object in products %}
             <div class="card-group">
                 <div class="card p-3 m-2">
-                    <a href="{% site_url object.product 'detail' %}" class="mb-3">
+                    <a
+                        href="{% site_url object.product 'detail' %}"
+                        class="mb-3"
+                    >
                         <img
                             src="{{ object.product.image }}"
                             alt="Photo by Nathan Guerrero"
                             class="rounded"
-
-                        >
+                            style="object-fit: contain; width: 100%; height: 300px;"
+                        />
                     </a>
                     <div class="d-flex align-items-center px-2">
                         <div>
-                            <div style="max-width: 230px;">{{ object.product.name }}</div>
-                            <small class="d-block text-muted">Referencia: {{ object.product.reference }}</small>
-                            <small class="d-block text-muted">Sección: {{ object.product.category.section }}</small>
-                            <small class="d-block text-muted">Categoría: {{ object.product.category.name }}</small>
+                            <div style="max-width: 230px;">
+                                {{ object.product.name }}
+                            </div>
+                            <small class="d-block text-muted">
+                                Referencia: {{ object.product.reference }}
+                            </small>
+                            <small class="d-block text-muted">
+                                Sección: {{ object.product.category.section }}
+                            </small>
+                            <small class="d-block text-muted">
+                                Categoría: {{ object.product.category.name }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -27,11 +41,14 @@
 {% else %}
     <div class="alert alert-warning">
         <h4>¡Lo sentimos!</h4>
-        <p>Los criterios de búsqueda seleccionados no obtuvieron ningún resultado.
-           Puede intentarlo de nuevo o resetear los filtros</p>
+        <p>
+            Los criterios de búsqueda seleccionados no obtuvieron ningún
+            resultado. Puede intentarlo de nuevo o resetear los filtros
+        </p>
         <div class="btn-list">
             <a href="{% site_url any_product 'list' %}" class="btn btn-info">
-                <i class="bx bx-plus"></i> Reiniciar Búsqueda
+                <i class="bx bx-plus"></i>
+                Reiniciar Búsqueda
             </a>
         </div>
     </div>

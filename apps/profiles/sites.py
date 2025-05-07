@@ -33,3 +33,4 @@ class ProfileSite(BaseSite):
     detail_template_name = None
     menu_is_public = True
     form_class = WizardForm
+    allow_views = ("create", "list", "detail")

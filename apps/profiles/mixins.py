@@ -1,16 +1,19 @@
-"""Define mixins to profile"""
+import uuid
 
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 
+from apps.authentication.models.token import AccessToken
+from apps.authentication.services import AccessTokenService
 from apps.products.models import Category, Product, Section
+from apps.profiles.models.profiles import Profile
+from apps.profiles.services import ProfileService
 from apps.utils.services import UserAPIService
 
 
 class ProfileListMixin:
-    """Profile List Mixin"""
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -118,11 +121,37 @@ class ProfileDetailMixin:
 class ProfileFormMixin:
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        self.object = form.save(commit=False)
-        errors = UserAPIService.update_user_profile_v2(self.object)
+        forum_user_id = form.data.get("forum_user_id")
+        forum_profile, errors = UserAPIService.get_updated_profile_data(forum_user_id)
 
         if errors:
             messages.error(self.request, errors)
             return super().form_invalid(form)
+
+        profiles = Profile.objects.filter(forum_user_id=forum_user_id)
+        created = False
+
+        if profiles.exists():
+            profile = profiles.first()
+        else:
+            profile = Profile(forum_user_id=forum_user_id)
+            created = True
+
+        profile = ProfileService.update_profile(profile, forum_profile)
+        self.object = profile
+
+        if created:
+            token = uuid.uuid4()
+            profile = UserAPIService.download_user_data_and_update(profile)
+            user = AccessTokenService.prepare_profile(profile, str(token))
+            tokens = AccessToken.objects.filter(user=user)
+
+            if tokens:
+                token_object = tokens.first()
+            else:
+                token_object = AccessToken(token=token, user=user)
+
+            token_object.save()
+            token_object.send_message()
 
         return HttpResponseRedirect(self.get_success_url())
