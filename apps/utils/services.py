@@ -117,7 +117,7 @@ class UserAPIService(APIService):
             wizard.avatar = avatar
 
         wizard.save()
-        wizard.refresh_from_db()
+        wizard = Profile.objects.get(pk=wizard.pk)
 
         return wizard
 

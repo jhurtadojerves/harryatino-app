@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from environs import Env
 from superadmin.templatetags.superadmin_utils import site_url
 
+from apps.profiles.models.profiles import Profile
 from apps.utils.services import LinkService, TopicAPIService, UserAPIService
 from apps.workflows.exceptions import WorkflowException
 
@@ -105,7 +106,7 @@ class MonthlyPaymentService(BaseService):
         work = line.work
         profile = work.wizard
         number_of_posts = len(posts)
-        profile.refresh_from_db()
+        profile = Profile.objects.get(pk=profile.pk)
 
         calculated_value = 0
 
