@@ -13,7 +13,7 @@ from .mixins import (
 )
 
 
-# @register("payments.Work")
+@register("payments.Work")
 class WorkSite(BaseSite):
     detail_fields = ("wizard", "work", "work_description")
     list_fields = ("wizard", "work")
