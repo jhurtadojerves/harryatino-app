@@ -1,15 +1,11 @@
-"""Define mixins to list and edit profile"""
-
-# Local
 import operator
 from functools import reduce
 
-from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.shortcuts import redirect
 from superadmin.templatetags.superadmin_utils import site_url
 
-from apps.authentication.models.users import User
+from apps.authentication.services import AccessTokenService
 from apps.utils.services import UserAPIService
 
 
@@ -31,20 +27,7 @@ class AccessTokenCreateMixin:
         profile = form.cleaned_data.get("wizard")
         self.object = form.save(commit=False)
         profile = UserAPIService.download_user_data_and_update(profile)
-        group = Group.objects.filter(name="Usuarios").first()
-
-        if profile.user:
-            user = profile.user
-        else:
-            user = User.objects.create_user(
-                username=profile.nick, password=str(self.object.token)
-            )
-            profile.user = user
-            profile.save()
-
-        if group:
-            user.groups.add(group)
-
+        user = AccessTokenService.prepare_profile(profile, str(self.object.token))
         self.object.user = user
         self.object.save()
         self.object.send_message()

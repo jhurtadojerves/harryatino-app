@@ -1,12 +1,15 @@
 """Define models to User Profile"""
 
 from django.db import models
+from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
+from apps.profiles.transitions import ProfileTransitions
 from config.utils import get_encoded_verbose
 
 
-class Profile(BaseModel):
+class Profile(BaseModel, ProfileTransitions):
+    workflow = ProfileTransitions.workflow
     forum_user_id = models.PositiveIntegerField(unique=True, verbose_name="Id del foro")
     nick = models.CharField(max_length=128)
     formatted_name = models.CharField(max_length=128, null=True)
@@ -39,6 +42,13 @@ class Profile(BaseModel):
         on_delete=models.SET_NULL,
     )
     profile_url = models.URLField(null=True, max_length=512)
+
+    state = FSMIntegerField(
+        choices=workflow.choices,
+        default=workflow.CREATED,
+        protected=True,
+        verbose_name="estado",
+    )
 
     def __str__(self):
         return self.nick
@@ -97,8 +107,7 @@ class Profile(BaseModel):
         return self.sales.filter(product__category__name__startswith="LH")
 
     class Meta(BaseModel.Meta):
-        """Meta options."""
-
         verbose_name = "Mago"
         verbose_name_plural = "Magos"
         ordering = ("pk",)
+        permissions = (("can_sync", "Can sync profile data"),)

@@ -1,14 +1,8 @@
-"""Sites from authentication"""
-
-# Base
 from superadmin.decorators import register
 
 from config.base import BaseSite
 
-# Forms
 from .forms import AccessTokenForm, UserForm
-
-# Local
 from .mixins import (
     AccessTokenCreateMixin,
     AccessTokenListMixin,
@@ -22,7 +16,6 @@ class UserSite(BaseSite):
     """Site from profiles"""
 
     form_class = UserForm
-    # form_mixins = (UserFormMixin,)
     list_mixins = (UserListMixin,)
     detail_fields = (
         (
@@ -46,4 +39,5 @@ class AccessTokenSite(BaseSite):
     form_mixins = (AccessTokenCreateMixin,)
     list_mixins = (AccessTokenListMixin,)
     detail_fields = ("user:Usuario",)
-    allow_views = ("create", "list", "detail", "delete")
+    allow_views = ("create", "list", "detail")
+    list_fields = ("__str__:Usuario", "created_date", "modified_date")
