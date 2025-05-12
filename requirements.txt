@@ -4,7 +4,7 @@ django-superadmin==1.2.6
 django-tracing==1.0.6
 django-ckeditor
 environs
-psycopg2==2.9.3
+psycopg2==2.9.10
 pillow
 django-import-export
 django-extensions
