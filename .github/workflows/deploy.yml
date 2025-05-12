@@ -36,7 +36,7 @@ jobs:
                         exit 1
                       fi
 
-                      if [ ! -f newrelic.ini ]; then
+                      if [ ! -f /root/newrelic.ini ]; then
                         echo "❌ newrelic.ini not found. Aborting..."
                         exit 1
                       fi
