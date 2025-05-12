@@ -41,6 +41,7 @@ jobs:
                         exit 1
                       fi
 
+                      mkdir -p /var/www/magicmall/static
                       docker build -t django-app:${{ github.ref_name }} -f .docker/Dockerfile .
 
                       docker stop django-app || true && docker rm django-app || true
@@ -49,6 +50,7 @@ jobs:
                       docker run -d --name django-app \
                         --env-file /root/.env \
                         -v /root/newrelic.ini:/app/newrelic.ini \
+                        -v /var/www/magicmall/static:/app/staticfiles \
                         -p 8080:8080 \
                         django-app:${{ github.ref_name }}
 
