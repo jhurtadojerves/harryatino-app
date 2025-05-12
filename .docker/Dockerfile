@@ -7,7 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
-ENV MODE=web
+RUN python manage.py collectstatic --noinput
 
 CMD ["newrelic-admin", "run-program", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080"]
 
