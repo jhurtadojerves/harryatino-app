@@ -29,7 +29,7 @@ jobs:
                   key: ${{ secrets.DROPLET_SSH_KEY }}
                   script: |
                       set -e
-                      cd /root
+                      cd /root/app
 
                       if [ ! -f /root/.env ]; then
                         echo "❌ /root/.env not found. Aborting..."
@@ -48,7 +48,7 @@ jobs:
                       # Django
                       docker run -d --name django-app \
                         --env-file /root/.env \
-                        -v /root/app/newrelic.ini:/app/newrelic.ini \
+                        -v /root/newrelic.ini:/app/newrelic.ini \
                         -p 8080:8080 \
                         django-app:${{ github.ref_name }}
 
