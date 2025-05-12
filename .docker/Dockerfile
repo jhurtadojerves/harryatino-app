@@ -5,18 +5,8 @@ RUN apt-get update && apt-get install -y libpq-dev gcc
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-
+# Establecer settings base como default
 ENV DJANGO_SETTINGS_MODULE=config.settings.base
-RUN python manage.py collectstatic --noinput
 
-CMD ["newrelic-admin", "run-program", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080"]
-
-
-
-
-
-
-
-
-
+# Ejecuta collectstatic + gunicorn al iniciar el contenedor
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && newrelic-admin run-program gunicorn config.wsgi:application --bind 0.0.0.0:8080"]
