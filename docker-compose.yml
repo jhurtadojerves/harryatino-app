@@ -23,7 +23,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: .docker/Dockerfile
+      dockerfile: .docker/Dockerfile.dev
     restart: always
     volumes:
       - .:/app/

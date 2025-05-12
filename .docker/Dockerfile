@@ -1,14 +1,21 @@
-FROM python:3.9-slim-bullseye
+FROM python:3.13.3-slim-bullseye
 
-RUN python --version
-
-COPY . /app/
 WORKDIR /app
-
-# OS dependencies
 RUN apt-get update && apt-get install -y libpq-dev gcc
 
-# Install Python dependencies
-RUN pip install -U pip && pip install -r requirements_dev.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 
-EXPOSE 8080
+ENV MODE=web
+
+CMD ["newrelic-admin", "run-program", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080"]
+
+
+
+
+
+
+
+
+
