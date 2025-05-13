@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from environs import Env
 from superadmin.templatetags.superadmin_utils import site_url
 
+from apps.payments.workflows import DonationWorkflow
 from apps.profiles.models.profiles import Profile
 from apps.utils.services import LinkService, TopicAPIService, UserAPIService
 from apps.workflows.exceptions import WorkflowException
@@ -503,4 +504,18 @@ class DonationService:
         if donation.total > donation.user.profile.galleons:
             raise WorkflowException(
                 "La bóveda tienes los galeones suficientes para realizar esta donación"
+            )
+
+    @classmethod
+    def validate_state(cls, donation: Donation):
+        if donation.state != DonationWorkflow.Choices.CREATED.value:
+            raise WorkflowException(
+                f"No puedes añadir beneficiarios a una donación en estado {donation.get_state_display()}"
+            )
+
+    @classmethod
+    def validate_giver(cls, request, donation: Donation):
+        if donation.user != request.user:
+            raise WorkflowException(
+                "No puedes realizar esta acción porque no eres el donante"
             )
