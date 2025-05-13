@@ -440,10 +440,14 @@ class DonationService:
             )
 
     @classmethod
-    def validate_line(cls, line: DonationLine):
+    def validate_line(cls, line: DonationLine, donation: Donation):
         from apps.payments.models.donations import DonationLine
 
         thirty_days_ago = datetime.now() - timedelta(days=30)
+
+        if line.beneficiary == donation.user.profile:
+            raise WorkflowException("No puedes donarte a ti mismo")
+
         other_lines = DonationLine.objects.filter(
             donation__confirm_date__gte=thirty_days_ago,
             beneficiary=line.beneficiary,

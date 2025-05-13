@@ -71,6 +71,15 @@ class DonationLineForm(ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super(DonationLineForm, self).__init__(*args, **kwargs)
+
+        if user and hasattr(user, "profile"):
+            self.fields["beneficiary"].queryset = self.fields[
+                "beneficiary"
+            ].queryset.exclude(id=user.profile.id)
+
 
 class DonationLineEdit(ModelForm):
     class Meta:

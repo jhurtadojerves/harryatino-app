@@ -248,7 +248,7 @@ class AddBeneficiaryToDonation(InstanceBaseFormView):
                 return self.form_invalid(form)
 
             line_form = form.save(commit=False)
-            DonationService.validate_line(line_form)
+            DonationService.validate_line(line_form, self.object)
             DonationService.not_is_full(self.object)
 
             DonationLine.objects.create(
@@ -264,8 +264,17 @@ class AddBeneficiaryToDonation(InstanceBaseFormView):
 
     def get_kwargs(self):
         kwargs = {}
+
         if self.request.POST or self.request.FILES:
             kwargs.update({"data": self.request.POST, "files": self.request.FILES})
+
+        return kwargs
+
+    def get_form_kwargs(self):
+        self.object = self.get_object()
+        kwargs = {**self.get_kwargs()}
+        kwargs["user"] = self.object.user
+
         return kwargs
 
     def get(self, request, *args, **kwargs):
@@ -282,7 +291,6 @@ class DonationBeneficiaty(InstanceBaseFormView):
     model = DonationLine
     form_class = DonationLineEdit
     create_url_name = "payments:donation_line_edit"
-    # validate_edit_line
 
     def post(self, request, *args, **kwargs):
         try:
