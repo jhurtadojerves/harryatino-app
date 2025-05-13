@@ -250,6 +250,8 @@ class AddBeneficiaryToDonation(InstanceBaseFormView):
             line_form = form.save(commit=False)
             DonationService.validate_line(line_form, self.object)
             DonationService.not_is_full(self.object)
+            DonationService.validate_giver(request, self.object)
+            DonationService.validate_state(self.object)
 
             DonationLine.objects.create(
                 quantity=line_form.quantity,
@@ -281,6 +283,8 @@ class AddBeneficiaryToDonation(InstanceBaseFormView):
         try:
             self.object = self.get_object()
             DonationService.not_is_full(self.object)
+            DonationService.validate_giver(request, self.object)
+            DonationService.validate_state(self.object)
         except WorkflowException as err:
             return self.error(str(err))
 

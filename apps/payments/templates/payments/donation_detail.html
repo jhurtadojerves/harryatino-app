@@ -57,7 +57,7 @@
         </table>
     </div>
 
-    {% if not object.is_full %}
+    {% if not object.is_full and object.state == 1 and object.user == request.user %}
         <div class="w-100 mt-12 ml-2">
             <a
                 href="#"
