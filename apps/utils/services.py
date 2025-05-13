@@ -318,8 +318,8 @@ class TopicAPIService(APIService):
 
         return cls.post(url=cls.CREATE_POST_API_URL, payload=payload)
 
-    @cache_decorator(TOPIC_ID_CACHE_KEY, ["key_id"])
     @classmethod
+    @cache_decorator(TOPIC_ID_CACHE_KEY, ["key_id"])
     def get_topic_id(cls, key_id):
         from apps.utils.models.api import TopicAPI
 
