@@ -1,12 +1,9 @@
-# Django
 from django.apps import apps
 from django.http import JsonResponse
 from django.views.generic import View
-
-# Libraries
 from django_fsm import has_transition_perm
+from newrelic import agent
 
-# Local
 from .exceptions import WorkflowException
 
 
@@ -28,6 +25,21 @@ class ChangeStateView(View):
             return self.success("La acción ha sido realizada con éxito.")
         except WorkflowException as e:
             return self.error(str(e))
+        except Exception as e:
+            request_id = getattr(request, "request_id", "UNKNOWN")
+            agent.record_exception(
+                exc=e,
+                custom_attributes={
+                    "request_id": request_id,
+                    "path": request.path,
+                    "method": request.method,
+                    "user_id": getattr(getattr(request, "user", None), "id", None),
+                },
+            )
+
+            return self.error(
+                str(f"Hubo un problema al procesar tu solicitud (Código: {request_id})")
+            )
 
     def get_kwargs(self):
         if self.request.FILES:

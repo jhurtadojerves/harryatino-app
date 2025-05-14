@@ -117,9 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Middlewares
 MIDDLEWARE = [
+    "apps.utils.middlewares.RequestIDMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "apps.utils.middlewares.NewRelicTrackingMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -272,3 +274,32 @@ MAGIC_MALL_TOPIC = env.int("MAGIC_MALL_TOPIC")
 CHECKOUT_COOLDOWN_HOURS = env.int("CHECKOUT_COOLDOWN_HOURS", 12)
 MOCK_CREATE_POST = False
 CACHE_TTL = env.int("CACHE_TTL", 60 * 15)
+
+
+# logger = logging.getLogger(__name__)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "request_id": {
+            "()": "apps.utils.logging.RequestIDLogFilter",
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] [{levelname}] [{request_id}] {name}:{funcName}:{lineno} :: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "filters": ["request_id"],
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
