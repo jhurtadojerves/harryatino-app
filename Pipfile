@@ -28,6 +28,7 @@ django-filter = "*"
 pydantic =  "*"
 gunicorn = "*"
 django-redis = "*"
+newrelic = "==10.11.0"
 
 [requires]
 python_version = "3.9"
