@@ -140,7 +140,11 @@ const initWorkflow = () => {
                 let url = getUrlWorkflow(sender, {"transition": sender.dataset.transition})
                 getFormWorkflow(url)
                     .then(res => confirmChangeStateForm(sender, res.template))
-                    .catch(error => toastr.error(error, 'Error'))
+                    .catch(error => Swal.fire({
+                                title: "Se produjo un error",
+                                text: error.message,
+                                icon: "error",
+                            }))
             } else {
                 confirmChangeState(sender)
             }
