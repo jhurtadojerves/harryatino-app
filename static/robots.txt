@@ -33,7 +33,6 @@ Disallow: /pago/
 Disallow: /pagos/
 Disallow: /reset/
 
-# Bloquear bots conocidos como malos
 User-agent: MJ12bot
 Disallow: /
 
@@ -55,9 +54,17 @@ Disallow: /
 User-agent: Yandex
 Disallow: /
 
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Barkrowler
+Disallow: /
+
 # Por defecto: bloquear todo a bots desconocidos
 User-agent: *
-User-agent: Googlebot
 Disallow: /admin/
 Disallow: /administracion/
 Disallow: /autenticacion/
