@@ -1,6 +1,3 @@
-"""Services from utils module"""
-
-# Third party integration
 from typing import Optional
 
 import requests
@@ -10,7 +7,6 @@ from environs import Env
 from pydantic import BaseModel, ValidationError
 from superadmin.templatetags.superadmin_utils import site_url
 
-# Models
 from apps.profiles.models.profiles import Profile
 from apps.utils.cache import CacheService
 from apps.utils.classes.profile import ForumProfile
@@ -22,13 +18,6 @@ API_KEY = env("API_KEY")
 API_KEY_MP = env("API_KEY_MP")
 API_KEY_GET = env("API_KEY")
 PERSONAL_MESSAGE_API_URL = "https://www.harrylatino.org/api/core/messages"
-# params:
-"""
-from int   User ID conversation is from
-to array One or more user IDs conversation is sent to
-title  string Conversation title
-body string Conversation body
-"""
 
 
 class LinkService:
@@ -153,29 +142,7 @@ class UserAPIService(APIService):
         return user_data
 
     @classmethod
-    def get_forum_user_data_v2(cls, wizard):
-        url = f"{cls.USER_API_URL}{wizard.forum_user_id}?key={API_KEY}"
-        response = requests.request("GET", url, headers={}, data={})
-        data = response.json()
-        custom_fields = data.get("customFields", False)
-        raw_user_data = dict()
-        user_data = dict()
-
-        for raw in custom_fields.values():
-            raw_user_data.update(raw["fields"])
-
-        for key, value in raw_user_data.items():
-            user_data.update({f"customFields[{key}]": value["value"]})
-
-        data.update(user_data)
-        data.update(
-            {"nick": data.get("name"), "formatted_name": data.get("formattedName")}
-        )
-
-        return data
-
-    @classmethod
-    def get_forum_user_data_v3(cls, forum_user_id):
+    def get_forum_user_data_v2(cls, forum_user_id: int) -> dict:
         url = f"{cls.USER_API_URL}{forum_user_id}?key={API_KEY}"
         response = requests.request("GET", url, headers={}, data={})
         data = response.json()
@@ -214,7 +181,7 @@ class UserAPIService(APIService):
 
     @classmethod
     def download_user_data(cls, wizard) -> ForumProfile:
-        data = cls.get_forum_user_data_v2(wizard)
+        data = cls.get_forum_user_data_v2(wizard.forum_user_id)
 
         return ForumProfile(**data)
 
@@ -240,7 +207,7 @@ class UserAPIService(APIService):
     @classmethod
     def get_updated_profile_data(cls, forum_user_id):
         try:
-            data = cls.get_forum_user_data_v3(forum_user_id)
+            data = cls.get_forum_user_data_v2(forum_user_id)
 
             return ForumProfile(**data), None
         except Exception as error:
