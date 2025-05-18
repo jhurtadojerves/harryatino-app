@@ -68,3 +68,26 @@ class LevelUpdateLine(BaseModel, LevelUpdateLineTransitions):
     @property
     def is_done(self):
         return self.level_update.is_done
+
+
+class ProfileHistory(BaseModel):
+    forum_user_id = models.IntegerField()
+    original_data = models.JSONField()
+    new_data = models.JSONField()
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="history", null=True
+    )
+
+    def __str__(self):
+        if self.profile:
+            return f"Historial de perfil de {self.profile.nick}"
+        return f"Historial de perfil ({self.forum_user_id})"
+
+    class Meta(BaseModel.Meta):
+        verbose_name = "Actualización de Perfil"
+        verbose_name_plural = "Actualizaciones de Perfil"
+        ordering = ["-id"]
+        permissions = (("can_update_profiles", "Can update profiles"),)
+        indexes = [
+            models.Index(fields=["forum_user_id"]),
+        ]

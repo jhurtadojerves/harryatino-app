@@ -25,6 +25,7 @@ class FieldDynamic(object):
         attrs_widget=None,
         class_type=None,
         class_widget=None,
+        disabled=False,
     ):
         self.label = label
         self.required = required
@@ -34,6 +35,7 @@ class FieldDynamic(object):
         self.model = self.get_model()
         self.queryset = self.get_queryset()
         self.default = {"data-placeholder": "Seleccione un elemento"}
+        self.disabled = disabled
 
     def clean_attrs_widget(self):
         return items_attr(self.attrs_widget)
@@ -59,7 +61,11 @@ class FieldDynamic(object):
         return None
 
     def get_kwargs_class_type(self):
-        kwargs = {"label": self.label, "required": self.required}
+        kwargs = {
+            "label": self.label,
+            "required": self.required,
+            "disabled": self.disabled,
+        }
         if self.queryset:
             kwargs.update({"queryset": self.queryset})
         choices = self.get_item_attrs_widget("choices")

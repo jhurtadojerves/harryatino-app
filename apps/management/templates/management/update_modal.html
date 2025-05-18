@@ -1,0 +1,64 @@
+<div class="insoles-forms">
+    <div
+        class="modal fade text-left"
+        id="insoles-forms"
+        tabindex="3"
+        role="dialog"
+        aria-labelledby="modalLabel"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-dialog modal-xl modal-dialog-centered"
+            role="document"
+        >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel">
+                        Editar Perfil
+                        <span id="username"></span>
+                    </h4>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <i class="bx bx-x"></i>
+                    </button>
+                </div>
+                <form
+                    id="insoles-form"
+                    action=""
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID de Usuario</label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                id="forum_user_id"
+                            />
+                            <button
+                                type="button"
+                                class="btn btn-primary mt-5"
+                                id="load_data"
+                            >
+                                Cargar Datos
+                            </button>
+                        </div>
+                        <div id="render_form"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light-primary ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Guardar</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

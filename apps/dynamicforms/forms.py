@@ -41,9 +41,12 @@ class BaseForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
 class CreationDynamicForm(BaseForm):
     def __init__(self, *args, **kwargs):
         self.form = kwargs.pop("form", None)
+        disable_fields = kwargs.pop("disable_fields", False)
         super().__init__(*args, **kwargs)
+
         if self.form:
             all_fields = self.form.field_form.all().order_by("pk")
+
             for field in all_fields:
                 class_type, class_widget = get_type_and_widget(field.type)
                 field_class = FieldDynamic(
@@ -52,6 +55,7 @@ class CreationDynamicForm(BaseForm):
                     attrs_widget=field.widget,
                     class_type=class_type,
                     class_widget=class_widget,
+                    disabled=disable_fields,
                 )
                 self.fields[f"{field.name}"] = field_class.create_field
             self.fieldsets = self.form.get_fieldsets

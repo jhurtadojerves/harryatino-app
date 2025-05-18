@@ -1,0 +1,25 @@
+{% extends 'base/base_list.html' %}
+{% load static %}
+
+{% block list_add_btn %}
+    <button
+        href="{{ site.urls.create }}"
+        class="btn btn-primary font-weight-bolder"
+        id="id_create_form"
+        data-url="{% url 'management:update_profile' 1 %}"
+    >
+        <i class="fas fa-plus icon-sm"></i>
+        Actualizar Perfil
+    </button>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'assets/js/apps/management/update_profile.js' %}"></script>
+    <script type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% include 'management/update_modal.html' %}
+{% endblock %}
