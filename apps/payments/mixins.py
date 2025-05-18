@@ -75,6 +75,9 @@ class DonationListMixin(FilterByChoice):
         perms_list = ["payments.can_approve_donation", "payments.can_reject_donation"]
         perms = [user.has_perm(perm) for perm in perms_list]
 
+        if not user.is_authenticated:
+            return queryset.none()
+
         if not any(perms):
             queryset = queryset.filter(Q(user=user) | Q(lines__beneficiary__user=user))
 

@@ -53,13 +53,15 @@
                 {% check_permission request.user change_perm as change_perm %}
                 {% check_permission request.user delete_perm as delete_perm %}
                 {% if add_perm %}
-                    <a
-                        href="{{ site.urls.create }}"
-                        class="btn btn-primary font-weight-bolder"
-                    >
-                        <i class="fas fa-plus icon-sm"></i>
-                        Crear nuevo
-                    </a>
+                    {% block list_add_btn %}
+                        <a
+                            href="{{ site.urls.create }}"
+                            class="btn btn-primary font-weight-bolder"
+                        >
+                            <i class="fas fa-plus icon-sm"></i>
+                            Crear nuevo
+                        </a>
+                    {% endblock %}
                 {% endif %}
                 <!--end::Button-->
             </div>

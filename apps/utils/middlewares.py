@@ -44,7 +44,9 @@ class NewRelicTrackingMiddleware:
         resolver_match: ResolverMatch = getattr(request, "resolver_match", None)
 
         if resolver_match:
-            transaction_name = f"{request.method} {resolver_match.route}"
+            route = resolver_match.route
+            transaction_name = f"{request.method} {route}"
+            agent.add_custom_parameter("path", route)
             agent.set_transaction_name(transaction_name)
 
         return response

@@ -40,10 +40,6 @@
             </div>
             <div class="card-toolbar">
                 {% block detail_actions %}
-                    <span class="mr-2">
-                        {{ site.nav.current_index|add:"1" }} de
-                        {{ site.nav.total_entries }}
-                    </span>
                     {% if site.urls.delete %}
                         <a
                             href="{{ site.urls.delete }}"
@@ -72,81 +68,83 @@
                         </a>
                     {% endif %}
                 {% endblock %}
-                <div class="btn-group">
-                    <button class="btn btn-info font-weight-bolder">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-info dropdown-toggle dropdown-toggle-split"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    ></button>
-                    <div
-                        class="dropdown-menu dropdown-menu-sm dropdown-menu-right"
-                    >
-                        <ul class="nav nav-hover flex-column">
-                            {% block toolbar_menu %}
-                                {% if site.urls.duplicate %}
-                                    <li class="nav-item">
-                                        <a
-                                            href="{{ site.urls.duplicate }}"
-                                            class="nav-link"
-                                        >
-                                            <i
-                                                class="far fa-copy icon-lg mr-3"
-                                            ></i>
-                                            <span class="nav-text">
-                                                Duplicar objeto
-                                            </span>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endblock %}
-                            {% block transition_menu %}
-                                {% for transition in object.get_available_state_transitions %}
-                                    {% if request.user|has_perm:transition.permission and not transition.custom.hide %}
+                {% block detail_toolbar %}
+                    <div class="btn-group">
+                        <button class="btn btn-info font-weight-bolder">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-info dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        ></button>
+                        <div
+                            class="dropdown-menu dropdown-menu-sm dropdown-menu-right"
+                        >
+                            <ul class="nav nav-hover flex-column">
+                                {% block toolbar_menu %}
+                                    {% if site.urls.duplicate %}
                                         <li class="nav-item">
                                             <a
-                                                href="#"
-                                                data-transition="{{ transition.name }}"
-                                                data-input="{{ transition.custom.input }}"
-                                                data-max_size="{{ transition.custom.max_size }}"
-                                                data-placeholder="{{ transition.custom.placeholder }}"
-                                                data-title="{{ transition.custom.title }}"
-                                                class="nav-link transition"
+                                                href="{{ site.urls.duplicate }}"
+                                                class="nav-link"
                                             >
                                                 <i
-                                                    class="{{ transition.custom.icon|default:'far fa-hand-point-right' }} icon-lg mr-3"
-                                                    {% if transition.target == 0 %}
-                                                        style="color:
-                                                        var(--danger);
-                                                        font-weight: bold;"
-                                                    {% endif %}
+                                                    class="far fa-copy icon-lg mr-3"
                                                 ></i>
-                                                <span
-                                                    class="nav-text"
-                                                    {% if transition.target == 0 %}
-                                                        style="color:
-                                                        var(--danger);
-                                                        font-weight: bold;"
-                                                    {% endif %}
-                                                >
-                                                    {% if object.state > transition.target and transition.custom.back_verbose %}
-                                                        {{ transition.custom.back_verbose }}
-                                                    {% else %}
-                                                        {{ transition.custom.verbose }}
-                                                    {% endif %}
+                                                <span class="nav-text">
+                                                    Duplicar objeto
                                                 </span>
                                             </a>
                                         </li>
                                     {% endif %}
-                                {% endfor %}
-                            {% endblock %}
-                        </ul>
+                                {% endblock %}
+                                {% block transition_menu %}
+                                    {% for transition in object.get_available_state_transitions %}
+                                        {% if request.user|has_perm:transition.permission and not transition.custom.hide %}
+                                            <li class="nav-item">
+                                                <a
+                                                    href="#"
+                                                    data-transition="{{ transition.name }}"
+                                                    data-input="{{ transition.custom.input }}"
+                                                    data-max_size="{{ transition.custom.max_size }}"
+                                                    data-placeholder="{{ transition.custom.placeholder }}"
+                                                    data-title="{{ transition.custom.title }}"
+                                                    class="nav-link transition"
+                                                >
+                                                    <i
+                                                        class="{{ transition.custom.icon|default:'far fa-hand-point-right' }} icon-lg mr-3"
+                                                        {% if transition.target == 0 %}
+                                                            style="color:
+                                                            var(--danger);
+                                                            font-weight: bold;"
+                                                        {% endif %}
+                                                    ></i>
+                                                    <span
+                                                        class="nav-text"
+                                                        {% if transition.target == 0 %}
+                                                            style="color:
+                                                            var(--danger);
+                                                            font-weight: bold;"
+                                                        {% endif %}
+                                                    >
+                                                        {% if object.state > transition.target and transition.custom.back_verbose %}
+                                                            {{ transition.custom.back_verbose }}
+                                                        {% else %}
+                                                            {{ transition.custom.verbose }}
+                                                        {% endif %}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endblock %}
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                {% endblock %}
             </div>
         </div>
         <div class="card-body">

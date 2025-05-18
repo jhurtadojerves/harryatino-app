@@ -1,0 +1,76 @@
+{% extends 'base/base_detail.html' %}
+{% load static %}
+{% block detail_toolbar %}
+{% endblock %}
+{% block detail_actions %}
+    <a
+        href="/administracion/actualizaciones-de-perfil/?show_modal=true"
+        class="btn btn-primary font-weight-bolder"
+        id="id_create_form"
+    >
+        <i class="fas fa-plus icon-sm"></i>
+        Actualizar Perfil
+    </a>
+{% endblock %}
+
+{% block detail %}
+    {{ block.super }}
+    <h3>Cambios realizados</h3>
+    {% if changes %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead style="text-align: center;">
+                    <tr>
+                        <th scope="col">Campo</th>
+                        <th scope="col">Valor Original</th>
+                        <th scope="col">Nuevo Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field, values in changes.items %}
+                        <tr>
+                            <th scope="row">{{ field }}</th>
+                            <td>{{ values.original_data|default:"--" }}</td>
+                            <td>{{ values.new_data }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No se han realizado cambios en el perfil.</p>
+    {% endif %}
+
+    <hr />
+
+    <button
+        href="#"
+        class="btn btn-primary font-weight-bolder"
+        id="original-data-btn"
+    >
+        <i class="fas fa-plus icon-sm"></i>
+        Ver datos anteriores
+    </button>
+
+    {% if new_template %}
+        <button
+            href="#"
+            class="btn btn-primary font-weight-bolder"
+            id="new-data-btn"
+        >
+            <i class="fas fa-plus icon-sm"></i>
+            Ver datos nuevos
+        </button>
+    {% endif %}
+{% endblock %}
+
+{% block modals %}
+    {{ block.super }}
+    {% include 'management/data_modal.html' with modal_id='original-data-modal' title='Datos anteriores' template=original_template %}
+    {% include 'management/data_modal.html' with modal_id='new-data-modal' title='Datos nuevos' template=new_template %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'assets/js/apps/management/detail_profile.js' %}"></script>
+{% endblock %}

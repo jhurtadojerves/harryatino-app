@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from apps.management.models import LevelUpdateLine
+from apps.management.models import LevelUpdateLine, ProfileHistory
 from apps.profiles.models.profiles import Profile
 from apps.profiles.schemas import CalculateLevelAndSocialRank
 from apps.profiles.services import ProfileService
@@ -55,3 +55,67 @@ class LevelUpdateService:
         cls, user_data: dict
     ) -> CalculateLevelAndSocialRank:
         return ProfileService.get_level_and_social_rank(user_data)
+
+
+class ProfileHistoryService:
+    @classmethod
+    def create(cls, forum_user_id: int, data: dict):
+        profile = Profile.objects.filter(forum_user_id=forum_user_id).first()
+        history = ProfileHistory.objects.create(
+            forum_user_id=forum_user_id,
+            profile=profile,
+            original_data=data,
+            new_data={},
+        )
+
+        return history
+
+    @classmethod
+    def update(cls, history_id: int, data: dict):
+        history = ProfileHistory.objects.filter(id=history_id).first()
+        history.new_data = data
+        history.save()
+
+        return history
+
+    @classmethod
+    def get_field_name(cls, field: str):
+        field_mapping = {
+            "customFields[61]": "Rango Social",
+            "customFields[43]": "Nivel Mágico",
+            "customFields[92]": "Rango en el Bando",
+            "customFields[12]": "Galeones",
+            "customFields[65]": "Ficha de Personaje",
+            "customFields[64]": "Bóveda",
+            "customFields[66]": "Bóveda Trastero",
+            "customFields[18]": "Bando",
+            "customFields[62]": "Libros de Hechizos",
+            "customFields[13]": "Familia",
+            "customFields[15]": "Trabajo",
+            "customFields[30]": "Escalafón laboral",
+            "customFields[14]": "Raza",
+            "customFields[40]": "Graduación",
+            "customFields[78]": "Poderes de Criaturas",
+            "customFields[34]": "Puntos de Poder en Objetos",
+            "customFields[33]": "Puntos de Poder en Criaturas",
+            "customFields[71]": "Puntos en Mazmorras",
+            "customFields[11]": "Puntos de Fabricación",
+            "customFields[36]": "Rango de Objetos",
+            "customFields[35]": "Rango de Criaturas",
+            "customFields[21]": "Objeto mágico legendario",
+            "customFields[79]": "Arcanos",
+            "customFields[80]": "Guerreros Uzza",
+            "customFields[19]": "Conocimientos",
+            "customFields[20]": "Habilidades Mágicas",
+            "customFields[60]": "Medallas",
+            "customFields[76]": "Inactividad en el Bando (Oculto)",
+            "customFields[39]": "Posteos para cálculo (Oculto)",
+            "customFields[41]": "Nº conocimientos (Oculto)",
+            "customFields[42]": "Nº Habilidades (Oculto)",
+            "customFields[63]": "Nº Poderes (Oculto)",
+            "customFields[67]": "Casa de Hogwarts",
+            "customFields[83]": "Equipo de Quidditch",
+            "customFields[90]": "Cantidad de Tickets",
+        }
+
+        return field_mapping.get(field, field)

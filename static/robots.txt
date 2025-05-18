@@ -15,6 +15,7 @@ Disallow: /api-auth/
 Disallow: /pago/
 Disallow: /pagos/
 Disallow: /reset/
+Disallow: /venta/
 
 User-agent: Bingbot
 Disallow: /admin/
@@ -32,6 +33,7 @@ Disallow: /api-auth/
 Disallow: /pago/
 Disallow: /pagos/
 Disallow: /reset/
+Disallow: /venta/
 
 User-agent: MJ12bot
 Disallow: /
@@ -80,3 +82,4 @@ Disallow: /api-auth/
 Disallow: /pago/
 Disallow: /pagos/
 Disallow: /reset/
+Disallow: /venta/

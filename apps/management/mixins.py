@@ -2,8 +2,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from superadmin.templatetags.superadmin_utils import site_url
 
+from apps.dynamicforms.models import Form
+from apps.dynamicforms.services import FormService
 from apps.management.models import LevelUpdate
-from apps.management.services import LevelUpdateService
+from apps.management.services import LevelUpdateService, ProfileHistoryService
 
 
 class LevelUpdateMixin:
@@ -23,3 +25,35 @@ class LevelUpdateMixin:
         LevelUpdateService.create_lines(new_level_update)
 
         return redirect(site_url(new_level_update, "detail"))
+
+
+class ProfileHistoryDetailMixin:
+    form_id = 1
+
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        context = super().get_context_data()
+        form = Form.objects.filter(id=self.form_id).first()
+        form_service = FormService(self.request, form)
+        original_data = self.object.original_data
+        new_data = self.object.new_data
+        original_template = form_service.get_form(
+            data=original_data, disable_fields=True
+        )
+        new_template = form_service.get_form(data=new_data or {}, disable_fields=True)
+        changes = {
+            ProfileHistoryService.get_field_name(k): (
+                {"original_data": original_data.get(k), "new_data": new_data[k]}
+            )
+            for k in new_data
+            if original_data.get(k) != new_data[k]
+        }
+        context.update(
+            {
+                "original_template": original_template,
+                "new_template": new_template,
+                "changes": changes,
+            }
+        )
+
+        return context

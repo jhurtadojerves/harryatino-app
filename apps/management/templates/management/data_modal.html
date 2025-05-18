@@ -1,0 +1,43 @@
+<div class="insoles-forms">
+    <div
+        class="modal fade text-left"
+        id="{{ modal_id }}"
+        tabindex="3"
+        role="dialog"
+        aria-labelledby="modalLabel"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-dialog modal-xl modal-dialog-centered"
+            role="document"
+        >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel">
+                        {{ title }}
+                        <span id="username"></span>
+                    </h4>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <i class="bx bx-x"></i>
+                    </button>
+                </div>
+                <form
+                    id="insoles-form"
+                    action=""
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    <div class="modal-body">
+                        <div id="render_form">{{ template }}</div>
+                    </div>
+                    <div class="modal-footer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

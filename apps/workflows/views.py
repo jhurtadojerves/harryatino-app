@@ -27,15 +27,13 @@ class ChangeStateView(View):
             return self.error(str(e))
         except Exception as e:
             request_id = getattr(request, "request_id", "UNKNOWN")
-            agent.record_exception(
-                exc=e,
-                custom_attributes={
-                    "request_id": request_id,
-                    "path": request.path,
-                    "method": request.method,
-                    "user_id": getattr(getattr(request, "user", None), "id", None),
-                },
+            agent.add_custom_parameter("request_id", request_id)
+            agent.add_custom_parameter("path", request.path)
+            agent.add_custom_parameter("method", request.method)
+            agent.add_custom_parameter(
+                "user_id", getattr(getattr(request, "user", None), "id", None)
             )
+            agent.record_exception(exc=e)
 
             return self.error(
                 str(f"Hubo un problema al procesar tu solicitud (Código: {request_id})")

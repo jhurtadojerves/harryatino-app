@@ -158,7 +158,11 @@ class UserAPIService(APIService):
 
         data.update(user_data)
         data.update(
-            {"nick": data.get("name"), "formatted_name": data.get("formattedName")}
+            {
+                "nick": data.get("name"),
+                "formatted_name": data.get("formattedName"),
+                "custom_fields": user_data,
+            }
         )
 
         return data

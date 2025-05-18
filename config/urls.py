@@ -34,6 +34,7 @@ urlpatterns = [
     path("", include("apps.insoles.urls")),
     path("", include("apps.dynamicforms.urls")),
     path("", include("apps.payments.urls")),
+    path("", include("apps.management.urls")),
     path("", HomePage.as_view()),
     # Api v1
     path(route="api/v1/", view=include("api.urls")),
