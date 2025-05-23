@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from superadmin.templatetags.superadmin_utils import site_url
 
+from apps.authentication.models.token import AccessToken
 from apps.authentication.services import AccessTokenService
 from apps.utils.services import UserAPIService
 
@@ -28,8 +29,14 @@ class AccessTokenCreateMixin:
         self.object = form.save(commit=False)
         profile = UserAPIService.download_user_data_and_update(profile)
         user = AccessTokenService.prepare_profile(profile, str(self.object.token))
-        self.object.user = user
-        self.object.save()
+        existing_token = AccessToken.objects.filter(user=user).first()
+
+        if existing_token:
+            self.object = existing_token
+        else:
+            self.object.user = user
+            self.object.save()
+
         self.object.send_message()
 
         return redirect(site_url(self.object, "detail"))
