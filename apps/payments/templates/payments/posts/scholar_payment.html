@@ -1,19 +1,23 @@
 <ul>
-  <li>
-    Saldo Anterior: {{ old_galleons }} G
-  </li>
-  <li>
-    Pagos a estudiantes de Escuelas: <span style="font-weight: bold">{{ payment.get_int_total_payments }} G</span>
-    <ul>
-      {% for line in payment.get_lines %}
-        <li>
-          {{ line.get_encoded_verbose|safe }}: <span style="color: #006666; font-weight: bold">{{ line.get_integer_amount }} G</span>
-        </li>
-      {% endfor %}
-    </ul>
-
-  </li>
-  <li>
-    Saldo: {{ new_galleons }} G
-  </li>
+    <li>Saldo Anterior: {{ old_galleons }} G</li>
+    <li>
+        Pagos a estudiantes de Escuelas:
+        <span style="font-weight: bold">
+            {{ payment.get_int_total_payments }} G
+        </span>
+        <ul>
+            {% for line in payment.get_lines %}
+                <li>
+                    <a href="{{ line.get_shorturl }}" target="_blank">
+                        {{ line.get_encoded_verbose|safe }}
+                    </a>
+                    :
+                    <span style="color: #006666; font-weight: bold">
+                        {{ line.get_integer_amount }} G
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>Saldo: {{ new_galleons }} G</li>
 </ul>
