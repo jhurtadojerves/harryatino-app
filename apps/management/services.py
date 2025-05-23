@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from apps.management.models import LevelUpdateLine, ProfileHistory
+from apps.management.models import EntryHistory, LevelUpdateLine, ProfileHistory
 from apps.profiles.models.profiles import Profile
 from apps.profiles.schemas import CalculateLevelAndSocialRank
 from apps.profiles.services import ProfileService
@@ -119,3 +119,24 @@ class ProfileHistoryService:
         }
 
         return field_mapping.get(field, field)
+
+
+class EntryHistoryService:
+    @classmethod
+    def create(cls, entry_id: int, type: str, data: dict):
+        history = EntryHistory.objects.create(
+            entry_id=entry_id,
+            type=type,
+            original_data=data,
+            new_data={},
+        )
+
+        return history
+
+    @classmethod
+    def update(cls, history_id: int, data: dict):
+        history = EntryHistory.objects.filter(id=history_id).first()
+        history.new_data = data
+        history.save()
+
+        return history

@@ -309,3 +309,32 @@ class TopicAPIService(APIService):
             cache_id,
             value,
         )
+
+    @classmethod
+    def update_topic(cls, topic_id, data):
+        url = f"{cls.GET_TOPIC_URL}{topic_id}?key={API_KEY}"
+        payload = cls.get_payload(data)
+        data = cls.post(url=url, payload=payload)
+
+        return data
+
+
+class PostAPIService(APIService):
+    BASE_API_URL = "https://www.harrylatino.org/api/forums/posts/"
+    URL = BASE_API_URL
+
+    @classmethod
+    def get_data(cls, post_id):
+        url = f"{cls.BASE_API_URL}{post_id}?key={API_KEY}"
+        response = requests.request("GET", url, headers={}, data={})
+        data = response.json()
+
+        return data
+
+    @classmethod
+    def update_post(cls, post_id, data):
+        url = f"{cls.BASE_API_URL}{post_id}?key={API_KEY}"
+        payload = cls.get_payload(data)
+        data = cls.post(url=url, payload=payload)
+
+        return data

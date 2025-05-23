@@ -14,8 +14,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modalLabel">
-                        Editar Perfil
-                        <span id="username"></span>
+                        {{ title | default:"Actualizar Perfil" }}
+                        <span id="title"></span>
                     </h4>
                     <button
                         type="button"
@@ -34,22 +34,14 @@
                 >
                     {% csrf_token %}
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>ID de Usuario</label>
-                            <input
-                                class="form-control"
-                                type="number"
-                                id="forum_user_id"
-                            />
-                            <button
-                                type="button"
-                                class="btn btn-primary mt-5"
-                                id="load_data"
-                            >
-                                Cargar Datos
-                            </button>
-                        </div>
                         <div id="render_form"></div>
+                        <button
+                            type="button"
+                            class="btn btn-primary mt-5"
+                            id="load_data"
+                        >
+                            Cargar Datos
+                        </button>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-light-primary ml-1">

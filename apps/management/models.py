@@ -5,6 +5,7 @@ from django.db.models.functions import Lower
 from django_fsm import FSMIntegerField
 from tracing.models import BaseModel
 
+from apps.management.enums import TypeEntryChoices
 from apps.management.transitions import (
     LevelUpdateLineTransitions,
     LevelUpdateTransitions,
@@ -84,10 +85,28 @@ class ProfileHistory(BaseModel):
         return f"Historial de perfil ({self.forum_user_id})"
 
     class Meta(BaseModel.Meta):
-        verbose_name = "Actualización de Perfil"
-        verbose_name_plural = "Actualizaciones de Perfil"
+        verbose_name = "Actualizar Perfil"
+        verbose_name_plural = "Actualizar Perfil"
         ordering = ["-id"]
         permissions = (("can_update_profiles", "Can update profiles"),)
         indexes = [
             models.Index(fields=["forum_user_id"]),
+        ]
+
+
+class EntryHistory(BaseModel):
+    type = models.CharField(max_length=8, choices=TypeEntryChoices.choices)
+    entry_id = models.IntegerField()
+    original_data = models.JSONField()
+    new_data = models.JSONField()
+
+    def __str__(self):
+        return f"Historial de {self.get_type_display()} ({self.entry_id})"
+
+    class Meta(BaseModel.Meta):
+        verbose_name = "Actualizar topic y post"
+        verbose_name_plural = "Actualizar topic y post"
+        permissions = (("can_update_entries", "Can update entries"),)
+        indexes = [
+            models.Index(fields=["entry_id", "type"]),
         ]
