@@ -178,7 +178,7 @@ class UpdateEntryView(BaseView):
 
     def create_history(self, forum_id: int, data: dict):
         new_data = data.copy()
-        type = new_data.pop("type", "topic")
+        type = new_data.pop("type", "topic").lower()
 
         return EntryHistoryService.create(
             entry_id=forum_id,
