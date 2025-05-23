@@ -48,9 +48,10 @@ class CreationDynamicForm(BaseForm):
             all_fields = self.form.field_form.all().order_by("pk")
 
             for field in all_fields:
+                label = "" if "hidden" in str(field.widget).lower() else field.label
                 class_type, class_widget = get_type_and_widget(field.type)
                 field_class = FieldDynamic(
-                    label=field.label,
+                    label=label,
                     required=field.required,
                     attrs_widget=field.widget,
                     class_type=class_type,
