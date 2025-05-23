@@ -2,7 +2,7 @@ from django.conf import settings
 
 from apps.products.models import Product
 from apps.sales.models import Sale
-from apps.utils.services import TopicAPIService
+from apps.utils.services import TopicAPIService, UserAPIService
 from apps.workflows.exceptions import WorkflowException
 
 
@@ -49,7 +49,7 @@ class SaleService:
     @classmethod
     def create_post(cls, multiple):
         sales = multiple.ordered_sales()
-        profile = multiple.profile
+        profile = UserAPIService.download_user_data_and_update(multiple.profile)
         response, html = TopicAPIService.create_post(
             topic=profile.get_boxroom_number,
             context={
